@@ -1,0 +1,62 @@
+# Prerequisites
+*.d
+
+# Compiled Object files
+*.slo
+*.lo
+*.o
+*.obj
+
+# Precompiled Headers
+*.gch
+*.pch
+
+# Compiled Dynamic libraries
+*.so
+*.dylib
+*.dll
+
+#report file
+*.out*
+
+# Fortran module files
+*.mod
+*.smod
+
+# Compiled Static libraries
+*.lai
+*.la
+*.a
+*.lib
+
+# Executables
+*.exe
+*.out
+*.app
+*.x
+
+#swapfiles from vim 
+*.swp
+
+#python garbage
+*.pyc
+__pycache__/
+*.py[cod]
+*$py.class
+
+#qt files
+*.config
+*.creator
+*.files
+*.include
+*.autosave
+
+#latex files
+*.aux
+*.log 
+*.bbl 
+*.blg 
+
+#data files
+/data
+*.csv
