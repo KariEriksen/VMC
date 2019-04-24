@@ -1,10 +1,11 @@
 import numpy as np
 import sys
+from system import System
 
-class Sampler:
+class Sampler(System):
 
 	"""
-	
+
 	"""
 
 	def local_energy():

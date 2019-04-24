@@ -1,12 +1,13 @@
 import numpy as np
 import sys
+from system import System
 
-class Metropolis:
+class Metropolis(System):
 
 	def __init__(self, positions):
 
 		self.positions = positions
-		
+
 
 	def new_positions(self, r):
 

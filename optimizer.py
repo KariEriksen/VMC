@@ -1,3 +1,7 @@
 import numpy as np
-import matplotlib.pyplot as plt
 import sys
+from sampler import Sampler
+
+class Optimizer(Sampler):
+
+	def gradient_descent():
