@@ -1,38 +1,82 @@
 import numpy as np
 import sys
+import math
 
 class System:
 
 	def __init__(self, num_particles, num_dimensions, monte_carlo_cycles, 
-		variational_parameters):
+		variational_parameters, step_length):
 
-		self.num_particles = num_p
-		self.num_dimensionsn = num_d
-		self.monte_carlo_cycles = mcc
+		self.num_particles          = num_p
+		self.num_dimensionsn        = num_d
+		self.monte_carlo_cycles     = mcc
 		#self.positions = positions
 		self.variational_parameters = vari_p
+		self.step_length            = step
 
 		positions = np.random.rand(num_p, num_d)
+		alpha     = vari_p[0]
+		beta      = vari_p[1]
+		omega     = vari_p[3]
+		a         = vari_p[4]
 
 
 	def hamiltonian():
 
+		return -0.5*kinetic_energy()
+
 
 	def kinetic_energy():
 
+		"""
+		Numerical differentiation for solving the second derivative
+		of the wave function. 
+		Step represents small changes is the spatial space
+		"""
 
+		position_forward = positions + step
+		position_backward = positions - step
 
+		lambda_ = (wavefunction(position_forward) 
+				+ wavefunction(position_backwards) 
+				- 2*wavefunction(positions))*(1/(step*step))
+
+		kine_energy = lambda_/wavefunction()
+
+		return kine_energy
 
 
 	def potential_energy():
 
+		omega_sq = omega*omega
+
+		return 0.5*omega_sq*positions*positions
+
 
 	def wavefunction():
 
+		return single_particel_function()*jastrow_factor()
 
 	def single_particel_function():
 
+		"""
+		Takes in position matrix of the particles and calculates the
+		single particle wave function. 
+		Returns g, type float, product of all single particle wave functions
+		of all particles.
+		"""
+
+		for i in range(num_p):
+
+			positions[i,3] *= beta 
+
+		g = np.prod(math.exp(-alpha*(np.sum(np.power(positions, 2), axis=1))))
+
+		return g
+
 
 	def jastrow_factor():
+
+		f = 1.0
 
 
