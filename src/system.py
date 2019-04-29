@@ -19,6 +19,7 @@ class System:
 		beta      = vari_p[1]
 		omega     = vari_p[3]
 		a         = vari_p[4]
+		r         = vari_p[5]
 
 
 	def hamiltonian():
