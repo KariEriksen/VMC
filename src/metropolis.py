@@ -7,9 +7,9 @@ class Metropolis(System):
 	def __init__(self, positions):
 
 		self.positions = positions
-		
 
-	def new_positions(self, r):
+
+	def new_positions(self):
 
 		"""
 		Calculating new trial position using old position.
@@ -17,6 +17,7 @@ class Metropolis(System):
 		in the spatial configuration space
 		"""
 
+		r = np.random.sample()
 		new_positions = positions + r*delta_R
 
 
