@@ -48,14 +48,21 @@ class System:
 
 	def potential_energy():
 
+		"""
+		Returns the potential energy of the system
+
+		np.multiply multiply argument element-wise
+		"""
+
 		omega_sq = omega*omega
 
-		return 0.5*omega_sq*positions*positions
+		return 0.5*omega_sq*np.multiply(positions, positions)
 
 
 	def wavefunction():
 
 		return single_particel_function()*jastrow_factor()
+
 
 	def single_particel_function():
 
@@ -77,6 +84,19 @@ class System:
 
 	def jastrow_factor():
 
-		f = 1.0
+		f = 0
+
+		for i in range(num_p):
+			for j in range(num_p-(i+1)):
+				j = i + 1
+				distance = abs(np.subtract(positions[i,3], positions[j,3]))
+
+				if distance > a:
+					f *= 1 - a/distance
+				else:
+					f *= 0
+			
+		return f
+
 
 
