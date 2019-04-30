@@ -1,5 +1,7 @@
 import numpy as np
 import sys
+
+
 from system import System
 from sampler import Sampler
 
@@ -9,12 +11,11 @@ class Metropolis(System):
 
 		self.delta_R = delta_R
 
-		System.__init__(self, num_particles, num_dimensions, monte_carlo_cycles, 
+		System.__init__(self, num_particles, num_dimensions,
 		variational_parameters, step_length)
 
 		self.num_particles          = num_p
 		self.num_dimensionsn        = num_d
-		self.monte_carlo_cycles     = mcc
 		self.variational_parameters = vari_p
 		self.step_length            = step
 
@@ -64,7 +65,7 @@ class Metropolis(System):
 		and delta_t is the time step between 0.001 and 0.01
 		"""
 
-		D = 0.5
+		D  = 0.5
 		xi = np.random.sampler()
 		new_positions_importance = positions + D*F*delta_t + xi*sqrt(delta_t)
 		

@@ -1,5 +1,7 @@
 import numpy as np
 import sys
+
+
 from system import System
 
 class Sampler(System):

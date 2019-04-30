@@ -4,13 +4,11 @@ import math
 
 class System:
 
-	def __init__(self, num_particles, num_dimensions, monte_carlo_cycles, 
+	def __init__(self, num_particles, num_dimensions, 
 		variational_parameters, step_length):
 
 		self.num_particles          = num_p
 		self.num_dimensionsn        = num_d
-		self.monte_carlo_cycles     = mcc
-		#self.positions = positions
 		self.variational_parameters = vari_p
 		self.step_length            = step
 
@@ -34,7 +32,7 @@ class System:
 		Step represents small changes is the spatial space
 		"""
 
-		position_forward = positions + step
+		position_forward  = positions + step
 		position_backward = positions - step
 
 		lambda_ = (wavefunction(position_forward) 
