@@ -43,7 +43,7 @@ class Metropolis(System):
 		new positions
 		"""
 
-		acceptance_ratio = Sampler.probability()
+		acceptance_ratio = Sampler.probability(positions ,new_positions)
 		epsilon = np.random.sampler()
 
 		if acceptance_ratio < epsilon:
@@ -65,11 +65,20 @@ class Metropolis(System):
 		"""
 
 		D = 0.5
-		F = Sampler.drift_force
 		xi = np.random.sampler()
 		new_positions_importance = positions + D*F*delta_t + xi*sqrt(delta_t)
-
 		
+		acceptance_ratio = Sampler.greens_function(positions, new_positions_importance)
+		epsilon = np.random.sampler()
+
+		if acceptance_ratio < epsilon:
+			positions = new_positions_importance
+
+		else:
+			pass
+
+		Sampler.local_energy(positions)
+
 
 	def gibbs_sampling(self):
 	

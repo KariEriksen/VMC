@@ -23,7 +23,7 @@ class System:
 
 	def hamiltonian():
 
-		return -0.5*kinetic_energy()
+		return -0.5*kinetic_energy() + potential_energy()
 
 
 	def kinetic_energy():
@@ -92,7 +92,7 @@ class System:
 				distance = abs(np.subtract(positions[i,3], positions[j,3]))
 
 				if distance > a:
-					f *= 1 - a/distance
+					f *= 1.0 - a/distance
 				else:
 					f *= 0
 			
