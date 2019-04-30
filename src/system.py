@@ -4,15 +4,15 @@ import math
 
 class System:
 
-	def __init__(self, num_particles, num_dimensions, 
+	def __init__(self, num_particles, num_dimensions, positions,
 		variational_parameters, step_length):
 
 		self.num_particles          = num_p
 		self.num_dimensionsn        = num_d
+		self.positions              = positions
 		self.variational_parameters = vari_p
 		self.step_length            = step
 
-		positions = np.random.rand(num_p, num_d)
 		alpha     = vari_p[0]
 		beta      = vari_p[1]
 		omega     = vari_p[3]

@@ -16,6 +16,7 @@ class Metropolis(System):
 
 		self.num_particles          = num_p
 		self.num_dimensionsn        = num_d
+		self.positions              = positions
 		self.variational_parameters = vari_p
 		self.step_length            = step
 
