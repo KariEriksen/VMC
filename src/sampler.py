@@ -10,6 +10,17 @@ class Sampler:
 
 	"""
 
+	def __init__(self, positions, new_positions, new_positions_importance, 
+		         omega, step):
+
+		self.positions                = positions
+		self.new_positions            = new_positions
+		self.new_positions_importance = new_positions_importance
+		self.omega                    = omega
+		self.step                     = step
+
+
+
 	def kinetic_energy():
 
 		"""
