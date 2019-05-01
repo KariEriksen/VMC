@@ -19,50 +19,12 @@ class System:
 		a         = vari_p[4]
 
 
-	def hamiltonian():
+	def wavefunction(positions):
 
-		return -0.5*kinetic_energy() + potential_energy()
-
-
-	def kinetic_energy():
-
-		"""
-		Numerical differentiation for solving the second derivative
-		of the wave function. 
-		Step represents small changes is the spatial space
-		"""
-
-		position_forward  = positions + step
-		position_backward = positions - step
-
-		lambda_ = (wavefunction(position_forward) 
-				+ wavefunction(position_backwards) 
-				- 2*wavefunction(positions))*(1/(step*step))
-
-		kine_energy = lambda_/wavefunction()
-
-		return kine_energy
+		return single_particel_function(positions)*jastrow_factor(positions)
 
 
-	def potential_energy():
-
-		"""
-		Returns the potential energy of the system
-
-		np.multiply multiply argument element-wise
-		"""
-
-		omega_sq = omega*omega
-
-		return 0.5*omega_sq*np.multiply(positions, positions)
-
-
-	def wavefunction():
-
-		return single_particel_function()*jastrow_factor()
-
-
-	def single_particel_function():
+	def single_particel_function(positions):
 
 		"""
 		Takes in position matrix of the particles and calculates the
@@ -80,7 +42,7 @@ class System:
 		return g
 
 
-	def jastrow_factor():
+	def jastrow_factor(positions):
 
 		f = 0
 
