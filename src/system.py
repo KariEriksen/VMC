@@ -11,7 +11,7 @@ class System:
 		self.num_dimensionsn        = num_d
 		self.positions              = positions
 		self.variational_parameters = vari_p
-		self.step_length            = step
+		self.numerical_step_length  = step
 
 		alpha     = vari_p[0]
 		beta      = vari_p[1]

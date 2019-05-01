@@ -2,28 +2,24 @@ import numpy as np
 import sys
 
 
-from system import System
+from system  import System
 from sampler import Sampler
 
-class Metropolis(System):
+class Metropolis():
 
-	def __init__(self, delta_R, delta_t):
+	"""
 
-		self.delta_R = delta_R
+	"""
 
-		System.__init__(self, num_particles, num_dimensions,
-		variational_parameters, step_length)
+	def __init__(self, delta_R, delta_t, num_particles, num_dimensionsn,
+				 positions, metropolis_step_length):
 
+		self.delta_R                = delta_R
+		self.delta_t                = delta_t
 		self.num_particles          = num_p
 		self.num_dimensionsn        = num_d
 		self.positions              = positions
-		self.variational_parameters = vari_p
-		self.step_length            = step
-
-		alpha     = vari_p[0]
-		beta      = vari_p[1]
-		omega     = vari_p[3]
-		a         = vari_p[4]
+		self.metropolis_step_length = step
 
 
 	def new_positions(self):
@@ -45,6 +41,7 @@ class Metropolis(System):
 		new positions
 		"""
 
+		S = Sampler()
 		acceptance_ratio = Sampler.probability(positions ,new_positions)
 		epsilon = np.random.sampler()
 
