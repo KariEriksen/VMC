@@ -5,26 +5,24 @@ import math
 class System:
 
 	def __init__(self, num_particles, num_dimensions, positions,
-		variational_parameters, step_length):
+		numerical_step_length, alpha, beta, omega, a):
 
 		self.num_particles          = num_p
 		self.num_dimensionsn        = num_d
 		self.positions              = positions
-		self.variational_parameters = vari_p
 		self.numerical_step_length  = step
-
-		alpha     = vari_p[0]
-		beta      = vari_p[1]
-		omega     = vari_p[3]
-		a         = vari_p[4]
-
-
-	def wavefunction(positions):
-
-		return single_particel_function(positions)*jastrow_factor(positions)
+		self.alpha                  = alpha
+		self.beta                   = beta
+		self.omega                  = omega
+		self.a                      = a
 
 
-	def single_particel_function(positions):
+	def wavefunction(self):
+
+		return single_particel_function(self.positions)*jastrow_factor(self.positions)
+
+
+	def single_particel_function(self):
 
 		"""
 		Takes in position matrix of the particles and calculates the
@@ -33,26 +31,26 @@ class System:
 		of all particles.
 		"""
 
-		for i in range(num_p):
+		for i in range(self.num_p):
 
-			positions[i,3] *= beta 
+			self.positions[i,3] *= self.beta 
 
-		g = np.prod(math.exp(-alpha*(np.sum(np.power(positions, 2), axis=1))))
+		g = np.prod(math.exp(-self.alpha*(np.sum(np.power(self.positions, 2), axis=1))))
 
 		return g
 
 
-	def jastrow_factor(positions):
+	def jastrow_factor(self):
 
 		f = 0
 
-		for i in range(num_p):
-			for j in range(num_p-(i+1)):
+		for i in range(self.num_p):
+			for j in range(self.num_p-(i+1)):
 				j = i + 1
-				distance = abs(np.subtract(positions[i,3], positions[j,3]))
+				distance = abs(np.subtract(self.positions[i,3], self.positions[j,3]))
 
-				if distance > a:
-					f *= 1.0 - a/distance
+				if distance > self.a:
+					f *= 1.0 - self.a/distance
 				else:
 					f *= 0
 			

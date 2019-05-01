@@ -4,6 +4,6 @@ import sys
 
 from sampler import Sampler
 
-class Optimizer(Sampler):
+class Optimizer:
 
 	def gradient_descent():

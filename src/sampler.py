@@ -4,7 +4,7 @@ import sys
 
 from system import System
 
-class Sampler():
+class Sampler:
 
 	"""
 
@@ -18,14 +18,14 @@ class Sampler():
 		Step represents small changes is the spatial space
 		"""
 
-		position_forward  = positions + step
-		position_backward = positions - step
+		position_forward  = self.positions + self.step
+		position_backward = self.positions - self.step
 
 		lambda_ = (System.wavefunction(position_forward) 
 				+ System.wavefunction(position_backwards) 
-				- 2*System.wavefunction(positions))*(1/(step*step))
+				- 2*System.wavefunction(self.positions))*(1/(self.step*self.step))
 
-		kine_energy = lambda_/System.wavefunction(positions)
+		kine_energy = lambda_/System.wavefunction(self.positions)
 
 		return kine_energy
 
@@ -38,9 +38,9 @@ class Sampler():
 		np.multiply multiply argument element-wise
 		"""
 
-		omega_sq = omega*omega
+		omega_sq = self.omega*self.omega
 
-		return 0.5*omega_sq*np.multiply(positions, positions)
+		return 0.5*omega_sq*np.multiply(self.positions, self.positions)
 
 	def local_energy():
 
@@ -54,15 +54,15 @@ class Sampler():
 
 	def probability(positions, new_positions):
 
-		acceptance_ratio = System.wavefunction(new_positions)*System.wavefunction(new_positions)/
-						   System.wavefunction(positions)*System.wavefunction(positions)
+		acceptance_ratio = System.wavefunction(self.new_positions)*System.wavefunction(self.new_positions)/
+						   System.wavefunction(self.positions)*System.wavefunction(self.positions)
 
 
 	def drift_force(positions):
 
-		position_forward  = positions + step
+		position_forward  = self.positions + self.step
 		derivativ = (System.wavefunction(position_forward) 
-				  - System.wavefunction(positions))/step
+				  - System.wavefunction(self.positions))/self.step
 		return derivativ
 
 
@@ -70,12 +70,12 @@ class Sampler():
 
 		greens_function = 0.0
 
-		F_old = drift_force(positions)
-		F_new = drift_force(new_positions_importance)
+		F_old = drift_force(self.positions)
+		F_new = drift_force(self.new_positions_importance)
 
 		greens_function = 0.5*(F_old + F_new)
-		                *(0.5*(positions - new_positions_importance) 
-		                + D*delta_t*(F_old - F_new))
+		                *(0.5*(self.positions - self.new_positions_importance) 
+		                + D*self.delta_t*(F_old - F_new))
 
 		greens_function = exp(greens_function)
 
