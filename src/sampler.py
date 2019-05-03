@@ -6,22 +6,14 @@ from system import System
 
 class Sampler:
 
-	"""
-
-	"""
-
-	def __init__(self, positions, new_positions, new_positions_importance, 
-		         omega, step):
+	def __init__(self, positions, omega, step):
 
 		self.positions                = positions
-		self.new_positions            = new_positions
-		self.new_positions_importance = new_positions_importance
 		self.omega                    = omega
 		self.step                     = step
 
 
-
-	def kinetic_energy():
+	def kinetic_energy(self):
 
 		"""
 		Numerical differentiation for solving the second derivative
@@ -41,7 +33,7 @@ class Sampler:
 		return kine_energy
 
 
-	def potential_energy():
+	def potential_energy(self):
 
 		"""
 		Returns the potential energy of the system
@@ -53,23 +45,28 @@ class Sampler:
 
 		return 0.5*omega_sq*np.multiply(self.positions, self.positions)
 
-	def local_energy():
+
+	def local_energy(self):
 
 		return -0.5*kinetic_energy() + potential_energy()
 
 
-	def energy_gradient():
+	def energy_gradient(self):
 
 		return 0
 
 
-	def probability(positions, new_positions):
+	def probability(self, new_positions):
 
-		acceptance_ratio = System.wavefunction(self.new_positions)*System.wavefunction(self.new_positions)/
-						   System.wavefunction(self.positions)*System.wavefunction(self.positions)
+		acceptance_ratio = System.wavefunction(self.new_positions)
+						 *System.wavefunction(self.new_positions)
+						 /System.wavefunction(self.positions)
+						 *System.wavefunction(self.positions)
+
+		return acceptance_ratio
 
 
-	def drift_force(positions):
+	def drift_force(self):
 
 		position_forward  = self.positions + self.step
 		derivativ = (System.wavefunction(position_forward) 
@@ -77,7 +74,7 @@ class Sampler:
 		return derivativ
 
 
-	def greens_function(positions, new_positions_importance):
+	def greens_function(self, new_positions_importance):
 
 		greens_function = 0.0
 
