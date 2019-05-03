@@ -1,15 +1,11 @@
 import numpy as np
 import sys
 
-
-from system  import System
 from sampler import Sampler
 
 class Metropolis:
 
-	"""
-
-	"""
+	S = Sampler(omega, step)
 
 	def __init__(self, delta_R, delta_t, num_particles, num_dimensionsn,
 				 positions, metropolis_step_length):
@@ -41,8 +37,7 @@ class Metropolis:
 		new positions
 		"""
 
-		S = Sampler()
-		acceptance_ratio = Sampler.probability(self.positions ,self.new_positions)
+		acceptance_ratio = S.probability(self.positions ,self.new_positions)
 		epsilon = np.random.sampler()
 
 		if acceptance_ratio < epsilon:
@@ -51,7 +46,7 @@ class Metropolis:
 		else:
 			pass
 
-		Sampler.local_energy(self.positions)
+		S.local_energy(self.positions)
 
 
 	def importance_sampling(self):
@@ -68,8 +63,7 @@ class Metropolis:
 		self.new_positions_importance = self.positions + D*F*self.delta_t 
 									  + xi*sqrt(self.delta_t)
 		
-		acceptance_ratio = Sampler.greens_function(self.positions, 
-						   self.new_positions_importance)
+		acceptance_ratio = S.greens_function(self.posistions, self.new_positions_importance)
 		epsilon = np.random.sampler()
 
 		if acceptance_ratio < epsilon:
@@ -78,7 +72,7 @@ class Metropolis:
 		else:
 			pass
 
-		Sampler.local_energy(self.positions)
+		S.local_energy(self.positions)
 
 
 	def gibbs_sampling(self):
