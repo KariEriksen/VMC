@@ -6,14 +6,15 @@ from system import System
 
 class Sampler:
 
-	def __init__(self, positions, omega, step):
+	S = System()
 
-		self.positions                = positions
+	def __init__(self, omega, step):
+
 		self.omega                    = omega
 		self.step                     = step
 
 
-	def kinetic_energy(self):
+	def kinetic_energy(self, positions):
 
 		"""
 		Numerical differentiation for solving the second derivative
@@ -21,19 +22,19 @@ class Sampler:
 		Step represents small changes is the spatial space
 		"""
 
-		position_forward  = self.positions + self.step
-		position_backward = self.positions - self.step
+		position_forward  = positions + self.step
+		position_backward = positions - self.step
 
 		lambda_ = (System.wavefunction(position_forward) 
 				+ System.wavefunction(position_backwards) 
-				- 2*System.wavefunction(self.positions))*(1/(self.step*self.step))
+				- 2*System.wavefunction(positions))*(1/(self.step*self.step))
 
-		kine_energy = lambda_/System.wavefunction(self.positions)
+		kine_energy = lambda_/System.wavefunction(positions)
 
 		return kine_energy
 
 
-	def potential_energy(self):
+	def potential_energy(self, positions):
 
 		"""
 		Returns the potential energy of the system
@@ -43,46 +44,46 @@ class Sampler:
 
 		omega_sq = self.omega*self.omega
 
-		return 0.5*omega_sq*np.multiply(self.positions, self.positions)
+		return 0.5*omega_sq*np.multiply(positions, positions)
 
 
-	def local_energy(self):
+	def local_energy(self, positions):
 
-		return -0.5*kinetic_energy() + potential_energy()
+		return -0.5*kinetic_energy(positions) + potential_energy(positions)
 
 
-	def energy_gradient(self):
+	def energy_gradient(self, positions):
 
 		return 0
 
 
-	def probability(self, new_positions):
+	def probability(self, positions, new_positions):
 
-		acceptance_ratio = System.wavefunction(self.new_positions)
-						 *System.wavefunction(self.new_positions)
-						 /System.wavefunction(self.positions)
-						 *System.wavefunction(self.positions)
+		acceptance_ratio = System.wavefunction(new_positions)
+						 *System.wavefunction(new_positions)
+						 /System.wavefunction(positions)
+						 *System.wavefunction(positions)
 
 		return acceptance_ratio
 
 
-	def drift_force(self):
+	def drift_force(self, positions):
 
-		position_forward  = self.positions + self.step
+		position_forward  = positions + self.step
 		derivativ = (System.wavefunction(position_forward) 
-				  - System.wavefunction(self.positions))/self.step
+				  - System.wavefunction(positions))/self.step
 		return derivativ
 
 
-	def greens_function(self, new_positions_importance):
+	def greens_function(self, positions, new_positions_importance):
 
 		greens_function = 0.0
 
-		F_old = drift_force(self.positions)
-		F_new = drift_force(self.new_positions_importance)
+		F_old = drift_force(positions)
+		F_new = drift_force(new_positions_importance)
 
 		greens_function = 0.5*(F_old + F_new)
-		                *(0.5*(self.positions - self.new_positions_importance) 
+		                *(0.5*(positions - new_positions_importance) 
 		                + D*self.delta_t*(F_old - F_new))
 
 		greens_function = exp(greens_function)
