@@ -63,14 +63,14 @@ class Metropolis:
 
 		D  = 0.5
 		xi = np.random.sampler()
-		new_positions_importance = (self.positions + D*F*self.delta_t 
+		new_positions = (self.positions + D*F*self.delta_t 
 								 + xi*sqrt(self.delta_t))
 		
-		acceptance_ratio = Sampler.greens_function(self.posistions, new_positions_importance)
+		acceptance_ratio = Sampler.greens_function(self.posistions, new_positions)
 		epsilon = np.random.sampler()
 
 		if acceptance_ratio < epsilon:
-			self.positions = new_positions_importance
+			self.positions = new_positions
 
 		else:
 			pass
