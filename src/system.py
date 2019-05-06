@@ -9,19 +9,18 @@ class System:
 
 		self.num_particles          = num_p
 		self.num_dimensionsn        = num_d
-		self.positions              = positions
 		self.numerical_step_length  = step
 		self.alpha                  = alpha
 		self.beta                   = beta
 		self.a                      = a
 
 
-	def wavefunction(self):
+	def wavefunction(self, positions):
 
-		return single_particel_function(self.positions)*jastrow_factor(self.positions)
+		return single_particel_function(positions)*jastrow_factor(positions)
 
 
-	def single_particel_function(self):
+	def single_particel_function(self, positions):
 
 		"""
 		Takes in position matrix of the particles and calculates the
@@ -32,21 +31,21 @@ class System:
 
 		for i in range(self.num_p):
 
-			self.positions[i,3] *= self.beta 
+			positions[i,3] *= self.beta 
 
-		g = np.prod(math.exp(-self.alpha*(np.sum(np.power(self.positions, 2), axis=1))))
+		g = np.prod(math.exp(-self.alpha*(np.sum(np.power(positions, 2), axis=1))))
 
 		return g
 
 
-	def jastrow_factor(self):
+	def jastrow_factor(self, positions):
 
 		f = 0
 
 		for i in range(self.num_p):
 			for j in range(self.num_p-(i+1)):
 				j = i + 1
-				distance = abs(np.subtract(self.positions[i,3], self.positions[j,3]))
+				distance = abs(np.subtract(positions[i,3], positions[j,3]))
 
 				if distance > self.a:
 					f *= 1.0 - self.a/distance
