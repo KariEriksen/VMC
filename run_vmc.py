@@ -1,7 +1,9 @@
 import numpy as np
-import sys
 import matplotlib.pyplot as plt
+import sys
+import os
 
+sys.path.append('/home/kari/VMC/src')
 
 from system import System
 from sampler import Sampler
@@ -25,13 +27,13 @@ omega                    = 0.01
 
 positions = np.random.rand(number_of_particles, number_of_dimensions)
 
-System(number_of_particles, number_of_dimensions, positions, 
+System(number_of_particles, number_of_dimensions,
 	   alpha, beta, a)
 
 Sampler(omega, numerical_step_length)
 
 m = Metropolis(step_metropolis, step_importance, number_of_particles, 
-			   number_of_dimensions, positions, step_metropolis)
+			   number_of_dimensions, positions)
 
 for i in range(monte_carlo_cycles):
 

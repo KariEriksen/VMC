@@ -1,6 +1,4 @@
 import numpy as np
-import sys
-
 
 from system import System
 
@@ -59,10 +57,10 @@ class Sampler:
 
 	def probability(self, positions, new_positions):
 
-		acceptance_ratio = System.wavefunction(new_positions)
+		acceptance_ratio = (System.wavefunction(new_positions)
 						 *System.wavefunction(new_positions)
 						 /System.wavefunction(positions)
-						 *System.wavefunction(positions)
+						 *System.wavefunction(positions))
 
 		return acceptance_ratio
 
@@ -82,8 +80,8 @@ class Sampler:
 		F_old = drift_force(positions)
 		F_new = drift_force(new_positions_importance)
 
-		greens_function = 0.5*(F_old + F_new)
-		                *(0.5*(positions - new_positions_importance) 
+		greens_function = (0.5*(F_old + F_new)
+		                *(0.5*(positions - new_positions_importance))
 		                + D*self.delta_t*(F_old - F_new))
 
 		greens_function = exp(greens_function)

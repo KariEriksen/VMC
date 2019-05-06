@@ -1,17 +1,18 @@
 import numpy as np
-import sys
 import math
+import sys
+
 
 class System:
 
-	def __init__(self, num_particles, num_dimensions, positions,
+	def __init__(self, num_particles, num_dimensions,
 		alpha, beta, a):
 
-		self.num_particles   = num_p
-		self.num_dimensionsn = num_d
-		self.alpha           = alpha
-		self.beta            = beta
-		self.a               = a
+		self.num_p = num_particles
+		self.num_d = num_dimensions
+		self.alpha = alpha
+		self.beta  = beta
+		self.a     = a
 
 
 	def wavefunction(self, positions):

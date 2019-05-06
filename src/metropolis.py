@@ -1,5 +1,4 @@
 import numpy as np
-import sys
 
 from sampler import Sampler
 
@@ -7,14 +6,14 @@ class Metropolis:
 
 	#Sampler(omega, step)
 
-	def __init__(self, delta_R, delta_t, num_particles, num_dimensionsn,
-				 positions, step_metropolis):
+	def __init__(self, delta_R, delta_t, num_particles, num_dimensions,
+				 positions):
 
-		self.delta_R         = delta_R
-		self.delta_t         = delta_t
-		self.num_particles   = num_p
-		self.num_dimensionsn = num_d
-		self.positions       = positions
+		self.delta_R   = delta_R
+		self.delta_t   = delta_t
+		self.num_p     = num_particles
+		self.num_d     = num_dimensions
+		self.positions = positions
 
 	"""
 	def new_positions(self):
@@ -64,8 +63,8 @@ class Metropolis:
 
 		D  = 0.5
 		xi = np.random.sampler()
-		new_positions_importance = self.positions + D*F*self.delta_t 
-									  + xi*sqrt(self.delta_t)
+		new_positions_importance = (self.positions + D*F*self.delta_t 
+								 + xi*sqrt(self.delta_t))
 		
 		acceptance_ratio = Sampler.greens_function(self.posistions, new_positions_importance)
 		epsilon = np.random.sampler()
