@@ -5,29 +5,30 @@ from sampler import Sampler
 
 class Metropolis:
 
-	S = Sampler(omega, step)
+	#Sampler(omega, step)
 
 	def __init__(self, delta_R, delta_t, num_particles, num_dimensionsn,
-				 positions, metropolis_step_length):
+				 positions, step_metropolis):
 
 		self.delta_R                = delta_R
 		self.delta_t                = delta_t
 		self.num_particles          = num_p
 		self.num_dimensionsn        = num_d
 		self.positions              = positions
-		self.metropolis_step_length = step
 
-
+	"""
 	def new_positions(self):
 
-		"""
+		
 		Calculating new trial position using old position.
 		r is a random variable in [0,1] and delta_R is the step length 
 		in the spatial configuration space
-		"""
+		
 
 		r = np.random.rand(num_p, num_d)
-		self.new_positions = self.positions + np.multiply(r, self.delta_R)
+		new_positions = self.positions + np.multiply(r, self.delta_R)
+		return new_positions
+	"""
 
 
 	def metropolis(self):
@@ -37,16 +38,19 @@ class Metropolis:
 		new positions
 		"""
 
-		acceptance_ratio = S.probability(self.positions ,self.new_positions)
+		#new_positions = new_positions()
+		r = np.random.rand(self.num_p, self.num_d)
+		new_positions = self.positions + np.multiply(r, self.delta_R)
+		acceptance_ratio = Sampler.probability(self.positions, new_positions)
 		epsilon = np.random.sampler()
 
 		if acceptance_ratio < epsilon:
-			self.positions = self.new_positions
+			self.positions = new_positions
 
 		else:
 			pass
 
-		S.local_energy(self.positions)
+		Sampler.local_energy(self.positions)
 
 
 	def importance_sampling(self):
@@ -60,19 +64,19 @@ class Metropolis:
 
 		D  = 0.5
 		xi = np.random.sampler()
-		self.new_positions_importance = self.positions + D*F*self.delta_t 
+		new_positions_importance = self.positions + D*F*self.delta_t 
 									  + xi*sqrt(self.delta_t)
 		
-		acceptance_ratio = S.greens_function(self.posistions, self.new_positions_importance)
+		acceptance_ratio = Sampler.greens_function(self.posistions, new_positions_importance)
 		epsilon = np.random.sampler()
 
 		if acceptance_ratio < epsilon:
-			self.positions = self.new_positions_importance
+			self.positions = new_positions_importance
 
 		else:
 			pass
 
-		S.local_energy(self.positions)
+		Sampler.local_energy(self.positions)
 
 
 	def gibbs_sampling(self):

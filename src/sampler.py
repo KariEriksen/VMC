@@ -6,7 +6,7 @@ from system import System
 
 class Sampler:
 
-	S = System()
+	#S = System()
 
 	def __init__(self, omega, step):
 

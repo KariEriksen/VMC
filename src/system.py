@@ -5,11 +5,10 @@ import math
 class System:
 
 	def __init__(self, num_particles, num_dimensions, positions,
-		numerical_step_length, alpha, beta, a):
+		alpha, beta, a):
 
 		self.num_particles          = num_p
 		self.num_dimensionsn        = num_d
-		self.numerical_step_length  = step
 		self.alpha                  = alpha
 		self.beta                   = beta
 		self.a                      = a
