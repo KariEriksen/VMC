@@ -7,11 +7,11 @@ class System:
 	def __init__(self, num_particles, num_dimensions, positions,
 		alpha, beta, a):
 
-		self.num_particles          = num_p
-		self.num_dimensionsn        = num_d
-		self.alpha                  = alpha
-		self.beta                   = beta
-		self.a                      = a
+		self.num_particles   = num_p
+		self.num_dimensionsn = num_d
+		self.alpha           = alpha
+		self.beta            = beta
+		self.a               = a
 
 
 	def wavefunction(self, positions):

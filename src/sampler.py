@@ -10,8 +10,8 @@ class Sampler:
 
 	def __init__(self, omega, step):
 
-		self.omega                    = omega
-		self.step                     = step
+		self.omega = omega
+		self.step  = step
 
 
 	def kinetic_energy(self, positions):

@@ -10,11 +10,11 @@ class Metropolis:
 	def __init__(self, delta_R, delta_t, num_particles, num_dimensionsn,
 				 positions, step_metropolis):
 
-		self.delta_R                = delta_R
-		self.delta_t                = delta_t
-		self.num_particles          = num_p
-		self.num_dimensionsn        = num_d
-		self.positions              = positions
+		self.delta_R         = delta_R
+		self.delta_t         = delta_t
+		self.num_particles   = num_p
+		self.num_dimensionsn = num_d
+		self.positions       = positions
 
 	"""
 	def new_positions(self):
