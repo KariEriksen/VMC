@@ -5,9 +5,10 @@ import os
 
 sys.path.append('/home/kari/VMC/src')
 
-from system import System
-from sampler import Sampler
+from system     import System
+from sampler    import Sampler
 from metropolis import Metropolis
+from optimizer  import Optimizer
 
 """
 Variational Monte Carlo with Metropolis Hastings algorithm for selection of 
@@ -24,13 +25,15 @@ alpha                    = 0.1
 beta                     = 1.0
 a                        = 0.0
 omega                    = 0.01
+learning_rate            = 0.01
 
 positions = np.random.rand(number_of_particles, number_of_dimensions)
 
-System(number_of_particles, number_of_dimensions,
-	   alpha, beta, a)
+System(number_of_particles, number_of_dimensions, alpha, beta, a)
 
 Sampler(omega, numerical_step_length)
+
+o = Optimizer(learning_rate)
 
 m = Metropolis(step_metropolis, step_importance, number_of_particles, 
 			   number_of_dimensions, positions)
@@ -40,6 +43,7 @@ for i in range(monte_carlo_cycles):
 	"""
 	Run the metropolis algo for given Monte Carlo cycles.
 	"""
-	m.metropolis()
+	new_posistion = m.metropolis()
+	o.gradient_descent(alpha, new_positions)
 
 

@@ -49,7 +49,9 @@ class Metropolis:
 		else:
 			pass
 
-		Sampler.local_energy(self.positions)
+		energy = Sampler.local_energy(self.positions)
+
+		return positions, energy
 
 
 	def importance_sampling(self):

@@ -4,6 +4,7 @@ from system import System
 
 class Sampler:
 
+	#num_particles = 
 	#S = System(num_particles, num_dimensions, alpah, beta, a)
 
 	def __init__(self, omega, step):
