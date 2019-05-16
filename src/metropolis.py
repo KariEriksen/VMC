@@ -7,7 +7,7 @@ class Metropolis:
 	#Sampler(omega, step)
 
 	def __init__(self, delta_R, delta_t, num_particles, num_dimensions,
-				 positions):
+				 positions, sampler):
 
 		self.delta_R   = delta_R
 		self.delta_t   = delta_t

@@ -7,10 +7,10 @@ class Sampler:
 	#num_particles = 
 	#S = System(num_particles, num_dimensions, alpah, beta, a)
 
-	def __init__(self, omega, step):
+	def __init__(self, omega, numerical_step):
 
 		self.omega = omega
-		self.step  = step
+		self.step  = numerical_step
 
 
 	def kinetic_energy(self, positions, s):
