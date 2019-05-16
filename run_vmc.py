@@ -29,7 +29,7 @@ learning_rate            = 0.01
 
 positions = np.random.rand(number_of_particles, number_of_dimensions)
 
-System(number_of_particles, number_of_dimensions, alpha, beta, a)
+s = System(number_of_particles, number_of_dimensions, alpha, beta, a)
 
 Sampler(omega, numerical_step_length)
 

@@ -20,7 +20,7 @@ class System:
 		return single_particel_function(positions)*jastrow_factor(positions)
 
 
-	def single_particel_function(self, positions):
+	def single_particle_function(self, positions):
 
 		"""
 		Takes in position matrix of the particles and calculates the

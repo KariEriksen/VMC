@@ -13,7 +13,7 @@ class Sampler:
 		self.step  = step
 
 
-	def kinetic_energy(self, positions):
+	def kinetic_energy(self, positions, s):
 
 		"""
 		Numerical differentiation for solving the second derivative
@@ -24,7 +24,7 @@ class Sampler:
 		position_forward  = positions + self.step
 		position_backward = positions - self.step
 
-		lambda_ = (System.wavefunction(position_forward) 
+		lambda_ = (s.wavefunction(position_forward) 
 				+ System.wavefunction(position_backwards) 
 				- 2*System.wavefunction(positions))*(1/(self.step*self.step))
 

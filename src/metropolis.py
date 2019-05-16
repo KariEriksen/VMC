@@ -1,6 +1,6 @@
 import numpy as np
-
 from sampler import Sampler
+
 
 class Metropolis:
 
