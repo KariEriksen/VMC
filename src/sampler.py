@@ -7,10 +7,11 @@ class Sampler:
 	#num_particles = 
 	#S = System(num_particles, num_dimensions, alpah, beta, a)
 
-	def __init__(self, omega, numerical_step):
+	def __init__(self, omega, numerical_step, system):
 
 		self.omega = omega
 		self.step  = numerical_step
+		self.s     = system
 
 
 	def kinetic_energy(self, positions, s):
@@ -25,10 +26,10 @@ class Sampler:
 		position_backward = positions - self.step
 
 		lambda_ = (s.wavefunction(position_forward) 
-				+ System.wavefunction(position_backwards) 
-				- 2*System.wavefunction(positions))*(1/(self.step*self.step))
+				+ s.wavefunction(position_backwards) 
+				- 2*s.wavefunction(positions))*(1/(self.step*self.step))
 
-		kine_energy = lambda_/System.wavefunction(positions)
+		kine_energy = lambda_/s.wavefunction(positions)
 
 		return kine_energy
 
@@ -58,10 +59,10 @@ class Sampler:
 
 	def probability(self, positions, new_positions):
 
-		acceptance_ratio = (System.wavefunction(new_positions)
-						 *System.wavefunction(new_positions)
-						 /System.wavefunction(positions)
-						 *System.wavefunction(positions))
+		acceptance_ratio = (s.wavefunction(new_positions)
+						 *s.wavefunction(new_positions)
+						 /s.wavefunction(positions)
+						 *s.wavefunction(positions))
 
 		return acceptance_ratio
 
@@ -69,8 +70,8 @@ class Sampler:
 	def drift_force(self, positions):
 
 		position_forward  = positions + self.step
-		derivativ = (System.wavefunction(position_forward) 
-				  - System.wavefunction(positions))/self.step
+		derivativ = (s.wavefunction(position_forward) 
+				  - s.wavefunction(positions))/self.step
 		return derivativ
 
 

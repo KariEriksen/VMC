@@ -14,6 +14,7 @@ class Metropolis:
 		self.num_p     = num_particles
 		self.num_d     = num_dimensions
 		self.positions = positions
+		self.s         = sampler
 
 	"""
 	def new_positions(self):
@@ -40,7 +41,7 @@ class Metropolis:
 		#new_positions = new_positions()
 		r = np.random.rand(self.num_p, self.num_d)
 		new_positions = self.positions + np.multiply(r, self.delta_R)
-		acceptance_ratio = Sampler.probability(self.positions, new_positions)
+		acceptance_ratio = s.probability(self.positions, new_positions)
 		epsilon = np.random.sampler()
 
 		if acceptance_ratio < epsilon:
@@ -49,7 +50,7 @@ class Metropolis:
 		else:
 			pass
 
-		energy = Sampler.local_energy(self.positions)
+		energy = s.local_energy(self.positions)
 
 		return positions, energy
 
@@ -68,7 +69,7 @@ class Metropolis:
 		new_positions = (self.positions + D*F*self.delta_t 
 								 + xi*sqrt(self.delta_t))
 		
-		acceptance_ratio = Sampler.greens_function(self.posistions, new_positions)
+		acceptance_ratio = s.greens_function(self.posistions, new_positions)
 		epsilon = np.random.sampler()
 
 		if acceptance_ratio < epsilon:
@@ -77,7 +78,7 @@ class Metropolis:
 		else:
 			pass
 
-		Sampler.local_energy(self.positions)
+		s.local_energy(self.positions)
 
 
 	def gibbs_sampling(self):

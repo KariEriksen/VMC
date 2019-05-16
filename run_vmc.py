@@ -31,12 +31,12 @@ positions = np.random.rand(num_particles, num_dimensions)
 
 Sys = System(num_particles, num_dimensions, alpha, beta, a)
 
-Sam = Sampler(omega, numerical_step_length)
+Sam = Sampler(omega, numerical_step_length, Sys)
 
 Opt = Optimizer(learning_rate)
 
 Met = Metropolis(step_metropolis, step_importance, num_particles, 
-			   num_dimensions, positions)
+			   num_dimensions, positions, Sam)
 
 for i in range(monte_carlo_cycles):
 
