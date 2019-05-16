@@ -31,7 +31,7 @@ class System:
 
 		for i in range(self.num_p):
 
-			g = 0
+			g = 1.0
 			#self.num_d = j
 			x = positions[i,0]
 			y = positions[i,1]
@@ -48,7 +48,7 @@ class System:
 
 	def jastrow_factor(self, positions):
 
-		f = 0
+		f = 1.0
 
 		for i in range(self.num_p):
 			for j in range(self.num_p-(i+1)):
@@ -59,6 +59,7 @@ class System:
 					f *= 1.0 - self.a/distance
 				else:
 					f *= 0
+					#pass
 			
 		return f
 
