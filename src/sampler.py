@@ -14,7 +14,7 @@ class Sampler:
 		self.s     = system
 
 
-	def kinetic_energy(self, positions, s):
+	def kinetic_energy(self, positions):
 
 		"""
 		Numerical differentiation for solving the second derivative
@@ -25,11 +25,11 @@ class Sampler:
 		position_forward  = positions + self.step
 		position_backward = positions - self.step
 
-		lambda_ = (s.wavefunction(position_forward) 
-				+ s.wavefunction(position_backwards) 
-				- 2*s.wavefunction(positions))*(1/(self.step*self.step))
+		lambda_ = (self.s.wavefunction(position_forward) 
+				+ self.s.wavefunction(position_backward) 
+				- 2*self.s.wavefunction(positions))*(1/(self.step*self.step))
 
-		kine_energy = lambda_/s.wavefunction(positions)
+		kine_energy = lambda_/self.s.wavefunction(positions)
 
 		return kine_energy
 
@@ -49,7 +49,7 @@ class Sampler:
 
 	def local_energy(self, positions):
 
-		return -0.5*kinetic_energy(positions) + potential_energy(positions)
+		return -0.5*self.kinetic_energy(positions) + self.potential_energy(positions)
 
 
 	def energy_gradient(self, positions):
@@ -59,10 +59,10 @@ class Sampler:
 
 	def probability(self, positions, new_positions):
 
-		acceptance_ratio = (s.wavefunction(new_positions)
-						 *s.wavefunction(new_positions)
-						 /s.wavefunction(positions)
-						 *s.wavefunction(positions))
+		acceptance_ratio = (self.s.wavefunction(new_positions)
+						 *self.s.wavefunction(new_positions)
+						 /self.s.wavefunction(positions)
+						 *self.s.wavefunction(positions))
 
 		return acceptance_ratio
 
@@ -70,8 +70,8 @@ class Sampler:
 	def drift_force(self, positions):
 
 		position_forward  = positions + self.step
-		derivativ = (s.wavefunction(position_forward) 
-				  - s.wavefunction(positions))/self.step
+		derivativ = (self.s.wavefunction(position_forward) 
+				  - self.s.wavefunction(positions))/self.step
 		return derivativ
 
 
@@ -79,8 +79,8 @@ class Sampler:
 
 		greens_function = 0.0
 
-		F_old = drift_force(positions)
-		F_new = drift_force(new_positions_importance)
+		F_old = self.drift_force(positions)
+		F_new = self.drift_force(new_positions_importance)
 
 		greens_function = (0.5*(F_old + F_new)
 		                *(0.5*(positions - new_positions_importance))

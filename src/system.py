@@ -17,7 +17,7 @@ class System:
 
 	def wavefunction(self, positions):
 
-		return single_particel_function(positions)*jastrow_factor(positions)
+		return self.single_particle_function(positions)*self.jastrow_factor(positions)
 
 
 	def single_particle_function(self, positions):
@@ -31,9 +31,17 @@ class System:
 
 		for i in range(self.num_p):
 
-			positions[i,3] *= self.beta 
+			g = 0
+			#self.num_d = j
+			x = positions[i,0]
+			y = positions[i,1]
+			if self.num_d > 2:
+				positions[i,2] *= self.beta #if vector is 3 dimesions
+				z = positions[i,2]
+				  
+			g *= math.exp(-self.alpha*(x*x + y*y + z*z))
 
-		g = np.prod(math.exp(-self.alpha*(np.sum(np.power(positions, 2), axis=1))))
+		#g = np.prod(math.exp(-self.alpha*(np.sum(np.power(positions, 2), axis=1))))
 
 		return g
 
@@ -45,7 +53,7 @@ class System:
 		for i in range(self.num_p):
 			for j in range(self.num_p-(i+1)):
 				j = i + 1
-				distance = abs(np.subtract(positions[i,3], positions[j,3]))
+				distance = abs(np.subtract(positions[i,2], positions[j,2]))
 
 				if distance > self.a:
 					f *= 1.0 - self.a/distance

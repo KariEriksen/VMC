@@ -41,8 +41,8 @@ class Metropolis:
 		#new_positions = new_positions()
 		r = np.random.rand(self.num_p, self.num_d)
 		new_positions = self.positions + np.multiply(r, self.delta_R)
-		acceptance_ratio = s.probability(self.positions, new_positions)
-		epsilon = np.random.sampler()
+		acceptance_ratio = self.s.probability(self.positions, new_positions)
+		epsilon = np.random.sample()
 
 		if acceptance_ratio < epsilon:
 			self.positions = new_positions
@@ -50,9 +50,9 @@ class Metropolis:
 		else:
 			pass
 
-		energy = s.local_energy(self.positions)
+		energy = self.s.local_energy(self.positions)
 
-		return positions, energy
+		return self.positions, energy
 
 
 	def importance_sampling(self):
@@ -69,8 +69,8 @@ class Metropolis:
 		new_positions = (self.positions + D*F*self.delta_t 
 								 + xi*sqrt(self.delta_t))
 		
-		acceptance_ratio = s.greens_function(self.posistions, new_positions)
-		epsilon = np.random.sampler()
+		acceptance_ratio = self.s.greens_function(self.posistions, new_positions)
+		epsilon = np.random.sample()
 
 		if acceptance_ratio < epsilon:
 			self.positions = new_positions
@@ -78,7 +78,7 @@ class Metropolis:
 		else:
 			pass
 
-		s.local_energy(self.positions)
+		self.s.local_energy(self.positions)
 
 
 	def gibbs_sampling(self):

@@ -33,7 +33,7 @@ Sys = System(num_particles, num_dimensions, alpha, beta, a)
 
 Sam = Sampler(omega, numerical_step_length, Sys)
 
-Opt = Optimizer(learning_rate)
+Opt = Optimizer(learning_rate, Sam)
 
 Met = Metropolis(step_metropolis, step_importance, num_particles, 
 			   num_dimensions, positions, Sam)
@@ -43,7 +43,7 @@ for i in range(monte_carlo_cycles):
 	"""
 	Run the metropolis algo for given Monte Carlo cycles.
 	"""
-	new_posistion = m.metropolis()
-	o.gradient_descent(alpha, new_positions)
+	new_positions = Met.metropolis()
+	Opt.gradient_descent(alpha, new_positions)
 
 
