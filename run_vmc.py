@@ -26,24 +26,21 @@ beta                     = 1.0
 a                        = 0.0
 omega                    = 0.01
 learning_rate            = 0.01
+gradient_iterations      = 2
 
 positions = np.random.rand(num_particles, num_dimensions)
 
 Sys = System(num_particles, num_dimensions, alpha, beta, a)
-
 Sam = Sampler(omega, numerical_step_length, Sys)
-
-Opt = Optimizer(learning_rate, Sam)
-
 Met = Metropolis(step_metropolis, step_importance, num_particles, 
 			   num_dimensions, positions, Sam)
+Opt = Optimizer(learning_rate, gradient_iterations, Sam, Met)
 
 for i in range(monte_carlo_cycles):
 
 	"""
 	Run the metropolis algo for given Monte Carlo cycles.
 	"""
-	new_positions = Met.metropolis()
-	Opt.gradient_descent(alpha, new_positions)
+	Opt.gradient_descent()
 
 
