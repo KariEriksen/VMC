@@ -64,4 +64,15 @@ class System:
 		return f
 
 
+	def expectation_value_deri_psi(self, positions):
 
+		for i in range(self.num_p):
+			x = positions[i,0]
+			y = positions[i,1]
+			if self.num_d > 2:
+				positions[i,2] *= self.beta #if vector is 3 dimesions
+				z = positions[i,2]
+			
+			expectation_value *= -(x*x + y*y + z*z)
+
+		return expectation_value
