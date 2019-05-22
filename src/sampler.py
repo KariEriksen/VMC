@@ -54,6 +54,13 @@ class Sampler:
 
 	def energy_gradient(self, positions):
 
+		energy = self.local_energy(positions)
+		expectation_value_one = (s.expectation_value_deri_psi(positions)
+							  *self.local_energy(positions))
+		expectation_value_two = s.expectation_value_deri_psi(positions)
+
+		expectation_value = 2*(e)
+
 		return 0
 
 
@@ -89,3 +96,4 @@ class Sampler:
 		greens_function = exp(greens_function)
 
 		return greens_function
+
