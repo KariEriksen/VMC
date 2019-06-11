@@ -28,10 +28,10 @@ class System:
 		Returns g, type float, product of all single particle wave functions
 		of all particles.
 		"""
+		g = 1.0
 
 		for i in range(self.num_p):
 
-			g = 1.0
 			#self.num_d = j
 			x = positions[i,0]
 			y = positions[i,1]
@@ -65,6 +65,8 @@ class System:
 
 
 	def expectation_value_deri_psi(self, positions):
+
+		expectation_value = 1.0
 
 		for i in range(self.num_p):
 			x = positions[i,0]
