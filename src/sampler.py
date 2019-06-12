@@ -50,8 +50,7 @@ class Sampler:
 
 	def local_energy(self, positions):
 
-		energy =  -0.5*self.kinetic_energy(positions) 
-						  + self.potential_energy(positions)
+		energy =  -0.5*self.kinetic_energy(positions) + self.potential_energy(positions)
 
 		return energy
 
@@ -59,7 +58,7 @@ class Sampler:
 	def local_energy_times_wf(self, positions):
 
 		energy = self.local_energy(positions)
-		energy_times_wf = s.derivative_psi_term(positions)*energy
+		energy_times_wf = self.s.derivative_psi_term(positions)*energy
 
 		return energy_times_wf
 

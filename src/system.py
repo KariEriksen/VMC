@@ -5,9 +5,9 @@ import sys
 
 class System:
 
-	deri_psi = 0.0
-	g        = 0.0
-	f        = 0.0
+	#deri_psi = 0.0
+	#g        = 0.0
+	#f        = 0.0
 
 	def __init__(self, num_particles, num_dimensions,
 		alpha, beta, a):
@@ -33,6 +33,8 @@ class System:
 		of all particles.
 		"""
 
+		g = 1.0
+
 		for i in range(self.num_p):
 
 			#self.num_d = j
@@ -41,9 +43,10 @@ class System:
 			if self.num_d > 2:
 				positions[i,2] *= self.beta #if vector is 3 dimesions
 				z = positions[i,2]
+				g = g*math.exp(-self.alpha*(x*x + y*y + z*z))
 				  
-			g *= math.exp(-self.alpha*(x*x + y*y + z*z))
-
+			else:
+				g = 1#g*math.exp(-self.alpha*(x*x + y*y))
 		#g = np.prod(math.exp(-self.alpha*(np.sum(np.power(positions, 2), axis=1))))
 
 		return g
@@ -51,10 +54,13 @@ class System:
 
 	def jastrow_factor(self, positions):
 
+		f = 1.0
+		n = self.num_d - 1
+
 		for i in range(self.num_p):
 			for j in range(self.num_p-(i+1)):
 				j = i + 1
-				distance = abs(np.subtract(positions[i,2], positions[j,2]))
+				distance = abs(np.subtract(positions[i,n], positions[j,n]))
 
 				if distance > self.a:
 					f *= 1.0 - self.a/distance
@@ -72,6 +78,7 @@ class System:
 		described by the single particle wave function as a the harmonic 
 		oscillator function and the correlation function 
 		"""
+		deri_psi = 1.0
 
 		for i in range(self.num_p):
 			x = positions[i,0]
@@ -79,7 +86,8 @@ class System:
 			if self.num_d > 2:
 				positions[i,2] *= self.beta #if vector is 3 dimesions
 				z = positions[i,2]
-			
-			deri_psi *= -(x*x + y*y + z*z)
+				deri_psi *= -(x*x + y*y + z*z)
+			else:
+				deri_psi *= -(x*x + y*y)
 
 		return deri_psi

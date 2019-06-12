@@ -11,15 +11,13 @@ class Optimizer:
 	parameter is done within the run_vmc file.
 	"""
 
-	def __init__(self, alpha, learning_rate, derivative_energy):
+	def __init__(self, learning_rate):
 
-		self.alpha              = alpha
 		self.learning_rate      = learning_rate
-		self.derivative_energy  = derivative_energy
 
-	def gradient_descent(self):
+	def gradient_descent(self, alpha, derivative_energy):
 
-		new_alpha  = self.alpha - self.learning_rate*self.derivative_energy
+		new_alpha  = alpha - self.learning_rate*derivative_energy
 
 		return new_alpha
 

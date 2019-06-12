@@ -15,9 +15,9 @@ Variational Monte Carlo with Metropolis Hastings algorithm for selection of
 configurations. Optimizing using Gradient descent.
 """
 
-monte_carlo_cycles       = 5
-num_particles            = 3
-num_dimensions           = 3
+monte_carlo_cycles       = 3
+num_particles            = 2
+num_dimensions           = 2
 numerical_step_length    = 0.1
 step_metropolis          = 0.1
 step_importance          = 0.1
@@ -32,11 +32,7 @@ parameter                = alpha
 
 positions = np.random.rand(num_particles, num_dimensions)
 
-Sys = System(num_particles, num_dimensions, alpha, beta, a)
-Sam = Sampler(omega, numerical_step_length, Sys)
-Met = Metropolis(step_metropolis, step_importance, num_particles, 
-			   num_dimensions, positions, Sam)
-Opt = Optimizer(learning_rate, gradient_iterations, Sam, Met)
+Opt = Optimizer(learning_rate)
 
 
 def run_vmc(parameter):
@@ -52,16 +48,16 @@ def run_vmc(parameter):
 	Met = Metropolis(step_metropolis, step_importance, num_particles, 
 			   num_dimensions, positions, Sam)
 
-	for i in range(self.monte_carlo_cycles):
+	for i in range(monte_carlo_cycles):
 
 		new_energy, new_position = Met.metropolis() 
 		accumulate_energy        += Sam.local_energy(new_position) 
 		accumulate_psi_term      += Sys.derivative_psi_term(new_position)
 		accumulate_both          += Sam.local_energy_times_wf(new_position)
 
-	expec_value_energy = accumulate_energy/(monte_carlo_cycles*n_particles)
-	expec_value_psi    = accumulate_psi_term/(monte_carlo_cycles*n_particles)
-	expec_value_both   = accumulate_both/(monte_carlo_cycles*n_particles)
+	expec_value_energy = accumulate_energy/(monte_carlo_cycles*num_particles)
+	expec_value_psi    = accumulate_psi_term/(monte_carlo_cycles*num_particles)
+	expec_value_both   = accumulate_both/(monte_carlo_cycles*num_particles)
 
 	derivative_energy = 2*(expec_value_both - expec_value_psi*expec_value_energy)
 
@@ -71,7 +67,9 @@ def run_vmc(parameter):
 for i in range(gradient_iterations):
 
 	d_El = run_vmc(parameter)
-	parameter = Opt.gradient_descent()
+	new_parameter = Opt.gradient_descent(parameter, d_El)
+	parameter = new_parameter
+	print (parameter)
 
 
 
