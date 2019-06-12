@@ -52,7 +52,7 @@ class Metropolis:
 
 		energy = self.s.local_energy(self.positions)
 
-		return energy
+		return energy, new_positions
 
 
 	def importance_sampling(self):
