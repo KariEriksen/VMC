@@ -1,5 +1,4 @@
 import numpy as np
-
 from sampler import Sampler
 from metropolis import Metropolis
 from system import System
@@ -12,23 +11,15 @@ class Optimizer:
 	parameter is done within the run_vmc file.
 	"""
 
-	def __init__(self, learning_rate, monte_carlo_cycles, sampler, metropolis):
+	def __init__(self, alpha, learning_rate, derivative_energy):
 
+		self.alpha              = alpha
 		self.learning_rate      = learning_rate
-		self.monte_carlo_cycles = iterations
-		self.s                  = sampler
-		self.m                  = metropolis
+		self.derivative_energy  = derivative_energy
 
 	def gradient_descent(self):
 
-		for i in range(self.monte_carlo_cycles):
+		new_alpha  = self.alpha - self.learning_rate*self.derivative_energy
 
-			der_energy = self.s.energy_gradient(posistions)
-			new_alpha  = alpha - self.learning_rate*der_energy
-			System.update(alpha)
-
-			new_energy = m.metropolis() 
-
-		return 0
-
+		return new_alpha
 

@@ -3,6 +3,7 @@ import numpy as np
 from system import System
 
 class Sampler:
+	
 
 	#num_particles = 
 	#S = System(num_particles, num_dimensions, alpah, beta, a)
@@ -49,17 +50,18 @@ class Sampler:
 
 	def local_energy(self, positions):
 
-		return -0.5*self.kinetic_energy(positions) + self.potential_energy(positions)
+		energy =  -0.5*self.kinetic_energy(positions) 
+						  + self.potential_energy(positions)
+
+		return energy
 
 
-	def energy_gradient(self, positions):
+	def local_energy_times_wf(self, positions):
 
 		energy = self.local_energy(positions)
-		expectation_value_one = (s.derivative_psi_term(positions)
-							  *self.local_energy(positions))
-		expectation_value_two = s.derivative_psi_term(positions)	
+		energy_times_wf = s.derivative_psi_term(positions)*energy
 
-		return 0
+		return energy_times_wf
 
 
 	def probability(self, positions, new_positions):

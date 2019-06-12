@@ -39,15 +39,30 @@ Opt = Optimizer(learning_rate, gradient_iterations, Sam, Met)
 
 def run_vmc(parameters):
 
-	expec_value_energy = Sam.local_energy(...) 
-	expec_value_psi    = Sys.derivative_psi_term(...)
-	expec_value_both   = 
-	return <E>, <1/psi*..>, <--->
+	#Set all values to zero for each new Monte Carlo run
+	accumulate_energy   = 0.0
+	accumulate_psi_term = 0.0
+	accumulate_both     = 0.0
+
+	for i in range(self.monte_carlo_cycles):
+
+		new_energy = Met.metropolis() 
+		accumulate_energy   += Sam.local_energy(...) 
+		accumulate_psi_term += Sys.derivative_psi_term(...)
+		accumulate_both     += Sam.local_energy_times_wf()
+
+	expec_value_energy = accumulate_energy/(monte_carlo_cycles*n_particles)
+	expec_value_psi    = accumulate_psi_term/(monte_carlo_cycles*n_particles)
+	expec_value_both   = accumulate_both/(monte_carlo_cycles*n_particles)
+
+	derivative_energy = 2*(expec_value_both - expec_value_psi*expec_value_energy)
+
+	return derivative_energy
 
 
-for i in range(iterations):
-	E, psi, ... = run_vmc(paramters)
-	dparameters = Opt.gradient_descent(E,psi, parametrs)
+for i in range(gradient_iterations):
+	d_El = run_vmc(paramters)
+	dparameters = Opt.gradient_descent()
 	paramters += dparameters
 
 

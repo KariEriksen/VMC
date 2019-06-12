@@ -5,6 +5,10 @@ import sys
 
 class System:
 
+	deri_psi = 0.0
+	g        = 0.0
+	f        = 0.0
+
 	def __init__(self, num_particles, num_dimensions,
 		alpha, beta, a):
 
@@ -28,7 +32,6 @@ class System:
 		Returns g, type float, product of all single particle wave functions
 		of all particles.
 		"""
-		g = 1.0
 
 		for i in range(self.num_p):
 
@@ -47,8 +50,6 @@ class System:
 
 
 	def jastrow_factor(self, positions):
-
-		f = 1.0
 
 		for i in range(self.num_p):
 			for j in range(self.num_p-(i+1)):
@@ -72,8 +73,6 @@ class System:
 		oscillator function and the correlation function 
 		"""
 
-		value = 1.0
-
 		for i in range(self.num_p):
 			x = positions[i,0]
 			y = positions[i,1]
@@ -81,6 +80,6 @@ class System:
 				positions[i,2] *= self.beta #if vector is 3 dimesions
 				z = positions[i,2]
 			
-			value *= -(x*x + y*y + z*z)
+			deri_psi *= -(x*x + y*y + z*z)
 
-		return value
+		return deri_psi
