@@ -6,16 +6,22 @@ from system import System
 
 class Optimizer:
 
-	def __init__(self, learning_rate, iterations, sampler, metropolis):
+	"""
+	The optimizer method runs through a whole Monte Carlo loop
+	for each gradient descent iteration. Update of the variational 
+	parameter is done within the run_vmc file.
+	"""
 
-		self.learning_rate = learning_rate
-		self.iterations    = iterations
-		self.s             = sampler
-		self.m             = metropolis
+	def __init__(self, learning_rate, monte_carlo_cycles, sampler, metropolis):
+
+		self.learning_rate      = learning_rate
+		self.monte_carlo_cycles = iterations
+		self.s                  = sampler
+		self.m                  = metropolis
 
 	def gradient_descent(self):
 
-		for i in range(self.iterations):
+		for i in range(self.monte_carlo_cycles):
 
 			der_energy = self.s.energy_gradient(posistions)
 			new_alpha  = alpha - self.learning_rate*der_energy

@@ -64,9 +64,15 @@ class System:
 		return f
 
 
-	def expectation_value_deri_psi(self, positions):
+	def derivative_psi_term(self, positions):
 
-		expectation_value = 1.0
+		"""
+		This expression holds for the case of the trail wave function 
+		described by the single particle wave function as a the harmonic 
+		oscillator function and the correlation function 
+		"""
+
+		value = 1.0
 
 		for i in range(self.num_p):
 			x = positions[i,0]
@@ -75,6 +81,6 @@ class System:
 				positions[i,2] *= self.beta #if vector is 3 dimesions
 				z = positions[i,2]
 			
-			expectation_value *= -(x*x + y*y + z*z)
+			value *= -(x*x + y*y + z*z)
 
-		return expectation_value
+		return value

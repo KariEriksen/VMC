@@ -36,11 +36,21 @@ Met = Metropolis(step_metropolis, step_importance, num_particles,
 			   num_dimensions, positions, Sam)
 Opt = Optimizer(learning_rate, gradient_iterations, Sam, Met)
 
-for i in range(monte_carlo_cycles):
 
-	"""
-	Run the metropolis algo for given Monte Carlo cycles.
-	"""
-	Opt.gradient_descent()
+def run_vmc(parameters):
+
+	expec_value_energy = Sam.local_energy(...) 
+	expec_value_psi    = Sys.derivative_psi_term(...)
+	expec_value_both   = 
+	return <E>, <1/psi*..>, <--->
+
+
+for i in range(iterations):
+	E, psi, ... = run_vmc(paramters)
+	dparameters = Opt.gradient_descent(E,psi, parametrs)
+	paramters += dparameters
+
+
+
 
 

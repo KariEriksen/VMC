@@ -55,11 +55,9 @@ class Sampler:
 	def energy_gradient(self, positions):
 
 		energy = self.local_energy(positions)
-		expectation_value_one = (s.expectation_value_deri_psi(positions)
+		expectation_value_one = (s.derivative_psi_term(positions)
 							  *self.local_energy(positions))
-		expectation_value_two = s.expectation_value_deri_psi(positions)
-
-		expectation_value = 2*(e)
+		expectation_value_two = s.derivative_psi_term(positions)	
 
 		return 0
 
