@@ -50,6 +50,8 @@ def run_vmc(parameter):
 
 	for i in range(monte_carlo_cycles):
 
+		#something wrong here, can I do this??
+		#derivarive_energy is now an array
 		new_energy, new_position = Met.metropolis() 
 		accumulate_energy        += Sam.local_energy(new_position) 
 		accumulate_psi_term      += Sys.derivative_psi_term(new_position)
@@ -69,7 +71,7 @@ for i in range(gradient_iterations):
 	d_El = run_vmc(parameter)
 	new_parameter = Opt.gradient_descent(parameter, d_El)
 	parameter = new_parameter
-	print (parameter)
+	#print (parameter)
 
 
 
