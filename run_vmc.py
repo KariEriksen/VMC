@@ -3,7 +3,7 @@ import matplotlib.pyplot as plt
 import sys
 import os
 
-sys.path.append('/home/kari/VMC/src')
+sys.path.append('/Users/morten/Desktop/VMC-1/src')
 
 from system     import System
 from sampler    import Sampler
@@ -11,7 +11,7 @@ from metropolis import Metropolis
 from optimizer  import Optimizer
 
 """
-Variational Monte Carlo with Metropolis Hastings algorithm for selection of 
+Variational Monte Carlo with Metropolis Hastings algorithm for selection of
 configurations. Optimizing using Gradient descent.
 """
 
@@ -45,13 +45,13 @@ def run_vmc(parameter):
 	#Call system class in order to set new alpha parameter
 	Sys = System(num_particles, num_dimensions, parameter, beta, a)
 	Sam = Sampler(omega, numerical_step_length, Sys)
-	Met = Metropolis(step_metropolis, step_importance, num_particles, 
+	Met = Metropolis(step_metropolis, step_importance, num_particles,
 			   num_dimensions, positions, Sam)
 
 	for i in range(monte_carlo_cycles):
 
-		new_energy, new_position = Met.metropolis() 
-		accumulate_energy        += Sam.local_energy(new_position) 
+		new_energy, new_position = Met.metropolis()
+		accumulate_energy        += Sam.local_energy(new_position)
 		accumulate_psi_term      += Sys.derivative_psi_term(new_position)
 		accumulate_both          += Sam.local_energy_times_wf(new_position)
 
@@ -70,8 +70,3 @@ for i in range(gradient_iterations):
 	new_parameter = Opt.gradient_descent(parameter, d_El)
 	parameter = new_parameter
 	print (parameter)
-
-
-
-
-
