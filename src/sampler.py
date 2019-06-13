@@ -3,9 +3,9 @@ import numpy as np
 from system import System
 
 class Sampler:
-	
 
-	#num_particles = 
+
+	#num_particles =
 	#S = System(num_particles, num_dimensions, alpah, beta, a)
 
 	def __init__(self, omega, numerical_step, system):
@@ -19,15 +19,15 @@ class Sampler:
 
 		"""
 		Numerical differentiation for solving the second derivative
-		of the wave function. 
+		of the wave function.
 		Step represents small changes is the spatial space
 		"""
 
 		position_forward  = positions + self.step
 		position_backward = positions - self.step
 
-		lambda_ = (self.s.wavefunction(position_forward) 
-				+ self.s.wavefunction(position_backward) 
+		lambda_ = (self.s.wavefunction(position_forward)
+				+ self.s.wavefunction(position_backward)
 				- 2*self.s.wavefunction(positions))*(1/(self.step*self.step))
 
 		kine_energy = lambda_/self.s.wavefunction(positions)
@@ -45,7 +45,7 @@ class Sampler:
 
 		omega_sq = self.omega*self.omega
 
-		return 0.5*omega_sq*np.multiply(positions, positions)
+		return np.sum(0.5*omega_sq*np.multiply(positions, positions))
 
 
 	def local_energy(self, positions):
@@ -76,7 +76,7 @@ class Sampler:
 	def drift_force(self, positions):
 
 		position_forward  = positions + self.step
-		derivativ = (self.s.wavefunction(position_forward) 
+		derivativ = (self.s.wavefunction(position_forward)
 				  - self.s.wavefunction(positions))/self.step
 		return derivativ
 
@@ -95,4 +95,3 @@ class Sampler:
 		greens_function = exp(greens_function)
 
 		return greens_function
-
