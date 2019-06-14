@@ -23,14 +23,23 @@ class Sampler:
 		Step represents small changes is the spatial space
 		"""
 
-		position_forward  = positions + self.step
-		position_backward = positions - self.step
+		kine_energy = 0.0
 
-		lambda_ = (self.s.wavefunction(position_forward)
-				+ self.s.wavefunction(position_backward)
-				- 2*self.s.wavefunction(positions))*(1/(self.step*self.step))
+		position_forward = positions
+		position_backward = positions
 
-		kine_energy = lambda_/self.s.wavefunction(positions)
+		for i in range(self.s.num_p):
+			for j in range(self.s.num_d):
+
+				#forward_step = positions[i,j] + self.step
+				position_forward[i,j] += self.step
+				position_backward[i,j] -= self.step
+
+				lambda_ = (self.s.wavefunction(position_forward)
+						+ self.s.wavefunction(position_backward)
+						- 2*self.s.wavefunction(positions))*(1/(self.step*self.step))
+
+				kine_energy += lambda_/self.s.wavefunction(positions)
 
 		return kine_energy
 
