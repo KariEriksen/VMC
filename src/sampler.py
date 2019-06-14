@@ -45,7 +45,7 @@ class Sampler:
 
 		omega_sq = self.omega*self.omega
 
-		return np.sum(0.5*omega_sq*np.multiply(positions, positions))
+		return 0.5*omega_sq*np.sum(np.multiply(positions, positions))
 
 
 	def local_energy(self, positions):

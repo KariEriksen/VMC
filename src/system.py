@@ -28,7 +28,7 @@ class System:
 
 		"""
 		Takes in position matrix of the particles and calculates the
-		single particle wave function. 
+		single particle wave function.
 		Returns g, type float, product of all single particle wave functions
 		of all particles.
 		"""
@@ -44,9 +44,9 @@ class System:
 				positions[i,2] *= self.beta #if vector is 3 dimesions
 				z = positions[i,2]
 				g = g*math.exp(-self.alpha*(x*x + y*y + z*z))
-				  
+
 			else:
-				g = 1#g*math.exp(-self.alpha*(x*x + y*y))
+				g = g*math.exp(-self.alpha*(x*x + y*y))
 		#g = np.prod(math.exp(-self.alpha*(np.sum(np.power(positions, 2), axis=1))))
 
 		return g
@@ -67,16 +67,16 @@ class System:
 				else:
 					f *= 0
 					#pass
-			
+
 		return f
 
 
 	def derivative_psi_term(self, positions):
 
 		"""
-		This expression holds for the case of the trail wave function 
-		described by the single particle wave function as a the harmonic 
-		oscillator function and the correlation function 
+		This expression holds for the case of the trail wave function
+		described by the single particle wave function as a the harmonic
+		oscillator function and the correlation function
 		"""
 		deri_psi = 1.0
 
@@ -86,8 +86,8 @@ class System:
 			if self.num_d > 2:
 				positions[i,2] *= self.beta #if vector is 3 dimesions
 				z = positions[i,2]
-				deri_psi *= -(x*x + y*y + z*z)
+				deri_psi *= (x*x + y*y + z*z)
 			else:
-				deri_psi *= -(x*x + y*y)
+				deri_psi *= (x*x + y*y)
 
-		return deri_psi
+		return -deri_psi
