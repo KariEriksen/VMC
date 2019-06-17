@@ -17,7 +17,7 @@ configurations. Optimizing using Gradient descent.
 """
 
 monte_carlo_cycles       = 1000
-num_particles            = 2
+num_particles            = 3
 num_dimensions           = 3
 numerical_step_length    = 0.01
 step_metropolis          = 0.01
@@ -64,6 +64,7 @@ def run_vmc(parameter):
 	expec_value_both   = accumulate_both/(monte_carlo_cycles*num_particles)
 
 	derivative_energy = 2*(expec_value_both - expec_value_psi*expec_value_energy)
+	print 'deri energy = ', derivative_energy
 
 	return derivative_energy, new_energy
 

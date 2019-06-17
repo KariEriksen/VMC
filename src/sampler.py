@@ -27,20 +27,25 @@ class Sampler:
 
 		position_forward = positions
 		position_backward = positions
+		current_pos = 0.0
+		numerical_pos = 0.0
 
 		for i in range(self.s.num_p):
+			current_pos -= 2*self.s.num_d*self.s.wavefunction(positions)
 			for j in range(self.s.num_d):
 
 				#forward_step = positions[i,j] + self.step
 				position_forward[i,j] += self.step
 				position_backward[i,j] -= self.step
 
-				lambda_ = (self.s.wavefunction(position_forward)
-						+ self.s.wavefunction(position_backward)
-						- 2*self.s.wavefunction(positions))*(1/(self.step*self.step))
+				numerical_pos += self.s.wavefunction(position_forward) + self.s.wavefunction(position_backward)
+				position_forward[i,j] = positions[i,j]
+				position_backward[i,j] = positions[i,j] 			
 
-				kine_energy += lambda_/self.s.wavefunction(positions)
-
+		kine_energy = (numerical_pos + current_pos)/(self.step*self.step)
+		print kine_energy
+		kine_energy = kine_energy/self.s.wavefunction(positions)
+		ksks
 		return kine_energy
 
 
