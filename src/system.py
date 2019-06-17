@@ -37,7 +37,6 @@ class System:
 		g = 1.0
 
 		for i in range(self.num_p):
-
 			#self.num_d = j
 			x = positions[i,0]
 			y = positions[i,1]
@@ -63,7 +62,7 @@ class System:
 
 				if distance > self.a:
 					f *= 1.0 - self.a/distance
-				else:
+				else:			
 					f *= 0	
 		return f
 

@@ -18,7 +18,7 @@ configurations. Optimizing using Gradient descent.
 
 monte_carlo_cycles       = 1000
 num_particles            = 2
-num_dimensions           = 2
+num_dimensions           = 3
 numerical_step_length    = 0.01
 step_metropolis          = 0.01
 step_importance          = 0.1
@@ -73,8 +73,7 @@ for i in range(gradient_iterations):
 	d_El, energy = run_vmc(parameter)
 	new_parameter = opt.gradient_descent(parameter, d_El)
 	parameter = new_parameter
-
 	print 'new alpha =  ', new_parameter
 	print '----------------------------'
 	print 'new energy =  ', energy
-	#print (parameter)
+
