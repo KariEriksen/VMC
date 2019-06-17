@@ -32,7 +32,7 @@ parameter                = alpha
 #energy                   = 0.0
 #parameters               = np.zeros(gradient_iterations)
 
-Opt = Optimizer(learning_rate)
+opt = Optimizer(learning_rate)
 
 def run_vmc(parameter):
 
@@ -45,19 +45,19 @@ def run_vmc(parameter):
 	positions = np.random.rand(num_particles, num_dimensions)
 
 	#Call system class in order to set new alpha parameter
-	Sys = System(num_particles, num_dimensions, parameter, beta, a)
-	Sam = Sampler(omega, numerical_step_length, Sys)
-	Met = Metropolis(step_metropolis, step_importance, num_particles,
-			   num_dimensions, Sam)
+	sys = System(num_particles, num_dimensions, parameter, beta, a)
+	sam = Sampler(omega, numerical_step_length, sys)
+	met = Metropolis(step_metropolis, step_importance, num_particles,
+			   num_dimensions, sam)
 
 	for i in range(monte_carlo_cycles):
 
-		new_energy, new_positions = Met.metropolis(positions)
+		new_energy, new_positions = met.metropolis(positions)
 		positions                 = new_positions
-		accumulate_energy         += Sam.local_energy(positions)
+		accumulate_energy         += sam.local_energy(positions)
 
-		accumulate_psi_term       += Sys.derivative_psi_term(positions)
-		accumulate_both           += Sam.local_energy_times_wf(positions)
+		accumulate_psi_term       += sys.derivative_psi_term(positions)
+		accumulate_both           += sam.local_energy_times_wf(positions)
 
 	expec_value_energy = accumulate_energy/(monte_carlo_cycles*num_particles)
 	expec_value_psi    = accumulate_psi_term/(monte_carlo_cycles*num_particles)
@@ -71,7 +71,7 @@ def run_vmc(parameter):
 for i in range(gradient_iterations):
 
 	d_El, energy = run_vmc(parameter)
-	new_parameter = Opt.gradient_descent(parameter, d_El)
+	new_parameter = opt.gradient_descent(parameter, d_El)
 	parameter = new_parameter
 
 	print 'new alpha =  ', new_parameter
