@@ -22,7 +22,7 @@ num_dimensions           = 2
 numerical_step_length    = 0.01
 step_metropolis          = 0.01
 step_importance          = 0.1
-alpha                    = 0.5
+alpha                    = 0.4
 beta                     = 1.0
 a                        = 0.0
 omega                    = 0.01
@@ -52,11 +52,12 @@ def run_vmc(parameter):
 
 	for i in range(monte_carlo_cycles):
 
-		new_energy, new_position = Met.metropolis(positions)
-		accumulate_energy        += Sam.local_energy(new_position)
+		new_energy, new_positions = Met.metropolis(positions)
+		positions                 = new_positions
+		accumulate_energy         += Sam.local_energy(positions)
 
-		accumulate_psi_term      += Sys.derivative_psi_term(new_position)
-		accumulate_both          += Sam.local_energy_times_wf(new_position)
+		accumulate_psi_term       += Sys.derivative_psi_term(positions)
+		accumulate_both           += Sam.local_energy_times_wf(positions)
 
 	expec_value_energy = accumulate_energy/(monte_carlo_cycles*num_particles)
 	expec_value_psi    = accumulate_psi_term/(monte_carlo_cycles*num_particles)
@@ -73,5 +74,7 @@ for i in range(gradient_iterations):
 	new_parameter = Opt.gradient_descent(parameter, d_El)
 	parameter = new_parameter
 
-	print (energy)
+	print 'new alpha =  ', new_parameter
+	print '----------------------------'
+	print 'new energy =  ', energy
 	#print (parameter)

@@ -13,11 +13,11 @@ class Optimizer:
 
 	def __init__(self, learning_rate):
 
-		self.learning_rate      = learning_rate
+		self.learning_rate = learning_rate
 
 	def gradient_descent(self, alpha, derivative_energy):
 
-		new_alpha  = alpha - self.learning_rate*derivative_energy
+		new_alpha = alpha - self.learning_rate*derivative_energy
 
 		return new_alpha
 

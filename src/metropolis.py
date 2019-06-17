@@ -1,5 +1,6 @@
 import numpy as np
 from sampler import Sampler
+from random import random
 
 
 class Metropolis:
@@ -39,23 +40,24 @@ class Metropolis:
 		"""
 
 		#new_positions = new_positions()
-		r = np.random.rand(self.num_p, self.num_d)
-		new_positions = positions + np.multiply(r, self.delta_R)
+		#r = np.random.rand(self.num_p, self.num_d)
+		r = random()
+		new_positions = positions + r*self.delta_R
 		acceptance_ratio = self.s.probability(positions, new_positions)
 		epsilon = np.random.sample()
 
-		if acceptance_ratio < epsilon:
-			self.positions = new_positions
+		if acceptance_ratio <= epsilon:
+			positions = new_positions
 
 		else:
 			pass
 
 		energy = self.s.local_energy(positions)
 
-		return energy, new_positions
+		return energy, positions
 
 
-	def importance_sampling(self):
+	def importance_sampling(self, positions):
 
 		"""
 		Running Importance sampling with upgraded method for suggesting new
@@ -66,19 +68,19 @@ class Metropolis:
 
 		D  = 0.5
 		xi = np.random.sampler()
-		new_positions = (self.positions + D*F*self.delta_t
+		new_positions = (positions + D*F*self.delta_t
 								 + xi*sqrt(self.delta_t))
 
-		acceptance_ratio = self.s.greens_function(self.posistions, new_positions)
+		acceptance_ratio = self.s.greens_function(posistions, new_positions)
 		epsilon = np.random.sample()
 
-		if acceptance_ratio < epsilon:
-			self.positions = new_positions
+		if acceptance_ratio <= epsilon:
+			positions = new_positions
 
 		else:
 			pass
 
-		self.s.local_energy(self.positions)
+		self.s.local_energy(positions)
 
 
 	def gibbs_sampling(self):
