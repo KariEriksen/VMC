@@ -58,7 +58,7 @@ class System:
 
 		for i in range(self.num_p):
 			for j in range(i, self.num_p-1):
-				distance = abs(np.subtract(positions[i,n], positions[j+1,n]))
+				distance = abs(np.sum(np.subtract(positions[i,:], positions[j+1,:])))
 
 				if distance > self.a:
 					f *= 1.0 - self.a/distance
