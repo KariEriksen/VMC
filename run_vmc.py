@@ -17,16 +17,16 @@ configurations. Optimizing using Gradient descent.
 """
 
 monte_carlo_cycles       = 1000
-num_particles            = 3
+num_particles            = 2
 num_dimensions           = 2
-numerical_step_length    = 0.1
+numerical_step_length    = 0.01
 step_metropolis          = 0.01
 step_importance          = 0.1
 alpha                    = 0.4
 beta                     = 1.0
 a                        = 0.0
-omega                    = 0.01
-learning_rate            = 0.01
+omega                    = 1.0
+learning_rate            = 0.1
 gradient_iterations      = 20
 parameter                = alpha
 #energy                   = 0.0
@@ -48,11 +48,11 @@ def run_vmc(parameter):
 	sys = System(num_particles, num_dimensions, parameter, beta, a)
 	sam = Sampler(omega, numerical_step_length, sys)
 	met = Metropolis(step_metropolis, step_importance, num_particles,
-			   num_dimensions, sam)
+			   num_dimensions, sam, 0.0)
 
 	for i in range(monte_carlo_cycles):
 
-		new_energy, new_positions = met.metropolis(positions)
+		new_energy, new_positions, count = met.metropolis(positions)
 		positions                 = new_positions
 		accumulate_energy         += sam.local_energy(positions)
 
@@ -64,8 +64,8 @@ def run_vmc(parameter):
 	expec_value_both   = accumulate_both/(monte_carlo_cycles*num_particles)
 
 	derivative_energy = 2*(expec_value_both - expec_value_psi*expec_value_energy)
-	print 'deri energy = ', derivative_energy
-
+	#print 'deri energy = ', derivative_energy
+	print 'counter = ', count
 	return derivative_energy, new_energy
 
 

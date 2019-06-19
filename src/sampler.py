@@ -79,10 +79,9 @@ class Sampler:
 
 	def probability(self, positions, new_positions):
 
-		acceptance_ratio = (self.s.wavefunction(new_positions)
-						 *self.s.wavefunction(new_positions)
-						 /self.s.wavefunction(positions)
-						 *self.s.wavefunction(positions))
+		numerator = self.s.wavefunction(new_positions)*self.s.wavefunction(new_positions)
+		denominator = self.s.wavefunction(positions)*self.s.wavefunction(positions)
+		acceptance_ratio = numerator/denominator
 
 		return acceptance_ratio
 
