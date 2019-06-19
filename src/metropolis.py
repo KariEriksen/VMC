@@ -46,7 +46,7 @@ class Metropolis:
 		acceptance_ratio = self.s.probability(positions, new_positions)
 		epsilon = np.random.sample()
 
-		if acceptance_ratio <= epsilon:
+		if acceptance_ratio > epsilon:
 			positions = new_positions
 
 		else:
