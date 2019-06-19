@@ -1,6 +1,6 @@
 import numpy as np
 from sampler import Sampler
-from random import random
+import random
 
 
 class Metropolis:
@@ -8,7 +8,7 @@ class Metropolis:
 	#Sampler(omega, step)
 
 	def __init__(self, delta_R, delta_t, num_particles, num_dimensions,
-				 sampler):
+				 sampler, c):
 
 		self.delta_R   = delta_R
 		self.delta_t   = delta_t
@@ -16,6 +16,7 @@ class Metropolis:
 		self.num_d     = num_dimensions
 		#self.positions = positions
 		self.s         = sampler
+		self.c         = c
 
 	"""
 	def new_positions(self):
@@ -41,20 +42,24 @@ class Metropolis:
 
 		#new_positions = new_positions()
 		#r = np.random.rand(self.num_p, self.num_d)
-		r = random()
-		new_positions = positions + r*self.delta_R
+		r = random.random()
+		#Pick a random particle and suggest a new move
+		random_index = random.randrange(len(positions))
+		new_positions = positions
+		new_positions[random_index,:] = new_positions[random_index,:] + r*self.delta_R
 		acceptance_ratio = self.s.probability(positions, new_positions)
 		epsilon = np.random.sample()
 
 		if acceptance_ratio > epsilon:
 			positions = new_positions
+			self.c += 1.0
 
 		else:
 			pass
 
 		energy = self.s.local_energy(positions)
 
-		return energy, positions
+		return energy, positions, self.c
 
 
 	def importance_sampling(self, positions):
