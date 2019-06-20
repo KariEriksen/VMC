@@ -54,9 +54,10 @@ class Metropolis:
 
         D = 0.5
         F = self.s.drift_force(positions)
-        xi = np.random.sampler()
-        new_positions = (positions + D*F*self.delta_t +
-                         xi*np.sqrt(self.delta_t))
+        r = np.random.sampler()
+        term1 = D*F*self.delta_t
+        term2 = r*np.sqrt(self.delta_t)
+        new_positions = positions + term1 + term2
 
         acceptance_ratio = self.s.greens_function(positions, new_positions)
         epsilon = np.random.sample()
@@ -67,7 +68,9 @@ class Metropolis:
         else:
             pass
 
-        self.s.local_energy(positions)
+        energy = self.s.local_energy(positions)
+
+        return energy, positions
 
     def gibbs_sampling(self):
         """Run Gibbs sampling."""

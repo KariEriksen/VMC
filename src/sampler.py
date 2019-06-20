@@ -29,11 +29,13 @@ class Sampler:
 
                 position_forward[i, j] += self.step
                 position_backward[i, j] -= self.step
-                psi_moved += (self.s.wavefunction(position_forward)
-                              + self.s.wavefunction(position_backward))
+                wf_p = self.s.wavefunction(position_forward)
+                wf_n = self.s.wavefunction(position_backward)
+                psi_moved += wf_p + wf_n
                 # Resett positions
                 position_forward[i, j] = positions[i, j]
                 position_backward[i, j] = positions[i, j]
+
             kine_energy = (psi_moved - psi_current)/(self.step*self.step)
             kine_energy = kine_energy/self.s.wavefunction(positions)
 
@@ -47,8 +49,9 @@ class Sampler:
 
     def local_energy(self, positions):
         """Docstring."""
-        energy = -0.5*self.kinetic_energy(positions)
-        + self.potential_energy(positions)
+        k = self.kinetic_energy(positions)
+        p = self.potential_energy(positions)
+        energy = -0.5*k + p
 
         return energy
 
@@ -72,8 +75,9 @@ class Sampler:
     def drift_force(self, positions):
         """Docstring."""
         position_forward = positions + self.step
-        derivativ = (self.s.wavefunction(position_forward) -
-                     self.s.wavefunction(positions))/self.step
+        wf_forward = self.s.wavefunction(position_forward)
+        wf_current = self.s.wavefunction(positions)
+        derivativ = (wf_forward - wf_current)/self.step
 
         return derivativ
 
@@ -85,6 +89,7 @@ class Sampler:
         F_old = self.drift_force(positions)
         F_new = self.drift_force(new_positions_importance)
 
+        # Deal with this mess later
         greens_function = (0.5*(F_old + F_new) * (0.5 * (positions -
                            new_positions_importance)) +
                            D*self.delta_t*(F_old - F_new))

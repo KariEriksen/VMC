@@ -23,6 +23,7 @@ class System:
         spf = self.single_particle_function(positions)
         jf = self.jastrow_factor(positions)
         wf = spf*jf
+
         return wf
 
     def single_particle_function(self, positions):
@@ -48,6 +49,7 @@ class System:
                 g = g*math.exp(-self.alpha*(x*x + y*y))
                 # g = np.prod(math.exp(-self.alpha*(np.sum(
                 # np.power(positions, 2)axis=1))))
+
         return g
 
     def jastrow_factor(self, positions):
@@ -62,6 +64,7 @@ class System:
                     f *= 1.0 - self.a/distance
                 else:
                     f *= 0
+
         return f
 
     def derivative_psi_term(self, positions):
