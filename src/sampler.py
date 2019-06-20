@@ -1,110 +1,96 @@
+"""Sampler class."""
 import numpy as np
 
-from system import System
 
-class Sampler:
+class Sampler(self):
+    """Docstring."""
 
+    # num_particles =
+    # S = System(num_particles, num_dimensions, alpah, beta, a)
 
-	#num_particles =
-	#S = System(num_particles, num_dimensions, alpah, beta, a)
+    def __init__(self, omega, numerical_step, system):
+        """Docstring."""
+        self.omega = omega
+        self.step = numerical_step
+        self.s = system
 
-	def __init__(self, omega, numerical_step, system):
+    def kinetic_energy(self, positions):
+        """Numerical differentiation."""
+        kine_energy = 0.0
 
-		self.omega = omega
-		self.step  = numerical_step
-		self.s     = system
+        position_forward = positions
+        position_backward = positions
+        psi_current = 0.0
+        psi_moved = 0.0
 
+        for i in range(self.s.num_p):
+            psi_current += 2*self.s.num_d*self.s.wavefunction(positions)
+            for j in range(self.s.num_d):
 
-	def kinetic_energy(self, positions):
+                position_forward[i, j] += self.step
+                position_backward[i, j] -= self.step
+                psi_moved += (self.s.wavefunction(position_forward)
+                              + self.s.wavefunction(position_backward))
+                # Resett positions
+                position_forward[i, j] = positions[i, j]
+                position_backward[i, j] = positions[i, j]
+            kine_energy = (psi_moved - psi_current)/(self.step*self.step)
+            kine_energy = kine_energy/self.s.wavefunction(positions)
 
-		"""
-		Numerical differentiation for solving the second derivative
-		of the wave function.
-		Step represents small changes is the spatial space
-		"""
+        return kine_energy
 
-		kine_energy = 0.0
+    def potential_energy(self, positions):
+        """Return the potential energy of the system."""
+        omega_sq = self.omega*self.omega
 
-		position_forward = positions
-		position_backward = positions
-		psi_current = 0.0
-		psi_moved = 0.0
+        return 0.5*omega_sq*np.sum(np.multiply(positions, positions))
 
-		for i in range(self.s.num_p):
-			psi_current += 2*self.s.num_d*self.s.wavefunction(positions)
-			for j in range(self.s.num_d):
+    def local_energy(self, positions):
+        """Docstring."""
+        energy = -0.5*self.kinetic_energy(positions)
+        + self.potential_energy(positions)
 
-				position_forward[i,j] += self.step
-				position_backward[i,j] -= self.step
-				psi_moved += (self.s.wavefunction(position_forward) 
-						   + self.s.wavefunction(position_backward))
-				
-				#Resett positions
-				position_forward[i,j] = positions[i,j]
-				position_backward[i,j] = positions[i,j] 			
+        return energy
 
-		kine_energy = (psi_moved - psi_current)/(self.step*self.step)
-		kine_energy = kine_energy/self.s.wavefunction(positions)
+    def local_energy_times_wf(self, positions):
+        """Docstring."""
+        energy = self.local_energy(positions)
+        energy_times_wf = self.s.derivative_psi_term(positions)*energy
 
-		return kine_energy
+        return energy_times_wf
 
+    def probability(self, positions, new_positions):
+        """Docstring."""
+        wf_old = self.s.wavefunction(positions)
+        wf_new = self.s.wavefunction(new_positions)
+        numerator = wf_new*wf_new
+        denominator = wf_old*wf_old
+        print ('numerator = ', numerator)
+        print ('denominator = ', denominator)
+        acceptance_ratio = numerator/denominator
 
-	def potential_energy(self, positions):
+        return acceptance_ratio
 
-		"""
-		Returns the potential energy of the system
+    def drift_force(self, positions):
+        """Docstring."""
+        position_forward = positions + self.step
+        derivativ = (self.s.wavefunction(position_forward) -
+                     self.s.wavefunction(positions))/self.step
 
-		np.multiply multiply argument element-wise
-		"""
+        return derivativ
 
-		omega_sq = self.omega*self.omega
+    def greens_function(self, positions, new_positions_importance):
+        """Docstring."""
+        greens_function = 0.0
+        D = 0.0
 
-		return 0.5*omega_sq*np.sum(np.multiply(positions, positions))
+        F_old = self.drift_force(positions)
+        F_new = self.drift_force(new_positions_importance)
 
+        greens_function = (0.5*(F_old + F_new) * (0.5 * (positions -
+                           new_positions_importance)) +
+                           D*self.delta_t*(F_old - F_new))
 
-	def local_energy(self, positions):
+        greens_function = np.exp(greens_function)
 
-		energy =  -0.5*self.kinetic_energy(positions) + self.potential_energy(positions)
-
-		return energy
-
-
-	def local_energy_times_wf(self, positions):
-
-		energy = self.local_energy(positions)
-		energy_times_wf = self.s.derivative_psi_term(positions)*energy
-
-		return energy_times_wf
-
-
-	def probability(self, positions, new_positions):
-
-		numerator = self.s.wavefunction(new_positions)*self.s.wavefunction(new_positions)
-		denominator = self.s.wavefunction(positions)*self.s.wavefunction(positions)
-		acceptance_ratio = numerator/denominator
-
-		return acceptance_ratio
-
-
-	def drift_force(self, positions):
-
-		position_forward  = positions + self.step
-		derivativ = (self.s.wavefunction(position_forward)
-				  - self.s.wavefunction(positions))/self.step
-		return derivativ
-
-
-	def greens_function(self, positions, new_positions_importance):
-
-		greens_function = 0.0
-
-		F_old = self.drift_force(positions)
-		F_new = self.drift_force(new_positions_importance)
-
-		greens_function = (0.5*(F_old + F_new)
-		                *(0.5*(positions - new_positions_importance))
-		                + D*self.delta_t*(F_old - F_new))
-
-		greens_function = exp(greens_function)
-
-		return greens_function
+        return greens_function
