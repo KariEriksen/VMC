@@ -37,7 +37,7 @@ class Sampler:
                 position_backward[i, j] = positions[i, j]
 
             kine_energy = (psi_moved - psi_current)/(self.step*self.step)
-            kine_energy = kine_energy/self.s.wavefunction(positions)
+            # kine_energy = kine_energy/self.s.wavefunction(positions)
 
         return kine_energy
 
@@ -49,7 +49,7 @@ class Sampler:
 
     def local_energy(self, positions):
         """Docstring."""
-        k = self.kinetic_energy(positions)
+        k = self.kinetic_energy(positions)/self.s.wavefunction(positions)
         p = self.potential_energy(positions)
         energy = -0.5*k + p
 

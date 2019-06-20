@@ -18,7 +18,7 @@ configurations. Optimizing using Gradient descent.
 monte_carlo_cycles = 1000
 num_particles = 2
 num_dimensions = 2
-numerical_step_length = 0.01
+numerical_step_length = 0.001
 step_metropolis = 0.01
 step_importance = 0.1
 alpha = 0.4
@@ -40,6 +40,7 @@ def run_vmc(parameter):
     accumulate_energy = 0.0
     accumulate_psi_term = 0.0
     accumulate_both = 0.0
+    new_energy = 0.0
 
     # Initialize the posistions for each new Monte Carlo run
     positions = np.random.rand(num_particles, num_dimensions)
@@ -58,13 +59,12 @@ def run_vmc(parameter):
         accumulate_psi_term += sys.derivative_psi_term(positions)
         accumulate_both += sam.local_energy_times_wf(positions)
 
-    expec_value_energy = accumulate_energy/(monte_carlo_cycles*num_particles)
-    expec_value_psi = accumulate_psi_term/(monte_carlo_cycles*num_particles)
-    expec_value_both = accumulate_both/(monte_carlo_cycles*num_particles)
+    expec_val_energy = accumulate_energy/(monte_carlo_cycles*num_particles)
+    expec_val_psi = accumulate_psi_term/(monte_carlo_cycles*num_particles)
+    expec_val_both = accumulate_both/(monte_carlo_cycles*num_particles)
 
-    derivative_energy = 2*(expec_value_both -
-                           expec_value_psi*expec_value_energy)
-    # print 'deri energy = ', derivative_energy
+    derivative_energy = 2*(expec_val_both - expec_val_psi*expec_val_energy)
+    print ('deri energy = ', derivative_energy)
     print ('counter = ', count)
     return derivative_energy, new_energy
 
