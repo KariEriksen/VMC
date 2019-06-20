@@ -65,8 +65,6 @@ class Sampler:
         wf_new = self.s.wavefunction(new_positions)
         numerator = wf_new*wf_new
         denominator = wf_old*wf_old
-        print ('numerator = ', numerator)
-        print ('denominator = ', denominator)
         acceptance_ratio = numerator/denominator
 
         return acceptance_ratio

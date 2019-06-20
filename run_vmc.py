@@ -1,14 +1,14 @@
 """Variational Monte Carlo."""
 
-from metropolis import Metropolis
 import numpy as np
-from optimizer import Optimizer
-from sampler import Sampler
 import sys
-from system import System
 
 # sys.path.append('/Users/morten/Desktop/VMC-1/src')
 sys.path.append('/home/kari/VMC/src')
+from metropolis import Metropolis
+from optimizer import Optimizer
+from sampler import Sampler
+from system import System
 
 """
 Variational Monte Carlo with Metropolis Hastings algorithm for selection of
