@@ -3,7 +3,7 @@ import math
 import numpy as np
 
 
-class System(wavefunction, single_particle_function):
+class System:
     """Docstring."""
 
     # deri_psi = 0.0

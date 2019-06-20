@@ -2,7 +2,7 @@
 import numpy as np
 
 
-class Sampler(self):
+class Sampler:
     """Docstring."""
 
     # num_particles =

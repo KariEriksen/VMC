@@ -3,7 +3,7 @@ import numpy as np
 import random
 
 
-class Metropolis(self):
+class Metropolis:
     """Docstring."""
 
     # Sampler(omega, step)
@@ -46,6 +46,7 @@ class Metropolis(self):
         return energy, positions, self.c
 
     def importance_sampling(self, positions):
+        """Docstring."""
         """Run Importance sampling with upgrad method for suggetion of new
         positions. Given through the Langevin equation.
         D is the diffusion coefficient equal 0.5, xi is a gaussion random
