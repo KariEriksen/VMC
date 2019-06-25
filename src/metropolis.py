@@ -25,7 +25,8 @@ class Metropolis:
 
         # new_positions = new_positions()
         # r = np.random.rand(self.num_p, self.num_d)
-        r = random.random()
+        # r = random.random()
+        r = random.random()*random.choice((-1, 1))
         # Pick a random particle and suggest a new move
         random_index = random.randrange(len(positions))
         new_positions = positions
