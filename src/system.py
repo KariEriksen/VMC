@@ -4,14 +4,14 @@ import numpy as np
 
 
 class System:
-    """Docstring."""
+    """Contains parameters of system and wave equation."""
 
     # deri_psi = 0.0
     # g        = 0.0
     # f        = 0.0
 
     def __init__(self, num_particles, num_dimensions, alpha, beta, a):
-        """Docstring."""
+        """Instance of class."""
         self.num_p = num_particles
         self.num_d = num_dimensions
         self.alpha = alpha
@@ -19,7 +19,7 @@ class System:
         self.a = a
 
     def wavefunction(self, positions):
-        """Docstring."""
+        """Return wave equation."""
         spf = self.single_particle_function(positions)
         jf = self.jastrow_factor(positions)
         wf = spf*jf
@@ -53,7 +53,7 @@ class System:
         return g
 
     def jastrow_factor(self, positions):
-        """Docstring."""
+        """Calculate correlation factor."""
         f = 1.0
 
         for i in range(self.num_p):
@@ -68,7 +68,7 @@ class System:
         return f
 
     def derivative_psi_term(self, positions):
-        """Docstring."""
+        """Calculate derivative of wave function divided by wave function."""
         """This expression holds for the case of the trail wave function
         described by the single particle wave function as a the harmonic
         oscillator function and the correlation function

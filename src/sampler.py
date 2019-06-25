@@ -3,19 +3,16 @@ import numpy as np
 
 
 class Sampler:
-    """Docstring."""
-
-    # num_particles =
-    # S = System(num_particles, num_dimensions, alpah, beta, a)
+    """Calculate variables regarding energy of given system."""
 
     def __init__(self, omega, numerical_step, system):
-        """Docstring."""
+        """Instance of class."""
         self.omega = omega
         self.step = numerical_step
         self.s = system
 
     def kinetic_energy(self, positions):
-        """Numerical differentiation."""
+        """Numerical differentiation for solving kinetic energy."""
         kine_energy = 0.0
 
         position_forward = positions
@@ -37,6 +34,8 @@ class Sampler:
                 position_backward[i, j] = positions[i, j]
 
             kine_energy = (psi_moved - psi_current)/(self.step*self.step)
+            print (kine_energy)
+            ksksks
             # kine_energy = kine_energy/self.s.wavefunction(positions)
 
         return kine_energy
@@ -48,7 +47,7 @@ class Sampler:
         return 0.5*omega_sq*np.sum(np.multiply(positions, positions))
 
     def local_energy(self, positions):
-        """Docstring."""
+        """Return the local energy."""
         k = self.kinetic_energy(positions)/self.s.wavefunction(positions)
         p = self.potential_energy(positions)
         energy = -0.5*k + p
@@ -56,14 +55,15 @@ class Sampler:
         return energy
 
     def local_energy_times_wf(self, positions):
-        """Docstring."""
+        """Return local energy times the derivative of wave equation."""
         energy = self.local_energy(positions)
         energy_times_wf = self.s.derivative_psi_term(positions)*energy
 
         return energy_times_wf
 
     def probability(self, positions, new_positions):
-        """Docstring."""
+        """Wave function with new positions squared divided by."""
+        """wave equation with old positions squared"""
         wf_old = self.s.wavefunction(positions)
         wf_new = self.s.wavefunction(new_positions)
         numerator = wf_new*wf_new
@@ -73,7 +73,7 @@ class Sampler:
         return acceptance_ratio
 
     def drift_force(self, positions):
-        """Docstring."""
+        """Return drift force."""
         position_forward = positions + self.step
         wf_forward = self.s.wavefunction(position_forward)
         wf_current = self.s.wavefunction(positions)
@@ -82,7 +82,7 @@ class Sampler:
         return derivativ
 
     def greens_function(self, positions, new_positions_importance):
-        """Docstring."""
+        """Calculate Greens function."""
         greens_function = 0.0
         D = 0.0
 
