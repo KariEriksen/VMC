@@ -58,7 +58,7 @@ class Metropolis:
         r = np.random.sampler()
         term1 = D*F*self.delta_t
         term2 = r*np.sqrt(self.delta_t)
-        new_positions = positions + term1 + term2
+        new_positions = np.array(positions) + term1 + term2
 
         acceptance_ratio = self.s.greens_function(positions, new_positions)
         epsilon = np.random.sample()

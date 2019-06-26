@@ -15,8 +15,8 @@ class Sampler:
         """Numerical differentiation for solving kinetic energy."""
         kine_energy = 0.0
 
-        position_forward = positions
-        position_backward = positions
+        position_forward = np.array(positions)
+        position_backward = np.array(positions)
         psi_current = 0.0
         psi_moved = 0.0
 
@@ -72,7 +72,8 @@ class Sampler:
 
     def drift_force(self, positions):
         """Return drift force."""
-        position_forward = positions + self.step
+        # position_forward = positions + self.step
+        position_forward = np.array(positions) + self.step
         wf_forward = self.s.wavefunction(position_forward)
         wf_current = self.s.wavefunction(positions)
         derivativ = (wf_forward - wf_current)/self.step
