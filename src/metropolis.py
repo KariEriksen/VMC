@@ -29,7 +29,7 @@ class Metropolis:
         r = random.random()*random.choice((-1, 1))
         # Pick a random particle and suggest a new move
         random_index = random.randrange(len(positions))
-        new_positions = positions
+        new_positions = np.array(positions)
         new_random_position = new_positions[random_index, :]
         new_positions[random_index, :] = new_random_position + r*self.delta_R
         acceptance_ratio = self.s.probability(positions, new_positions)

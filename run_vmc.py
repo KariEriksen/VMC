@@ -16,7 +16,7 @@ configurations. Optimizing using Gradient descent.
 """
 
 monte_carlo_cycles = 1000
-num_particles = 1
+num_particles = 2
 num_dimensions = 2
 numerical_step_length = 0.001
 step_metropolis = 0.01
@@ -26,7 +26,7 @@ beta = 1.0
 a = 0.0
 omega = 1.0
 learning_rate = 0.1
-gradient_iterations = 20
+gradient_iterations = 50
 parameter = alpha
 # energy = 0.0
 # parameters = np.zeros(gradient_iterations)
