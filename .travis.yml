@@ -1,0 +1,12 @@
+language: python
+sudo: false
+dist: xenial
+
+install:
+    - pip install pytest
+    - pip install numpy
+    - pip install codecov
+script:
+    - pytest -v -s --cov=./
+after_success:
+    - codecov
