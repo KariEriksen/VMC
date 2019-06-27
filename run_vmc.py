@@ -3,8 +3,8 @@
 import numpy as np
 import sys
 
-# sys.path.append('/Users/morten/Desktop/VMC-1/src')
-sys.path.append('/home/kari/VMC/src')
+sys.path.append('/Users/morten/Desktop/KariVMC/src')
+# sys.path.append('/home/kari/VMC/src')
 from metropolis import Metropolis
 from optimizer import Optimizer
 from sampler import Sampler
