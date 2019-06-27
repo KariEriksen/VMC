@@ -2,9 +2,9 @@
 
 import numpy as np
 import sys
+import os
 
-# sys.path.append('/Users/morten/Desktop/VMC-1/src')
-sys.path.append('/home/kari/VMC/src')
+sys.path.append(os.path.join(os.path.dirname(__file__), 'src'))
 from metropolis import Metropolis
 from optimizer import Optimizer
 from sampler import Sampler
@@ -19,7 +19,7 @@ monte_carlo_cycles = 1000
 num_particles = 2
 num_dimensions = 3
 numerical_step_length = 0.001
-step_metropolis = 0.01
+step_metropolis = 1.0
 step_importance = 0.1
 alpha = 0.4
 beta = 1.0
