@@ -40,10 +40,10 @@ class System:
             x = positions[i, 0]
             y = positions[i, 1]
             if self.num_d > 2:
-                positions[i, 2] *= self.beta
+                # positions[i, 2] *= self.beta
                 # if vector is 3 dimesions
                 z = positions[i, 2]
-                g = g*math.exp(-self.alpha*(x*x + y*y + z*z))
+                g = g*math.exp(-self.alpha*(x*x + y*y + self.beta*z*z))
 
             else:
                 g = g*math.exp(-self.alpha*(x*x + y*y))
