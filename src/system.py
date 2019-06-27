@@ -80,9 +80,9 @@ class System:
             y = positions[i, 1]
             if self.num_d > 2:
                 # if vector is 3 dimesions
-                positions[i, 2] *= self.beta
+                # positions[i, 2] *= self.beta
                 z = positions[i, 2]
-                deri_psi *= (x*x + y*y + z*z)
+                deri_psi *= (x*x + y*y + self.beta*z*z)
             else:
                 deri_psi *= (x*x + y*y)
 
