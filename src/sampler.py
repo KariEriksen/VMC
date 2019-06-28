@@ -33,8 +33,8 @@ class Sampler:
                 position_forward[i, j] = positions[i, j]
                 position_backward[i, j] = positions[i, j]
 
-            kine_energy = (psi_moved - psi_current)/(self.step*self.step)
-            # kine_energy = kine_energy/self.s.wavefunction(positions)
+        kine_energy = (psi_moved - psi_current)/(self.step*self.step)
+        # kine_energy = kine_energy/self.s.wavefunction(positions)
 
         return kine_energy
 
