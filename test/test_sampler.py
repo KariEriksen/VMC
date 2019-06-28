@@ -8,10 +8,50 @@ from sampler import Sampler  # noqa: 401
 from system import System  # noqa: 401
 
 
-def test_kinetic_energy():
+def test_kinetic_energy_2d():
 
     num_particles = 1
     num_dimensions = 2
+    omega = 1.0
+    numerical_step = 0.001
+    a = 0.0
+    alpha = 0.5
+    beta = 1.0
+    sys = System(num_particles, num_dimensions, alpha, beta, a)
+    sam = Sampler(omega, numerical_step, sys)
+    positions = np.zeros(shape=(num_particles, num_dimensions))
+    for _ in range(50):
+        alpha = np.random.uniform(1e-3, 10)
+        beta = np.random.uniform(1e-3, 10)
+        sys.alpha = alpha
+        sys.beta = beta
+        x = np.random.uniform(-20, 20)
+        y = np.random.uniform(-20, 20)
+        positions[0, 0] = x
+        positions[0, 1] = y
+        pos_xp = np.array(positions)
+        pos_xn = np.array(positions)
+        pos_yp = np.array(positions)
+        pos_yn = np.array(positions)
+        pos_xp[0, 0] += numerical_step
+        pos_xn[0, 0] -= numerical_step
+        pos_yp[0, 1] += numerical_step
+        pos_yn[0, 1] -= numerical_step
+
+        wf_current = 2*num_dimensions*sys.wavefunction(positions)
+        wf_forward = sys.wavefunction(pos_xp) + sys.wavefunction(pos_yp)
+        wf_backwawrd = sys.wavefunction(pos_xn) + sys.wavefunction(pos_yn)
+        kine_energy = wf_forward + wf_backwawrd - wf_current
+        kine_energy = kine_energy/(numerical_step*numerical_step)
+
+        assert kine_energy == pytest.approx(sam.kinetic_energy(positions),
+                                            abs=1e-14)
+
+
+def test_kinetic_energy_3d():
+
+    num_particles = 1
+    num_dimensions = 3
     omega = 1.0
     numerical_step = 0.001
     a = 0.0
