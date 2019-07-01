@@ -25,8 +25,8 @@ def test_kinetic_energy_2d():
         beta = np.random.uniform(1e-3, 10)
         sys.alpha = alpha
         sys.beta = beta
-        x = np.random.uniform(-2, 2)
-        y = np.random.uniform(-2, 2)
+        x = np.random.uniform(-20, 20)
+        y = np.random.uniform(-20, 20)
         positions[0, 0] = x
         positions[0, 1] = y
         pos_xp = np.array(positions)
@@ -61,9 +61,9 @@ def test_kinetic_energy_3d():
         beta = np.random.uniform(1e-3, 10)
         sys = System(num_particles, num_dimensions, alpha, beta, a)
         sam = Sampler(omega, numerical_step, sys)
-        x = np.random.uniform(-2, 2)
-        y = np.random.uniform(-2, 2)
-        z = np.random.uniform(-2, 2)
+        x = np.random.uniform(-20, 20)
+        y = np.random.uniform(-20, 20)
+        z = np.random.uniform(-20, 20)
         positions[0, 0] = x
         positions[0, 1] = y
         positions[0, 2] = z
@@ -155,21 +155,20 @@ def test_local_energy_2d():
     num_particles = 1
     num_dimensions = 2
     numerical_step = 0.001
-    alpha = np.random.uniform(1e-3, 10)
-    beta = np.random.uniform(1e-3, 10)
-    omega = np.random.uniform(1e-3, 10)
     positions = np.zeros(shape=(num_particles, num_dimensions))
-    x = np.random.uniform(-2, 2)
-    y = np.random.uniform(-2, 2)
-    positions[0, 0] = x
-    positions[0, 1] = y
-    sys = System(num_particles, num_dimensions, alpha, beta, a)
-    sam = Sampler(omega, numerical_step, sys)
-    k = sam.kinetic_energy(positions)/sys.wavefunction(positions)
-    p = sam.potential_energy(positions)
-    local_energy = -0.5*k + p
-    assert local_energy == pytest.approx(sam.local_energy(positions),
-                                         abs=1e-14)
+    for _ in range(50):
+        alpha = np.random.uniform(1e-3, 10)
+        beta = np.random.uniform(1e-3, 10)
+        omega = np.random.uniform(1e-3, 10)
+        positions[0, 0] = np.random.uniform(-2, 2)
+        positions[0, 1] = np.random.uniform(-2, 2)
+        sys = System(num_particles, num_dimensions, alpha, beta, a)
+        sam = Sampler(omega, numerical_step, sys)
+        k = sam.kinetic_energy(positions)/sys.wavefunction(positions)
+        p = sam.potential_energy(positions)
+        local_energy = -0.5*k + p
+        assert local_energy == pytest.approx(sam.local_energy(positions),
+                                             abs=1e-14)
 
 
 def test_local_energy_3d():
@@ -178,43 +177,124 @@ def test_local_energy_3d():
     num_particles = 1
     num_dimensions = 3
     numerical_step = 0.001
-    alpha = np.random.uniform(1e-3, 10)
-    beta = np.random.uniform(1e-3, 10)
-    omega = np.random.uniform(1e-3, 10)
     positions = np.zeros(shape=(num_particles, num_dimensions))
-    x = np.random.uniform(-2, 2)
-    y = np.random.uniform(-2, 2)
-    z = np.random.uniform(-2, 2)
-    positions[0, 0] = x
-    positions[0, 1] = y
-    positions[0, 2] = z
-    sys = System(num_particles, num_dimensions, alpha, beta, a)
-    sam = Sampler(omega, numerical_step, sys)
-    k = sam.kinetic_energy(positions)/sys.wavefunction(positions)
-    p = sam.potential_energy(positions)
-    local_energy = -0.5*k + p
-    assert local_energy == pytest.approx(sam.local_energy(positions),
-                                         abs=1e-14)
+    for _ in range(50):
+        alpha = np.random.uniform(1e-3, 10)
+        beta = np.random.uniform(1e-3, 10)
+        omega = np.random.uniform(1e-3, 10)
+        positions[0, 0] = np.random.uniform(-2, 2)
+        positions[0, 1] = np.random.uniform(-2, 2)
+        positions[0, 2] = np.random.uniform(-2, 2)
+        sys = System(num_particles, num_dimensions, alpha, beta, a)
+        sam = Sampler(omega, numerical_step, sys)
+        k = sam.kinetic_energy(positions)/sys.wavefunction(positions)
+        p = sam.potential_energy(positions)
+        local_energy = -0.5*k + p
+        assert local_energy == pytest.approx(sam.local_energy(positions),
+                                             abs=1e-14)
 
 
 def test_local_energy_times_wf_2d():
 
-    assert 1 == 1
+    a = 0.0
+    num_particles = 1
+    num_dimensions = 2
+    numerical_step = 0.001
+    positions = np.zeros(shape=(num_particles, num_dimensions))
+
+    for _ in range(50):
+        alpha = np.random.uniform(1e-3, 10)
+        beta = np.random.uniform(1e-3, 10)
+        omega = np.random.uniform(1e-3, 10)
+        positions[0, 0] = np.random.uniform(-2, 2)
+        positions[0, 1] = np.random.uniform(-2, 2)
+        sys = System(num_particles, num_dimensions, alpha, beta, a)
+        sam = Sampler(omega, numerical_step, sys)
+
+        e = sam.local_energy(positions)
+        t = sys.derivative_psi_term(positions)*e
+        assert t == pytest.approx(sam.local_energy_times_wf(positions),
+                                  abs=1e-14)
 
 
 def test_local_energy_times_wf_3d():
 
-    assert 1 == 1
+    a = 0.0
+    num_particles = 1
+    num_dimensions = 3
+    numerical_step = 0.001
+    positions = np.zeros(shape=(num_particles, num_dimensions))
+
+    for _ in range(50):
+        alpha = np.random.uniform(1e-3, 10)
+        beta = np.random.uniform(1e-3, 10)
+        omega = np.random.uniform(1e-3, 10)
+        positions[0, 0] = np.random.uniform(-2, 2)
+        positions[0, 1] = np.random.uniform(-2, 2)
+        positions[0, 2] = np.random.uniform(-2, 2)
+        sys = System(num_particles, num_dimensions, alpha, beta, a)
+        sam = Sampler(omega, numerical_step, sys)
+
+        e = sam.local_energy(positions)
+        t = sys.derivative_psi_term(positions)*e
+        assert t == pytest.approx(sam.local_energy_times_wf(positions),
+                                  abs=1e-14)
 
 
 def test_probability_2d():
 
-    assert 1 == 1
+    a = 0.0
+    num_particles = 1
+    num_dimensions = 2
+    numerical_step = 0.001
+    positions = np.zeros(shape=(num_particles, num_dimensions))
+    new_positions = np.zeros(shape=(num_particles, num_dimensions))
+
+    for _ in range(50):
+        alpha = np.random.uniform(1e-3, 10)
+        beta = np.random.uniform(1e-3, 10)
+        omega = np.random.uniform(1e-3, 10)
+        positions[0, 0] = np.random.uniform(-2, 2)
+        positions[0, 1] = np.random.uniform(-2, 2)
+        new_positions[0, 0] = np.random.uniform(-2, 2)
+        new_positions[0, 1] = np.random.uniform(-2, 2)
+        sys = System(num_particles, num_dimensions, alpha, beta, a)
+        sam = Sampler(omega, numerical_step, sys)
+
+        P_old = sys.wavefunction(positions)*sys.wavefunction(positions)
+        P_new = sys.wavefunction(new_positions)*sys.wavefunction(new_positions)
+        accept_ratio = P_new/P_old
+        assert accept_ratio == pytest.approx(sam.probability(positions,
+                                             new_positions), abs=1e-14)
 
 
 def test_probability_3d():
 
-    assert 1 == 1
+    a = 0.0
+    num_particles = 1
+    num_dimensions = 3
+    numerical_step = 0.001
+    positions = np.zeros(shape=(num_particles, num_dimensions))
+    new_positions = np.zeros(shape=(num_particles, num_dimensions))
+
+    for _ in range(50):
+        alpha = np.random.uniform(1e-3, 10)
+        beta = np.random.uniform(1e-3, 10)
+        omega = np.random.uniform(1e-3, 10)
+        positions[0, 0] = np.random.uniform(-2, 2)
+        positions[0, 1] = np.random.uniform(-2, 2)
+        positions[0, 2] = np.random.uniform(-2, 2)
+        new_positions[0, 0] = np.random.uniform(-2, 2)
+        new_positions[0, 1] = np.random.uniform(-2, 2)
+        new_positions[0, 2] = np.random.uniform(-2, 2)
+        sys = System(num_particles, num_dimensions, alpha, beta, a)
+        sam = Sampler(omega, numerical_step, sys)
+
+        P_old = sys.wavefunction(positions)*sys.wavefunction(positions)
+        P_new = sys.wavefunction(new_positions)*sys.wavefunction(new_positions)
+        accept_ratio = P_new/P_old
+        assert accept_ratio == pytest.approx(sam.probability(positions,
+                                             new_positions), abs=1e-14)
 
 
 def test_drift_force_2d():
