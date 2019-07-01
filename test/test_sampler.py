@@ -93,7 +93,7 @@ def test_kinetic_energy_3d():
         assert 1 == 1
 
 
-def test_potential_energy():
+def test_potential_energy_2d():
 
     num_particles = 1
     num_dimensions = 3
@@ -123,26 +123,81 @@ def test_potential_energy():
                                            abs=1e-14)
 
 
-def test_local_energy():
+def test_potential_energy_3d():
+
+    num_particles = 1
+    num_dimensions = 3
+    numerical_step = 0.001
+    a = 0.0
+    positions = np.zeros(shape=(num_particles, num_dimensions))
+    for _ in range(50):
+        alpha = np.random.uniform(1e-3, 10)
+        beta = np.random.uniform(1e-3, 10)
+        omega = np.random.uniform(1e-3, 10)
+        sys = System(num_particles, num_dimensions, alpha, beta, a)
+        sam = Sampler(omega, numerical_step, sys)
+
+        x = np.random.uniform(-20, 20)
+        y = np.random.uniform(-20, 20)
+        z = np.random.uniform(-20, 20)
+        positions[0, 0] = x
+        positions[0, 1] = y
+        positions[0, 2] = z*beta
+
+        sum = 0.0
+        for i in range(num_dimensions):
+            sum += (positions[0, i]*positions[0, i])
+
+        pot_energy = 0.5*omega*omega*(sum)
+        assert pot_energy == pytest.approx(sam.potential_energy(positions),
+                                           abs=1e-14)
+
+
+def test_local_energy_2d():
 
     assert 1 == 1
 
 
-def test_local_energy_times_wf():
+def test_local_energy_3d():
 
     assert 1 == 1
 
 
-def test_probability():
+def test_local_energy_times_wf_2d():
 
     assert 1 == 1
 
 
-def test_drift_force():
+def test_local_energy_times_wf_3d():
 
     assert 1 == 1
 
 
-def test_greens_function():
+def test_probability_2d():
+
+    assert 1 == 1
+
+
+def test_probability_3d():
+
+    assert 1 == 1
+
+
+def test_drift_force_2d():
+
+    assert 1 == 1
+
+
+def test_drift_force_3d():
+
+    assert 1 == 1
+
+
+def test_greens_function_2d():
+
+    assert 1 == 1
+
+
+def test_greens_function_3d():
 
     assert 1 == 1

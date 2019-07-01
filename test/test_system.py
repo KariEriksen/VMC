@@ -62,6 +62,26 @@ def test_system_wavefunction_3d():
                                    abs=1e-14)
 
 
+def test_single_particle_function_2d():
+
+    assert 1 == 1
+
+
+def test_single_particle_function_3d():
+
+    assert 1 == 1
+
+
+def test_jastrow_factor_2d():
+
+    assert 1 == 1
+
+
+def test_jastrow_factor_3d():
+
+    assert 1 == 1
+
+
 def test_system_derivative_psi_term_2d():
     num_particles = 1
     num_dimensions = 3
