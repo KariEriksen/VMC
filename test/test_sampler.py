@@ -25,8 +25,8 @@ def test_kinetic_energy_2d():
         beta = np.random.uniform(1e-3, 10)
         sys.alpha = alpha
         sys.beta = beta
-        x = np.random.uniform(-20, 20)
-        y = np.random.uniform(-20, 20)
+        x = np.random.uniform(-2, 2)
+        y = np.random.uniform(-2, 2)
         positions[0, 0] = x
         positions[0, 1] = y
         pos_xp = np.array(positions)
