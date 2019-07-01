@@ -112,7 +112,7 @@ def test_potential_energy_2d():
         z = np.random.uniform(-20, 20)
         positions[0, 0] = x
         positions[0, 1] = y
-        positions[0, 2] = z*beta
+        positions[0, 2] = z
 
         sum = 0.0
         for i in range(num_dimensions):
@@ -142,7 +142,7 @@ def test_potential_energy_3d():
         z = np.random.uniform(-20, 20)
         positions[0, 0] = x
         positions[0, 1] = y
-        positions[0, 2] = z*beta
+        positions[0, 2] = z
 
         sum = 0.0
         for i in range(num_dimensions):
@@ -155,7 +155,25 @@ def test_potential_energy_3d():
 
 def test_local_energy_2d():
 
-    assert 1 == 1
+    a = 0.0
+    num_particles = 1
+    num_dimensions = 2
+    numerical_step = 0.001
+    alpha = np.random.uniform(1e-3, 10)
+    beta = np.random.uniform(1e-3, 10)
+    omega = np.random.uniform(1e-3, 10)
+    positions = np.zeros(shape=(num_particles, num_dimensions))
+    x = np.random.uniform(-20, 20)
+    y = np.random.uniform(-20, 20)
+    positions[0, 0] = x
+    positions[0, 1] = y
+    sys = System(num_particles, num_dimensions, alpha, beta, a)
+    sam = Sampler(omega, numerical_step, sys)
+    k = sam.kinetic_energy(positions)/sys.wavefunction(positions)
+    p = sam.potential_energy(positions)
+    local_energy = -0.5*k + p
+    assert local_energy == pytest.approx(sam.local_energy(positions),
+                                         abs=1e-14)
 
 
 def test_local_energy_3d():
