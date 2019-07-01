@@ -71,7 +71,6 @@ def test_jastrow_factor_2d():
     num_dimensions = 2
     alpha = 1.0
     beta = 1.0
-    a = 0.0
     positions = np.zeros(shape=(num_particles, num_dimensions))
 
     for _ in range(50):
@@ -100,7 +99,6 @@ def test_jastrow_factor_3d():
     num_dimensions = 3
     alpha = 1.0
     beta = 1.0
-    a = 0.0
     positions = np.zeros(shape=(num_particles, num_dimensions))
 
     for _ in range(50):

@@ -61,7 +61,7 @@ class System:
                 ri_minus_rj = np.subtract(positions[i, :], positions[j+1, :])
                 distance = math.sqrt(np.sum(np.square(ri_minus_rj)))
                 if distance > self.a:
-                    f *= 1.0 - self.a/distance
+                    f *= 1.0 - (self.a/distance)
                 else:
                     f *= 0
 
