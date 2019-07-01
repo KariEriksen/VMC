@@ -61,9 +61,9 @@ def test_kinetic_energy_3d():
         beta = np.random.uniform(1e-3, 10)
         sys = System(num_particles, num_dimensions, alpha, beta, a)
         sam = Sampler(omega, numerical_step, sys)
-        x = np.random.uniform(-20, 20)
-        y = np.random.uniform(-20, 20)
-        z = np.random.uniform(-20, 20)
+        x = np.random.uniform(-2, 2)
+        y = np.random.uniform(-2, 2)
+        z = np.random.uniform(-2, 2)
         positions[0, 0] = x
         positions[0, 1] = y
         positions[0, 2] = z
@@ -88,9 +88,8 @@ def test_kinetic_energy_3d():
         kine_energy = wf_forward + wf_backwawrd - wf_current
         kine_energy = kine_energy/(numerical_step*numerical_step)
 
-        # assert kine_energy == pytest.approx(sam.kinetic_energy(positions),
-        #                                    abs=1e-14)
-        assert 1 == 1
+        assert kine_energy == pytest.approx(sam.kinetic_energy(positions),
+                                            abs=1e-14)
 
 
 def test_potential_energy_2d():
