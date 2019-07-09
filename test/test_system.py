@@ -65,7 +65,7 @@ def test_system_wavefunction_3d():
 
 def test_jastrow_factor_2d():
 
-    a = 0.0043
+    a = 0.43
     num_particles = 2
     num_dimensions = 2
     alpha = 1.0
@@ -93,7 +93,7 @@ def test_jastrow_factor_2d():
 
 def test_jastrow_factor_3d():
 
-    a = 0.0043
+    a = 0.43
     num_particles = 2
     num_dimensions = 3
     alpha = 1.0
