@@ -66,8 +66,7 @@ def test_system_wavefunction_3d():
 def test_jastrow_factor_2d():
 
     a = 0.0
-    f = 1.0
-    num_particles = 1
+    num_particles = 2
     num_dimensions = 2
     alpha = 1.0
     beta = 1.0
@@ -80,6 +79,7 @@ def test_jastrow_factor_2d():
         y = np.random.uniform(-20, 20)
         positions[0, 0] = x
         positions[0, 1] = y
+        f = 1.0
         for i in range(num_particles):
             for j in range(i, num_particles-1):
                 t = np.subtract(positions[i, :], positions[j+1, :])
@@ -94,7 +94,7 @@ def test_jastrow_factor_2d():
 def test_jastrow_factor_3d():
 
     a = 0.0
-    num_particles = 1
+    num_particles = 2
     num_dimensions = 3
     alpha = 1.0
     beta = 1.0
