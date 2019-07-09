@@ -353,9 +353,64 @@ def test_drift_force_3d():
 
 def test_greens_function_2d():
 
-    assert 1 == 1
+    a = 0.0
+    num_particles = 1
+    num_dimensions = 2
+    numerical_step = 0.001
+    positions = np.zeros(shape=(num_particles, num_dimensions))
+    new_positions = np.zeros(shape=(num_particles, num_dimensions))
+
+    for _ in range(50):
+        alpha = np.random.uniform(1e-3, 10)
+        beta = np.random.uniform(1e-3, 10)
+        omega = np.random.uniform(1e-3, 10)
+        positions[0, 0] = np.random.uniform(-2, 2)
+        positions[0, 1] = np.random.uniform(-2, 2)
+        new_positions[0, 0] = np.random.uniform(-2, 2)
+        new_positions[0, 1] = np.random.uniform(-2, 2)
+        sys = System(num_particles, num_dimensions, alpha, beta, a)
+        sam = Sampler(omega, numerical_step, sys)
+
+        F_old = sam.drift_force(positions)
+        F_new = sam.drift_force(new_positions)
+        D = 0.0
+        delta_t = 0.001
+        G = (0.5*(F_old + F_new) * (0.5 * (positions - new_positions)) +
+             D*delta_t*(F_old - F_new))
+        G = np.exp(G)
+        assert G == pytest.approx(sam.greens_function(positions, new_positions,
+                                                      delta_t), abs=1e-14)
 
 
 def test_greens_function_3d():
 
-    assert 1 == 1
+    a = 0.0
+    num_particles = 1
+    num_dimensions = 3
+    numerical_step = 0.001
+    positions = np.zeros(shape=(num_particles, num_dimensions))
+    new_positions = np.zeros(shape=(num_particles, num_dimensions))
+
+    for _ in range(50):
+        alpha = np.random.uniform(1e-3, 10)
+        beta = np.random.uniform(1e-3, 10)
+        omega = np.random.uniform(1e-3, 10)
+        positions[0, 0] = np.random.uniform(-2, 2)
+        positions[0, 1] = np.random.uniform(-2, 2)
+        positions[0, 2] = np.random.uniform(-2, 2)
+        new_positions[0, 0] = np.random.uniform(-2, 2)
+        new_positions[0, 1] = np.random.uniform(-2, 2)
+        new_positions[0, 2] = np.random.uniform(-2, 2)
+        sys = System(num_particles, num_dimensions, alpha, beta, a)
+        sam = Sampler(omega, numerical_step, sys)
+
+        F_old = sam.drift_force(positions)
+        F_new = sam.drift_force(new_positions)
+        D = 0.0
+        delta_t = 0.001
+        G = (0.5*(F_old + F_new) * (0.5 * (positions - new_positions)) +
+             D*delta_t*(F_old - F_new))
+        G = np.exp(G)
+        assert G == pytest.approx(sam.greens_function(positions,
+                                                      new_positions, delta_t),
+                                  abs=1e-14)
