@@ -84,10 +84,10 @@ def test_jastrow_factor_2d():
             for j in range(num_particles - 1):
                 t = np.subtract(positions[i, :], positions[j+1, :])
                 d = math.sqrt(np.sum(np.square(t)))
-                if abs(d) <= a:
-                    f *= 0
-                else:
+                if abs(d) > a:
                     f *= 1 - a/d
+                else:
+                    f *= 0
         assert f == pytest.approx(s.jastrow_factor(positions), abs=1e-14)
 
 
@@ -115,10 +115,10 @@ def test_jastrow_factor_3d():
             for j in range(num_particles - 1):
                 t = np.subtract(positions[i, :], positions[j+1, :])
                 d = math.sqrt(np.sum(np.square(t)))
-                if abs(d) <= a:
-                    f *= 0
-                else:
+                if abs(d) > a:
                     f *= 1 - a/d
+                else:
+                    f *= 0
         assert f == pytest.approx(s.jastrow_factor(positions), abs=1e-14)
 
 
