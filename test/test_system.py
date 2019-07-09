@@ -85,9 +85,9 @@ def test_jastrow_factor_2d():
                 t = np.subtract(positions[i, :], positions[j+1, :])
                 d = math.sqrt(np.sum(np.square(t)))
                 if d > a:
-                    f *= 1 - a/d
+                    f *= 1.0 - (a/d)
                 else:
-                    f *= 0
+                    f *= 0.0
         assert f == pytest.approx(s.jastrow_factor(positions), abs=1e-14)
 
 
@@ -116,9 +116,9 @@ def test_jastrow_factor_3d():
                 t = np.subtract(positions[i, :], positions[j+1, :])
                 d = math.sqrt(np.sum(np.square(t)))
                 if d > a:
-                    f *= 1 - a/d
+                    f *= 1.0 - (a/d)
                 else:
-                    f *= 0
+                    f *= 0.0
         assert f == pytest.approx(s.jastrow_factor(positions), abs=1e-14)
 
 
