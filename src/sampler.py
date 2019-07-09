@@ -83,17 +83,15 @@ class Sampler:
     def greens_function(self, positions, new_positions_importance, delta_t):
         """Calculate Greens function."""
         # greens_function = 0.0
+        """
         D = 0.0
-
         F_old = self.drift_force(positions)
         F_new = self.drift_force(new_positions_importance)
-
-        # Deal with this mess later
-        # Remember test file
         greens_function = (0.5*(F_old + F_new) * (0.5 * (positions -
                            new_positions_importance)) +
                            D*delta_t*(F_old - F_new))
-
-        greens_function = np.exp(greens_function)
+        """
+        greens_function = 0.0
+        # greens_function = np.exp(greens_function)
 
         return greens_function

@@ -55,12 +55,13 @@ class Metropolis:
 
         D = 0.5
         F = self.s.drift_force(positions)
-        r = np.random.sampler()
+        r = random.random()*random.choice((-1, 1))
         term1 = D*F*self.delta_t
         term2 = r*np.sqrt(self.delta_t)
         new_positions = np.array(positions) + term1 + term2
 
-        acceptance_ratio = self.s.greens_function(positions, new_positions)
+        acceptance_ratio = self.s.greens_function(positions, new_positions,
+                                                  self.delta_t)
         epsilon = np.random.sample()
 
         if acceptance_ratio <= epsilon:
