@@ -94,7 +94,6 @@ def test_jastrow_factor_2d():
 def test_jastrow_factor_3d():
 
     a = 0.0
-    f = 1.0
     num_particles = 1
     num_dimensions = 3
     alpha = 1.0
@@ -111,12 +110,13 @@ def test_jastrow_factor_3d():
         positions[0, 0] = x
         positions[0, 1] = y
         positions[0, 1] = z
+        f = 1.0
         for i in range(num_particles):
             for j in range(i, num_particles-1):
                 t = np.subtract(positions[i, :], positions[j+1, :])
-                d = math.sqrt(np.sum(np.square(t)))
-                if d > a:
-                    f *= 1.0 - (a/d)
+                distance = math.sqrt(np.sum(np.square(t)))
+                if distance > a:
+                    f *= 1.0 - (a/distance)
                 else:
                     f *= 0.0
         assert f == pytest.approx(s.jastrow_factor(positions), abs=1e-14)
