@@ -299,12 +299,56 @@ def test_probability_3d():
 
 def test_drift_force_2d():
 
-    assert 1 == 1
+    a = 0.0
+    num_particles = 1
+    num_dimensions = 2
+    numerical_step = 0.001
+    positions = np.zeros(shape=(num_particles, num_dimensions))
+    positions_fw = np.zeros(shape=(num_particles, num_dimensions))
+
+    for _ in range(50):
+        alpha = np.random.uniform(1e-3, 10)
+        beta = np.random.uniform(1e-3, 10)
+        omega = np.random.uniform(1e-3, 10)
+        positions[0, 0] = np.random.uniform(-2, 2)
+        positions[0, 1] = np.random.uniform(-2, 2)
+        positions_fw[0, 0] = positions[0, 0] + numerical_step
+        positions_fw[0, 1] = positions[0, 1] + numerical_step
+        sys = System(num_particles, num_dimensions, alpha, beta, a)
+        sam = Sampler(omega, numerical_step, sys)
+
+        wf_current = sys.wavefunction(positions)
+        wf_forward = sys.wavefunction(positions_fw)
+        deri = (wf_forward - wf_current)/numerical_step
+        assert deri == pytest.approx(sam.drift_force(positions), abs=1e-14)
 
 
 def test_drift_force_3d():
 
-    assert 1 == 1
+    a = 0.0
+    num_particles = 1
+    num_dimensions = 3
+    numerical_step = 0.001
+    positions = np.zeros(shape=(num_particles, num_dimensions))
+    positions_fw = np.zeros(shape=(num_particles, num_dimensions))
+
+    for _ in range(50):
+        alpha = np.random.uniform(1e-3, 10)
+        beta = np.random.uniform(1e-3, 10)
+        omega = np.random.uniform(1e-3, 10)
+        positions[0, 0] = np.random.uniform(-2, 2)
+        positions[0, 1] = np.random.uniform(-2, 2)
+        positions[0, 2] = np.random.uniform(-2, 2)
+        positions_fw[0, 0] = positions[0, 0] + numerical_step
+        positions_fw[0, 1] = positions[0, 1] + numerical_step
+        positions_fw[0, 2] = positions[0, 2] + numerical_step
+        sys = System(num_particles, num_dimensions, alpha, beta, a)
+        sam = Sampler(omega, numerical_step, sys)
+
+        wf_current = sys.wavefunction(positions)
+        wf_forward = sys.wavefunction(positions_fw)
+        deri = (wf_forward - wf_current)/numerical_step
+        assert deri == pytest.approx(sam.drift_force(positions), abs=1e-14)
 
 
 def test_greens_function_2d():
