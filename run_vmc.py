@@ -15,7 +15,7 @@ Variational Monte Carlo with Metropolis Hastings algorithm for selection of
 configurations. Optimizing using Gradient descent.
 """
 
-monte_carlo_cycles = 10000
+monte_carlo_cycles = 1000000
 num_particles = 1
 num_dimensions = 2
 numerical_step_length = 0.001

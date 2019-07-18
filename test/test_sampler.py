@@ -19,29 +19,61 @@ def test_kinetic_energy_2d():
     beta = 1.0
     sys = System(num_particles, num_dimensions, alpha, beta, a)
     sam = Sampler(omega, numerical_step, sys)
-    positions = np.zeros(shape=(num_particles, num_dimensions))
     for _ in range(50):
+        positions = np.random.uniform(-20, 20, (num_particles, num_dimensions))
         alpha = np.random.uniform(1e-3, 10)
         beta = np.random.uniform(1e-3, 10)
         sys.alpha = alpha
         sys.beta = beta
-        x = np.random.uniform(-20, 20)
-        y = np.random.uniform(-20, 20)
-        positions[0, 0] = x
-        positions[0, 1] = y
-        pos_xp = np.array(positions)
-        pos_xn = np.array(positions)
-        pos_yp = np.array(positions)
-        pos_yn = np.array(positions)
-        pos_xp[0, 0] += numerical_step
-        pos_xn[0, 0] -= numerical_step
-        pos_yp[0, 1] += numerical_step
-        pos_yn[0, 1] -= numerical_step
+        kine_energy = 0.0
+        pos_fw = np.array(positions)
+        pos_bw = np.array(positions)
+        for i in range(num_particles):
+            for j in range(num_dimensions):
+                pos_fw[i, j] = pos_fw[i, j] + numerical_step
+                pos_bw[i, j] = pos_bw[i, j] - numerical_step
+                wf_current = 2*sys.wavefunction(positions)
+                wf_forward = sys.wavefunction(pos_fw)
+                wf_backwawrd = sys.wavefunction(pos_bw)
+                pos_fw[i, j] = pos_fw[i, j] - numerical_step
+                pos_bw[i, j] = pos_bw[i, j] + numerical_step
+                kine_energy += wf_forward + wf_backwawrd - wf_current
+        kine_energy = kine_energy/(numerical_step*numerical_step)
 
-        wf_current = 2*num_dimensions*sys.wavefunction(positions)
-        wf_forward = sys.wavefunction(pos_xp) + sys.wavefunction(pos_yp)
-        wf_backwawrd = sys.wavefunction(pos_xn) + sys.wavefunction(pos_yn)
-        kine_energy = wf_forward + wf_backwawrd - wf_current
+        assert kine_energy == pytest.approx(sam.kinetic_energy(positions),
+                                            abs=1e-14)
+
+
+def test_kinetic_energy_2d_2p():
+
+    num_particles = 2
+    num_dimensions = 2
+    omega = 1.0
+    numerical_step = 0.001
+    a = 0.0
+    alpha = 0.5
+    beta = 1.0
+    sys = System(num_particles, num_dimensions, alpha, beta, a)
+    sam = Sampler(omega, numerical_step, sys)
+    for _ in range(50):
+        positions = np.random.uniform(-20, 20, (num_particles, num_dimensions))
+        alpha = np.random.uniform(1e-3, 10)
+        beta = np.random.uniform(1e-3, 10)
+        sys.alpha = alpha
+        sys.beta = beta
+        kine_energy = 0.0
+        pos_fw = np.array(positions)
+        pos_bw = np.array(positions)
+        for i in range(num_particles):
+            for j in range(num_dimensions):
+                pos_fw[i, j] = pos_fw[i, j] + numerical_step
+                pos_bw[i, j] = pos_bw[i, j] - numerical_step
+                wf_current = 2*sys.wavefunction(positions)
+                wf_forward = sys.wavefunction(pos_fw)
+                wf_backwawrd = sys.wavefunction(pos_bw)
+                pos_fw[i, j] = pos_fw[i, j] - numerical_step
+                pos_bw[i, j] = pos_bw[i, j] + numerical_step
+                kine_energy += wf_forward + wf_backwawrd - wf_current
         kine_energy = kine_energy/(numerical_step*numerical_step)
 
         assert kine_energy == pytest.approx(sam.kinetic_energy(positions),
@@ -86,6 +118,42 @@ def test_kinetic_energy_3d():
         wf_backwawrd = (sys.wavefunction(pos_xn) + sys.wavefunction(pos_yn) +
                         sys.wavefunction(pos_zn))
         kine_energy = wf_forward + wf_backwawrd - wf_current
+        kine_energy = kine_energy/(numerical_step*numerical_step)
+
+        assert kine_energy == pytest.approx(sam.kinetic_energy(positions),
+                                            abs=1e-14)
+
+
+def test_kinetic_energy_3d_2p():
+
+    num_particles = 2
+    num_dimensions = 3
+    omega = 1.0
+    numerical_step = 0.001
+    a = 0.0
+    alpha = 0.5
+    beta = 1.0
+    sys = System(num_particles, num_dimensions, alpha, beta, a)
+    sam = Sampler(omega, numerical_step, sys)
+    for _ in range(50):
+        positions = np.random.uniform(-20, 20, (num_particles, num_dimensions))
+        alpha = np.random.uniform(1e-3, 10)
+        beta = np.random.uniform(1e-3, 10)
+        sys.alpha = alpha
+        sys.beta = beta
+        kine_energy = 0.0
+        pos_fw = np.array(positions)
+        pos_bw = np.array(positions)
+        for i in range(num_particles):
+            for j in range(num_dimensions):
+                pos_fw[i, j] = pos_fw[i, j] + numerical_step
+                pos_bw[i, j] = pos_bw[i, j] - numerical_step
+                wf_current = 2*sys.wavefunction(positions)
+                wf_forward = sys.wavefunction(pos_fw)
+                wf_backwawrd = sys.wavefunction(pos_bw)
+                pos_fw[i, j] = pos_fw[i, j] - numerical_step
+                pos_bw[i, j] = pos_bw[i, j] + numerical_step
+                kine_energy += wf_forward + wf_backwawrd - wf_current
         kine_energy = kine_energy/(numerical_step*numerical_step)
 
         assert kine_energy == pytest.approx(sam.kinetic_energy(positions),

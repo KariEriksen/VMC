@@ -13,7 +13,7 @@ class Sampler:
 
     def kinetic_energy(self, positions):
         """Numerical differentiation for solving kinetic energy."""
-        kine_energy = 0.0
+        # kine_energy = 0.0
 
         position_forward = np.array(positions)
         position_backward = np.array(positions)
@@ -24,14 +24,14 @@ class Sampler:
             psi_current += 2*self.s.num_d*self.s.wavefunction(positions)
             for j in range(self.s.num_d):
 
-                position_forward[i, j] += self.step
-                position_backward[i, j] -= self.step
+                position_forward[i, j] = position_forward[i, j] + self.step
+                position_backward[i, j] = position_backward[i, j] - self.step
                 wf_p = self.s.wavefunction(position_forward)
                 wf_n = self.s.wavefunction(position_backward)
                 psi_moved += wf_p + wf_n
                 # Resett positions
-                position_forward[i, j] = positions[i, j]
-                position_backward[i, j] = positions[i, j]
+                position_forward[i, j] = position_forward[i, j] - self.step
+                position_backward[i, j] = position_backward[i, j] + self.step
 
         kine_energy = (psi_moved - psi_current)/(self.step*self.step)
         # kine_energy = kine_energy/self.s.wavefunction(positions)
