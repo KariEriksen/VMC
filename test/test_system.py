@@ -162,10 +162,10 @@ def test_jastrow_factor_3d():
         s = System(num_particles, num_dimensions, alpha, beta, a)
         positions[0, 0] = np.random.uniform(-20, 20)
         positions[0, 1] = np.random.uniform(-20, 20)
-        positions[0, 1] = np.random.uniform(-20, 20)
+        positions[0, 2] = np.random.uniform(-20, 20)
         positions[1, 0] = np.random.uniform(-20, 20)
         positions[1, 1] = np.random.uniform(-20, 20)
-        positions[1, 1] = np.random.uniform(-20, 20)
+        positions[1, 2] = np.random.uniform(-20, 20)
         f = 1.0
         for i in range(num_particles):
             for j in range(i, num_particles-1):
