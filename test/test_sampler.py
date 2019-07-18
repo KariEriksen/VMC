@@ -41,7 +41,7 @@ def test_kinetic_energy_2d():
         kine_energy = kine_energy/(numerical_step*numerical_step)
 
         assert kine_energy == pytest.approx(sam.kinetic_energy(positions),
-                                            abs=1e-14)
+                                            abs=1e-10)
 
 
 def test_kinetic_energy_2d_2p():
@@ -121,7 +121,7 @@ def test_kinetic_energy_3d():
         kine_energy = kine_energy/(numerical_step*numerical_step)
 
         assert kine_energy == pytest.approx(sam.kinetic_energy(positions),
-                                            abs=1e-14)
+                                            abs=1e-10)
 
 
 def test_kinetic_energy_3d_2p():
