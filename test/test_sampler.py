@@ -57,10 +57,11 @@ def test_kinetic_energy_2d_2p():
     sam = Sampler(omega, numerical_step, sys)
     for _ in range(50):
         positions = np.random.uniform(-20, 20, (num_particles, num_dimensions))
-        alpha = np.random.uniform(1e-3, 10)
+        alpha = np.random.uniform(1e-2, 10)
         beta = np.random.uniform(1e-3, 10)
         sys.alpha = alpha
         sys.beta = beta
+        print (alpha)
         kine_energy = 0.0
         pos_fw = np.array(positions)
         pos_bw = np.array(positions)
@@ -187,6 +188,36 @@ def test_potential_energy_2d():
                                            abs=1e-14)
 
 
+def test_potential_energy_2d_2p():
+
+    num_particles = 2
+    num_dimensions = 2
+    numerical_step = 0.001
+    a = 0.0
+    positions = np.zeros(shape=(num_particles, num_dimensions))
+    for _ in range(50):
+        alpha = np.random.uniform(1e-3, 10)
+        beta = np.random.uniform(1e-3, 10)
+        omega = np.random.uniform(1e-3, 10)
+        sys = System(num_particles, num_dimensions, alpha, beta, a)
+        sam = Sampler(omega, numerical_step, sys)
+
+        x1 = np.random.uniform(-20, 20)
+        y1 = np.random.uniform(-20, 20)
+        x2 = np.random.uniform(-20, 20)
+        y2 = np.random.uniform(-20, 20)
+        positions[0, 0] = x1
+        positions[0, 1] = y1
+        positions[1, 0] = x2
+        positions[1, 1] = y2
+
+        sum = x1*x1 + x2*x2 + y1*y1 + y2*y2
+
+        pot_energy = 0.5*omega*omega*(sum)
+        assert pot_energy == pytest.approx(sam.potential_energy(positions),
+                                           abs=1e-10)
+
+
 def test_potential_energy_3d():
 
     num_particles = 1
@@ -215,6 +246,39 @@ def test_potential_energy_3d():
         pot_energy = 0.5*omega*omega*(sum)
         assert pot_energy == pytest.approx(sam.potential_energy(positions),
                                            abs=1e-14)
+
+
+def test_potential_energy_3d_2p():
+
+        num_particles = 2
+        num_dimensions = 3
+        numerical_step = 0.001
+        a = 0.0
+        positions = np.zeros(shape=(num_particles, num_dimensions))
+        for _ in range(50):
+            alpha = np.random.uniform(1e-3, 10)
+            omega = np.random.uniform(1e-3, 10)
+            sys = System(num_particles, num_dimensions, alpha, 1.0, a)
+            sam = Sampler(omega, numerical_step, sys)
+
+            x1 = np.random.uniform(-20, 20)
+            y1 = np.random.uniform(-20, 20)
+            z1 = np.random.uniform(-20, 20)
+            x2 = np.random.uniform(-20, 20)
+            y2 = np.random.uniform(-20, 20)
+            z2 = np.random.uniform(-20, 20)
+            positions[0, 0] = x1
+            positions[0, 1] = y1
+            positions[0, 2] = z1
+            positions[1, 0] = x2
+            positions[1, 1] = y2
+            positions[1, 2] = z2
+
+            sum = x1*x1 + x2*x2 + y1*y1 + y2*y2 + z1*z1 + z2*z2
+
+            pot_energy = 0.5*omega*omega*(sum)
+            assert pot_energy == pytest.approx(sam.potential_energy(positions),
+                                               abs=1e-10)
 
 
 def test_local_energy_2d():
@@ -266,6 +330,29 @@ def test_local_energy_times_wf_2d():
 
     a = 0.0
     num_particles = 1
+    num_dimensions = 2
+    numerical_step = 0.001
+    positions = np.zeros(shape=(num_particles, num_dimensions))
+
+    for _ in range(50):
+        alpha = np.random.uniform(1e-3, 10)
+        beta = np.random.uniform(1e-3, 10)
+        omega = np.random.uniform(1e-3, 10)
+        positions[0, 0] = np.random.uniform(-2, 2)
+        positions[0, 1] = np.random.uniform(-2, 2)
+        sys = System(num_particles, num_dimensions, alpha, beta, a)
+        sam = Sampler(omega, numerical_step, sys)
+
+        e = sam.local_energy(positions)
+        t = sys.derivative_psi_term(positions)*e
+        assert t == pytest.approx(sam.local_energy_times_wf(positions),
+                                  abs=1e-14)
+
+
+def test_local_energy_times_wf_2d_2p():
+
+    a = 0.0
+    num_particles = 2
     num_dimensions = 2
     numerical_step = 0.001
     positions = np.zeros(shape=(num_particles, num_dimensions))
