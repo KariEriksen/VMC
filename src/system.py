@@ -73,7 +73,7 @@ class System:
         described by the single particle wave function as a the harmonic
         oscillator function and the correlation function
         """
-        deri_psi = 1.0
+        deri_psi = 0.0
 
         for i in range(self.num_p):
             x = positions[i, 0]
@@ -82,8 +82,8 @@ class System:
                 # if vector is 3 dimesions
                 # positions[i, 2] *= self.beta
                 z = positions[i, 2]
-                deri_psi *= (x*x + y*y + self.beta*z*z)
+                deri_psi += (x*x + y*y + self.beta*z*z)
             else:
-                deri_psi *= (x*x + y*y)
+                deri_psi += (x*x + y*y)
 
         return -deri_psi
