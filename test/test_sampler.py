@@ -61,7 +61,6 @@ def test_kinetic_energy_2d_2p():
         beta = np.random.uniform(1e-3, 10)
         sys.alpha = alpha
         sys.beta = beta
-        print (alpha)
         kine_energy = 0.0
         pos_fw = np.array(positions)
         pos_bw = np.array(positions)
@@ -78,7 +77,7 @@ def test_kinetic_energy_2d_2p():
         kine_energy = kine_energy/(numerical_step*numerical_step)
 
         assert kine_energy == pytest.approx(sam.kinetic_energy(positions),
-                                            abs=1e-14)
+                                            abs=1e-10)
 
 
 def test_kinetic_energy_3d():
@@ -158,7 +157,7 @@ def test_kinetic_energy_3d_2p():
         kine_energy = kine_energy/(numerical_step*numerical_step)
 
         assert kine_energy == pytest.approx(sam.kinetic_energy(positions),
-                                            abs=1e-14)
+                                            abs=1e-10)
 
 
 def test_potential_energy_2d():
