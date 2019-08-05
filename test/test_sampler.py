@@ -532,11 +532,11 @@ def test_greens_function_2d():
         F_old = sam.drift_force(positions)
         F_new = sam.drift_force(new_positions)
         D = 0.5
-        delta_t = 0.001
+        delta_t = 0.01
+        G = 0.0
         G = (0.5*(F_old + F_new)*(positions - new_positions) +
              D*delta_t*(F_old - F_new))
-        G = np.exp(G)
-        delta_t = 0.01
+        G = np.exp(np.sum(G))
 
         assert G == pytest.approx(sam.greens_function(positions, new_positions,
                                                       delta_t), abs=1e-14)
@@ -552,9 +552,9 @@ def test_greens_function_3d():
     new_positions = np.zeros(shape=(num_particles, num_dimensions))
 
     for _ in range(50):
-        alpha = np.random.uniform(1e-3, 10)
-        beta = np.random.uniform(1e-3, 10)
-        omega = np.random.uniform(1e-3, 10)
+        alpha = np.random.uniform(1e-3, 1)
+        beta = np.random.uniform(1e-3, 1)
+        omega = np.random.uniform(1e-3, 1)
         positions[0, 0] = np.random.uniform(-2, 2)
         positions[0, 1] = np.random.uniform(-2, 2)
         positions[0, 2] = np.random.uniform(-2, 2)
@@ -567,11 +567,11 @@ def test_greens_function_3d():
         F_old = sam.drift_force(positions)
         F_new = sam.drift_force(new_positions)
         D = 0.5
-        delta_t = 0.001
+        delta_t = 0.01
+        G = 0.0
         G = (0.5*(F_old + F_new)*(positions - new_positions) +
              D*delta_t*(F_old - F_new))
-        G = np.exp(G)
-        delta_t = 0.01
+        G = np.exp(np.sum(G))
 
         assert G == pytest.approx(sam.greens_function(positions,
                                                       new_positions, delta_t),

@@ -43,6 +43,6 @@ def test_importance_sampling():
     sam = Sampler(omega, numerical_step, sys)
     met = Metropolis(delta_R, delta_t, num_particles, num_dimensions, sam, 0.0)
     positions = np.zeros(shape=(num_particles, num_dimensions))
-    _, new_positions = met.importance_sampling(positions)
+    _, new_positions, _ = met.importance_sampling(positions)
 
     assert new_positions.shape == (num_particles, num_dimensions)
