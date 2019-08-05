@@ -474,7 +474,7 @@ def test_drift_force_2d():
         wf_current = sys.wavefunction(positions)
         wf_forward = sys.wavefunction(positions_fw)
         deri = (wf_forward - wf_current)/numerical_step
-        drift_force = (2.0*wf_current)*deri
+        drift_force = (2.0/wf_current)*deri
         assert drift_force == pytest.approx(sam.drift_force(positions),
                                             abs=1e-14)
 
@@ -504,7 +504,7 @@ def test_drift_force_3d():
         wf_current = sys.wavefunction(positions)
         wf_forward = sys.wavefunction(positions_fw)
         deri = (wf_forward - wf_current)/numerical_step
-        drift_force = (2.0*wf_current)*deri
+        drift_force = (2.0/wf_current)*deri
         assert drift_force == pytest.approx(sam.drift_force(positions),
                                             abs=1e-14)
 
@@ -531,12 +531,12 @@ def test_greens_function_2d():
 
         F_old = sam.drift_force(positions)
         F_new = sam.drift_force(new_positions)
-        D = 0.0
+        D = 0.5
         delta_t = 0.001
         G = (0.5*(F_old + F_new)*(positions - new_positions) +
              D*delta_t*(F_old - F_new))
         G = np.exp(G)
-        delta_t = 0.001
+        delta_t = 0.01
 
         assert G == pytest.approx(sam.greens_function(positions, new_positions,
                                                       delta_t), abs=1e-14)
@@ -566,12 +566,12 @@ def test_greens_function_3d():
 
         F_old = sam.drift_force(positions)
         F_new = sam.drift_force(new_positions)
-        D = 0.0
+        D = 0.5
         delta_t = 0.001
         G = (0.5*(F_old + F_new)*(positions - new_positions) +
              D*delta_t*(F_old - F_new))
         G = np.exp(G)
-        delta_t = 0.001
+        delta_t = 0.01
 
         assert G == pytest.approx(sam.greens_function(positions,
                                                       new_positions, delta_t),
