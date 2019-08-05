@@ -59,9 +59,9 @@ def run_vmc(parameter):
         accumulate_psi_term += sys.derivative_psi_term(positions)
         accumulate_both += sam.local_energy_times_wf(positions)
 
-    expec_val_energy = accumulate_energy/(monte_carlo_cycles*num_particles)
-    expec_val_psi = accumulate_psi_term/(monte_carlo_cycles*num_particles)
-    expec_val_both = accumulate_both/(monte_carlo_cycles*num_particles)
+    expec_val_energy = accumulate_energy/(monte_carlo_cycles)
+    expec_val_psi = accumulate_psi_term/(monte_carlo_cycles)
+    expec_val_both = accumulate_both/(monte_carlo_cycles)
 
     derivative_energy = 2*(expec_val_both - expec_val_psi*expec_val_energy)
     print ('deri energy = ', derivative_energy)
