@@ -15,18 +15,18 @@ Variational Monte Carlo with Metropolis Hastings algorithm for selection of
 configurations. Optimizing using Gradient descent.
 """
 
-monte_carlo_cycles = 2
-num_particles = 1
+monte_carlo_cycles = 10000
+num_particles = 2
 num_dimensions = 2
 numerical_step_length = 0.001
 step_metropolis = 1.0
-step_importance = 0.1
-alpha = 0.5
+step_importance = 0.01
+alpha = 0.4
 beta = 1.0
 a = 0.0
 omega = 1.0
 learning_rate = 0.01
-gradient_iterations = 1
+gradient_iterations = 1000
 parameter = alpha
 # energy = 0.0
 # parameters = np.zeros(gradient_iterations)
@@ -52,7 +52,8 @@ def run_vmc(parameter):
                      num_dimensions, sam, 0.0)
     for i in range(monte_carlo_cycles):
 
-        new_energy, new_positions, count = met.metropolis(positions)
+        # new_energy, new_positions, count = met.metropolis(positions)
+        new_energy, new_positions, count = met.importance_sampling(positions)
         positions = new_positions
         accumulate_energy += sam.local_energy(positions)
 
@@ -77,4 +78,4 @@ for i in range(gradient_iterations):
     print ('new alpha =  ', new_parameter)
     print ('----------------------------')
     print ('new energy =  ', energy, 'correct energy = ',
-           0.5*num_dimensions)
+           0.5*num_dimensions*num_particles)

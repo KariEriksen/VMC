@@ -99,21 +99,21 @@ class Sampler:
         wf_forward = self.s.wavefunction(position_forward)
         wf_current = self.s.wavefunction(positions)
         derivativ = (wf_forward - wf_current)/self.step
+        drift_force = (2.0/wf_current)*derivativ
 
-        return derivativ
+        return drift_force
 
     def greens_function(self, positions, new_positions_importance, delta_t):
         """Calculate Greens function."""
-        # greens_function = 0.0
-        """
-        D = 0.0
+        greens_function = 0.0
+
+        D = 0.5
         F_old = self.drift_force(positions)
         F_new = self.drift_force(new_positions_importance)
-        greens_function = (0.5*(F_old + F_new) * (0.5 * (positions -
-                           new_positions_importance)) +
+        greens_function = (0.5*(F_old + F_new)*(positions -
+                           new_positions_importance) +
                            D*delta_t*(F_old - F_new))
-        """
-        greens_function = 0.0
-        # greens_function = np.exp(greens_function)
+
+        greens_function = np.exp(np.sum(greens_function))
 
         return greens_function

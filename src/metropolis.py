@@ -58,21 +58,27 @@ class Metropolis:
         r = random.random()*random.choice((-1, 1))
         term1 = D*F*self.delta_t
         term2 = r*np.sqrt(self.delta_t)
-        new_positions = np.array(positions) + term1 + term2
+        # Pick a random particle and calculate new position
+        random_index = random.randrange(len(positions))
+        new_positions = np.array(positions)
+        new_random_position = new_positions[random_index, :] + term1 + term2
+        new_positions[random_index, :] = new_random_position
 
         acceptance_ratio = self.s.greens_function(positions, new_positions,
                                                   self.delta_t)
+
         epsilon = np.random.sample()
 
-        if acceptance_ratio <= epsilon:
+        if acceptance_ratio > epsilon:
             positions = new_positions
+            self.c += 1.0
 
         else:
             pass
 
         energy = self.s.local_energy(positions)
 
-        return energy, positions
+        return energy, positions, self.c
 
     def gibbs_sampling(self):
         """Run Gibbs sampling."""
