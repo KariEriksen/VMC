@@ -16,7 +16,7 @@ configurations. Optimizing using Gradient descent.
 """
 
 monte_carlo_cycles = 10000
-num_particles = 1
+num_particles = 2
 num_dimensions = 3
 numerical_step_length = 0.001
 step_metropolis = 1.0
