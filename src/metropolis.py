@@ -54,13 +54,13 @@ class Metropolis:
         variable and delta_t is the time step between 0.001 and 0.01"""
 
         D = 0.5
-        F = self.s.drift_force(positions)
+        F = self.s.quantum_force(positions)
         r = random.random()*random.choice((-1, 1))
-        term1 = D*F*self.delta_t
-        term2 = r*np.sqrt(self.delta_t)
         # Pick a random particle and calculate new position
         random_index = random.randrange(len(positions))
         new_positions = np.array(positions)
+        term1 = D*F[random_index, :]*self.delta_t
+        term2 = r*np.sqrt(self.delta_t)
         new_random_position = new_positions[random_index, :] + term1 + term2
         new_positions[random_index, :] = new_random_position
 

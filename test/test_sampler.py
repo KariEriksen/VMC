@@ -458,7 +458,7 @@ def test_drift_force_2d():
     num_dimensions = 2
     numerical_step = 0.001
     positions = np.zeros(shape=(num_particles, num_dimensions))
-    positions_fw = np.zeros(shape=(num_particles, num_dimensions))
+    drift_force = np.zeros((1, 2))
 
     for _ in range(50):
         alpha = np.random.uniform(1e-3, 10)
@@ -466,16 +466,22 @@ def test_drift_force_2d():
         omega = np.random.uniform(1e-3, 10)
         positions[0, 0] = np.random.uniform(-2, 2)
         positions[0, 1] = np.random.uniform(-2, 2)
-        positions_fw[0, 0] = positions[0, 0] + numerical_step
-        positions_fw[0, 1] = positions[0, 1] + numerical_step
+        positions_fw_x = np.array(positions)
+        positions_fw_y = np.array(positions)
+        positions_fw_x[0, 0] = positions[0, 0] + numerical_step
+        positions_fw_y[0, 1] = positions[0, 1] + numerical_step
         sys = System(num_particles, num_dimensions, alpha, beta, a)
         sam = Sampler(omega, numerical_step, sys)
 
         wf_current = sys.wavefunction(positions)
-        wf_forward = sys.wavefunction(positions_fw)
-        deri = (wf_forward - wf_current)/numerical_step
-        drift_force = (2.0/wf_current)*deri
-        assert drift_force == pytest.approx(sam.drift_force(positions),
+        wf_forward_x = sys.wavefunction(positions_fw_x)
+        wf_forward_y = sys.wavefunction(positions_fw_y)
+        deri1 = (wf_forward_x - wf_current)/numerical_step
+        deri2 = (wf_forward_y - wf_current)/numerical_step
+        drift_force[0, 0] = (2.0/wf_current)*deri1
+        drift_force[0, 1] = (2.0/wf_current)*deri2
+
+        assert drift_force == pytest.approx(sam.quantum_force(positions),
                                             abs=1e-14)
 
 
@@ -486,7 +492,7 @@ def test_drift_force_3d():
     num_dimensions = 3
     numerical_step = 0.001
     positions = np.zeros(shape=(num_particles, num_dimensions))
-    positions_fw = np.zeros(shape=(num_particles, num_dimensions))
+    drift_force = np.zeros((1, 3))
 
     for _ in range(50):
         alpha = np.random.uniform(1e-3, 10)
@@ -495,17 +501,26 @@ def test_drift_force_3d():
         positions[0, 0] = np.random.uniform(-2, 2)
         positions[0, 1] = np.random.uniform(-2, 2)
         positions[0, 2] = np.random.uniform(-2, 2)
-        positions_fw[0, 0] = positions[0, 0] + numerical_step
-        positions_fw[0, 1] = positions[0, 1] + numerical_step
-        positions_fw[0, 2] = positions[0, 2] + numerical_step
+        positions_fw_x = np.array(positions)
+        positions_fw_y = np.array(positions)
+        positions_fw_z = np.array(positions)
+        positions_fw_x[0, 0] = positions[0, 0] + numerical_step
+        positions_fw_y[0, 1] = positions[0, 1] + numerical_step
+        positions_fw_z[0, 2] = positions[0, 2] + numerical_step
         sys = System(num_particles, num_dimensions, alpha, beta, a)
         sam = Sampler(omega, numerical_step, sys)
 
         wf_current = sys.wavefunction(positions)
-        wf_forward = sys.wavefunction(positions_fw)
-        deri = (wf_forward - wf_current)/numerical_step
-        drift_force = (2.0/wf_current)*deri
-        assert drift_force == pytest.approx(sam.drift_force(positions),
+        wf_forward_x = sys.wavefunction(positions_fw_x)
+        wf_forward_y = sys.wavefunction(positions_fw_y)
+        wf_forward_z = sys.wavefunction(positions_fw_z)
+        deri1 = (wf_forward_x - wf_current)/numerical_step
+        deri2 = (wf_forward_y - wf_current)/numerical_step
+        deri3 = (wf_forward_z - wf_current)/numerical_step
+        drift_force[0, 0] = (2.0/wf_current)*deri1
+        drift_force[0, 1] = (2.0/wf_current)*deri2
+        drift_force[0, 2] = (2.0/wf_current)*deri3
+        assert drift_force == pytest.approx(sam.quantum_force(positions),
                                             abs=1e-14)
 
 
@@ -529,8 +544,8 @@ def test_greens_function_2d():
         sys = System(num_particles, num_dimensions, alpha, beta, a)
         sam = Sampler(omega, numerical_step, sys)
 
-        F_old = sam.drift_force(positions)
-        F_new = sam.drift_force(new_positions)
+        F_old = sam.quantum_force(positions)
+        F_new = sam.quantum_force(new_positions)
         D = 0.5
         delta_t = 0.01
         G = 0.0
@@ -564,8 +579,8 @@ def test_greens_function_3d():
         sys = System(num_particles, num_dimensions, alpha, beta, a)
         sam = Sampler(omega, numerical_step, sys)
 
-        F_old = sam.drift_force(positions)
-        F_new = sam.drift_force(new_positions)
+        F_old = sam.quantum_force(positions)
+        F_new = sam.quantum_force(new_positions)
         D = 0.5
         delta_t = 0.01
         G = 0.0

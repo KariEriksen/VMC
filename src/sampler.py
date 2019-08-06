@@ -92,28 +92,41 @@ class Sampler:
 
         return acceptance_ratio
 
-    def drift_force(self, positions):
+    def quantum_force(self, positions):
         """Return drift force."""
-        # position_forward = positions + self.step
-        position_forward = np.array(positions) + self.step
-        wf_forward = self.s.wavefunction(position_forward)
-        wf_current = self.s.wavefunction(positions)
-        derivativ = (wf_forward - wf_current)/self.step
-        drift_force = (2.0/wf_current)*derivativ
 
-        return drift_force
+        """This surely is inefficient, rewrite so the quantum force matrix
+        gets updated, than calculating it over and over again each time"""
+        quantum_force = np.zeros((self.s.num_p, self.s.num_d))
+        position_forward = np.array(positions)
+        psi_current = self.s.wavefunction(positions)
+        psi_moved = 0.0
 
-    def greens_function(self, positions, new_positions_importance, delta_t):
+        for i in range(self.s.num_p):
+            for j in range(self.s.num_d):
+                position_forward[i, j] = position_forward[i, j] + self.step
+                psi_moved = self.s.wavefunction(position_forward)
+                # Resett positions
+                position_forward[i, j] = position_forward[i, j] - self.step
+                derivative = (psi_moved - psi_current)/self.step
+                quantum_force[i, j] = (2.0/psi_current)*derivative
+
+        return quantum_force
+
+    def greens_function(self, positions, new_positions, delta_t):
         """Calculate Greens function."""
         greens_function = 0.0
 
         D = 0.5
-        F_old = self.drift_force(positions)
-        F_new = self.drift_force(new_positions_importance)
-        greens_function = (0.5*(F_old + F_new)*(positions -
-                           new_positions_importance) +
-                           D*delta_t*(F_old - F_new))
+        F_old = self.quantum_force(positions)
+        F_new = self.quantum_force(new_positions)
+        for i in range(self.s.num_p):
+            for j in range(self.s.num_d):
+                term1 = 0.5*((F_old[i, j] + F_new[i, j]) *
+                             (positions[i, j] - new_positions[i, j]))
+                term2 = D*delta_t*(F_old[i, j] - F_new[i, j])
+                greens_function += term1 + term2
 
-        greens_function = np.exp(np.sum(greens_function))
+        greens_function = np.exp(greens_function)
 
         return greens_function
