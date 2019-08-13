@@ -1,4 +1,5 @@
 """Sampler class."""
+import math
 import numpy as np
 
 
@@ -63,6 +64,21 @@ class Sampler:
         # 0.5*omega_sq*np.sum(np.multiply(positions, positions))
         return 0.5*omega_sq*np.sum(np.multiply(positions, positions))
 
+    def interaction(self, positions):
+        """Return the interaction potential between particles"""
+        internal_potential = 0.0
+        for i in range(self.s.num_p):
+            for j in range(i, self.s.num_p-1):
+                ri_minus_rj = np.subtract(positions[i, :], positions[j+1, :])
+                distance = math.sqrt(np.sum(np.square(ri_minus_rj)))
+
+                if distance > self.s.a:
+                    internal_potential += 0.0
+                else:
+                    internal_potential += 1e10
+
+        return internal_potential
+
     def local_energy(self, positions):
         """Return the local energy."""
         # Run with analytical expression for kinetic energy
@@ -70,6 +86,7 @@ class Sampler:
         # Run with numerical expression for kinetic energy
         k = self.kinetic_energy(positions)/self.s.wavefunction(positions)
         p = self.potential_energy(positions)
+        # i = self.interaction(positions)
         energy = -0.5*k + p
 
         return energy
