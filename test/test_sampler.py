@@ -160,6 +160,60 @@ def test_kinetic_energy_3d_2p():
                                             abs=1e-10)
 
 
+def test_kinetic_analytic_2d():
+
+    num_particles = 1
+    num_dimensions = 2
+    positions = np.zeros(shape=(num_particles, num_dimensions))
+    numerical_step = 0.001
+    a = 0.0
+    beta = 1.0
+    omega = 1.0
+    for _ in range(50):
+        energy = 0.0
+        alpha = np.random.uniform(1e-3, 10)
+        sys = System(num_particles, num_dimensions, alpha, beta, a)
+        sam = Sampler(omega, numerical_step, sys)
+        x = np.random.uniform(-20, 20)
+        y = np.random.uniform(-20, 20)
+        positions[0, 0] = x
+        positions[0, 1] = y
+        energy = 4*alpha*alpha*(x*x + y*y) - 4*alpha
+        assert energy == pytest.approx(sam.kinetic_analytic(positions),
+                                       abs=1e-14)
+
+
+def test_kinetic_analytic_2d_2p():
+
+    num_particles = 2
+    num_dimensions = 2
+    positions = np.zeros(shape=(num_particles, num_dimensions))
+    numerical_step = 0.001
+    a = 0.0
+    beta = 1.0
+    omega = 1.0
+    for _ in range(50):
+        energy = 0.0
+        alpha = np.random.uniform(1e-3, 10)
+        omega = np.random.uniform(1e-3, 10)
+        sys = System(num_particles, num_dimensions, alpha, beta, a)
+        sam = Sampler(omega, numerical_step, sys)
+        x1 = np.random.uniform(-20, 20)
+        y1 = np.random.uniform(-20, 20)
+        x2 = np.random.uniform(-20, 20)
+        y2 = np.random.uniform(-20, 20)
+        positions[0, 0] = x1
+        positions[0, 1] = y1
+        positions[1, 0] = x2
+        positions[1, 1] = y2
+        for i in range(num_particles):
+            x = positions[i, 0]
+            y = positions[i, 1]
+            energy += 4*alpha*alpha*(x*x + y*y) - 4*alpha
+        assert energy == pytest.approx(sam.kinetic_analytic(positions),
+                                       abs=1e-10)
+
+
 def test_potential_energy_2d():
 
     num_particles = 1

@@ -14,6 +14,7 @@ class Sampler:
 
     def kinetic_energy(self, positions):
         """Numerical differentiation for solving kinetic energy."""
+        """The -0.5 part is added in local energy function"""
         # kine_energy = 0.0
 
         position_forward = np.array(positions)
@@ -40,6 +41,8 @@ class Sampler:
         return kine_energy
 
     def kinetic_analytic(self, positions):
+        """Assumes beta = 1.0"""
+        """The -0.5 part is added in local energy function"""
 
         c = 0.0
         d = self.s.num_d
