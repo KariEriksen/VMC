@@ -55,16 +55,20 @@ class System:
     def jastrow_factor(self, positions):
         """Calculate correlation factor."""
         f = 1.0
+        r = 0.0
 
         for i in range(self.num_p):
             for j in range(i, self.num_p-1):
-                ri_minus_rj = np.subtract(positions[i, :], positions[j+1, :])
-                distance = math.sqrt(np.sum(np.square(ri_minus_rj)))
+                # ri_minus_rj = np.subtract(positions[i, :], positions[j+1, :])
+                for k in range(self.num_d):
+                    ri_minus_rj = positions[i, k] - positions[j+1, k]
+                    r += ri_minus_rj**2
+                distance = math.sqrt(r)
+                # distance = math.sqrt(np.sum(np.square(ri_minus_rj)))
                 if distance > self.a:
                     f *= 1.0 - (self.a/distance)
                 else:
                     f *= 0
-
         return f
 
     def derivative_psi_term(self, positions):
