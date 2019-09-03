@@ -600,6 +600,52 @@ def test_drift_force_2d():
                                             abs=1e-14)
 
 
+def test_drift_force_2d_2p():
+
+    a = 0.0
+    num_particles = 2
+    num_dimensions = 2
+    numerical_step = 0.001
+    positions = np.zeros(shape=(num_particles, num_dimensions))
+    drift_force = np.zeros((2, 2))
+
+    for _ in range(50):
+        alpha = np.random.uniform(1e-3, 10)
+        beta = np.random.uniform(1e-3, 10)
+        omega = np.random.uniform(1e-3, 10)
+        positions[0, 0] = np.random.uniform(-2, 2)
+        positions[0, 1] = np.random.uniform(-2, 2)
+        positions[1, 0] = np.random.uniform(-2, 2)
+        positions[1, 1] = np.random.uniform(-2, 2)
+        positions_fw_x1 = np.array(positions)
+        positions_fw_y1 = np.array(positions)
+        positions_fw_x2 = np.array(positions)
+        positions_fw_y2 = np.array(positions)
+        positions_fw_x1[0, 0] = positions[0, 0] + numerical_step
+        positions_fw_y1[0, 1] = positions[0, 1] + numerical_step
+        positions_fw_x2[1, 0] = positions[1, 0] + numerical_step
+        positions_fw_y2[1, 1] = positions[1, 1] + numerical_step
+        sys = System(num_particles, num_dimensions, alpha, beta, a)
+        sam = Sampler(omega, numerical_step, sys)
+
+        wf_current = sys.wavefunction(positions)
+        wf_forward_x1 = sys.wavefunction(positions_fw_x1)
+        wf_forward_y1 = sys.wavefunction(positions_fw_y1)
+        wf_forward_x2 = sys.wavefunction(positions_fw_x2)
+        wf_forward_y2 = sys.wavefunction(positions_fw_y2)
+        deri1 = (wf_forward_x1 - wf_current)/numerical_step
+        deri2 = (wf_forward_y1 - wf_current)/numerical_step
+        deri3 = (wf_forward_x2 - wf_current)/numerical_step
+        deri4 = (wf_forward_y2 - wf_current)/numerical_step
+        drift_force[0, 0] = (2.0/wf_current)*deri1
+        drift_force[0, 1] = (2.0/wf_current)*deri2
+        drift_force[1, 0] = (2.0/wf_current)*deri3
+        drift_force[1, 1] = (2.0/wf_current)*deri4
+
+        assert drift_force == pytest.approx(sam.quantum_force(positions),
+                                            abs=1e-14)
+
+
 def test_drift_force_3d():
 
     a = 0.0
@@ -635,6 +681,64 @@ def test_drift_force_3d():
         drift_force[0, 0] = (2.0/wf_current)*deri1
         drift_force[0, 1] = (2.0/wf_current)*deri2
         drift_force[0, 2] = (2.0/wf_current)*deri3
+        assert drift_force == pytest.approx(sam.quantum_force(positions),
+                                            abs=1e-14)
+
+
+def test_drift_force_3d_2p():
+
+    a = 0.0
+    num_particles = 2
+    num_dimensions = 3
+    numerical_step = 0.001
+    positions = np.zeros(shape=(num_particles, num_dimensions))
+    drift_force = np.zeros((2, 3))
+
+    for _ in range(50):
+        alpha = np.random.uniform(1e-3, 10)
+        beta = np.random.uniform(1e-3, 10)
+        omega = np.random.uniform(1e-3, 10)
+        positions[0, 0] = np.random.uniform(-2, 2)
+        positions[0, 1] = np.random.uniform(-2, 2)
+        positions[0, 2] = np.random.uniform(-2, 2)
+        positions[1, 0] = np.random.uniform(-2, 2)
+        positions[1, 1] = np.random.uniform(-2, 2)
+        positions[1, 2] = np.random.uniform(-2, 2)
+        positions_fw_x1 = np.array(positions)
+        positions_fw_y1 = np.array(positions)
+        positions_fw_z1 = np.array(positions)
+        positions_fw_x2 = np.array(positions)
+        positions_fw_y2 = np.array(positions)
+        positions_fw_z2 = np.array(positions)
+        positions_fw_x1[0, 0] = positions[0, 0] + numerical_step
+        positions_fw_y1[0, 1] = positions[0, 1] + numerical_step
+        positions_fw_z1[0, 2] = positions[0, 2] + numerical_step
+        positions_fw_x2[1, 0] = positions[1, 0] + numerical_step
+        positions_fw_y2[1, 1] = positions[1, 1] + numerical_step
+        positions_fw_z2[1, 2] = positions[1, 2] + numerical_step
+        sys = System(num_particles, num_dimensions, alpha, beta, a)
+        sam = Sampler(omega, numerical_step, sys)
+
+        wf_current = sys.wavefunction(positions)
+        wf_forward_x1 = sys.wavefunction(positions_fw_x1)
+        wf_forward_y1 = sys.wavefunction(positions_fw_y1)
+        wf_forward_z1 = sys.wavefunction(positions_fw_z1)
+        wf_forward_x2 = sys.wavefunction(positions_fw_x2)
+        wf_forward_y2 = sys.wavefunction(positions_fw_y2)
+        wf_forward_z2 = sys.wavefunction(positions_fw_z2)
+        deri1 = (wf_forward_x1 - wf_current)/numerical_step
+        deri2 = (wf_forward_y1 - wf_current)/numerical_step
+        deri3 = (wf_forward_x2 - wf_current)/numerical_step
+        deri4 = (wf_forward_y2 - wf_current)/numerical_step
+        deri5 = (wf_forward_z1 - wf_current)/numerical_step
+        deri6 = (wf_forward_z2 - wf_current)/numerical_step
+        drift_force[0, 0] = (2.0/wf_current)*deri1
+        drift_force[0, 1] = (2.0/wf_current)*deri2
+        drift_force[1, 0] = (2.0/wf_current)*deri3
+        drift_force[1, 1] = (2.0/wf_current)*deri4
+        drift_force[0, 2] = (2.0/wf_current)*deri5
+        drift_force[1, 2] = (2.0/wf_current)*deri6
+
         assert drift_force == pytest.approx(sam.quantum_force(positions),
                                             abs=1e-14)
 
@@ -691,6 +795,48 @@ def test_greens_function_3d():
         new_positions[0, 0] = np.random.uniform(-2, 2)
         new_positions[0, 1] = np.random.uniform(-2, 2)
         new_positions[0, 2] = np.random.uniform(-2, 2)
+        sys = System(num_particles, num_dimensions, alpha, beta, a)
+        sam = Sampler(omega, numerical_step, sys)
+
+        F_old = sam.quantum_force(positions)
+        F_new = sam.quantum_force(new_positions)
+        D = 0.5
+        delta_t = 0.01
+        G = 0.0
+        G = (0.5*(F_old + F_new)*(positions - new_positions) +
+             D*delta_t*(F_old - F_new))
+        G = np.exp(np.sum(G))
+
+        assert G == pytest.approx(sam.greens_function(positions,
+                                                      new_positions, delta_t),
+                                  abs=1e-14)
+
+
+def test_greens_function_3d_2p():
+
+    a = 0.0
+    num_particles = 2
+    num_dimensions = 3
+    numerical_step = 0.001
+    positions = np.zeros(shape=(num_particles, num_dimensions))
+    new_positions = np.zeros(shape=(num_particles, num_dimensions))
+
+    for _ in range(50):
+        alpha = np.random.uniform(1e-3, 1)
+        beta = np.random.uniform(1e-3, 1)
+        omega = np.random.uniform(1e-3, 1)
+        positions[0, 0] = np.random.uniform(-2, 2)
+        positions[0, 1] = np.random.uniform(-2, 2)
+        positions[0, 2] = np.random.uniform(-2, 2)
+        positions[1, 0] = np.random.uniform(-2, 2)
+        positions[1, 1] = np.random.uniform(-2, 2)
+        positions[1, 2] = np.random.uniform(-2, 2)
+        new_positions[0, 0] = np.random.uniform(-2, 2)
+        new_positions[0, 1] = np.random.uniform(-2, 2)
+        new_positions[0, 2] = np.random.uniform(-2, 2)
+        new_positions[1, 0] = np.random.uniform(-2, 2)
+        new_positions[1, 1] = np.random.uniform(-2, 2)
+        new_positions[1, 2] = np.random.uniform(-2, 2)
         sys = System(num_particles, num_dimensions, alpha, beta, a)
         sam = Sampler(omega, numerical_step, sys)
 
