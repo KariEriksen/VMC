@@ -1,6 +1,5 @@
 """System class."""
 import math
-import numpy as np
 
 
 class System:
@@ -55,11 +54,11 @@ class System:
     def jastrow_factor(self, positions):
         """Calculate correlation factor."""
         f = 1.0
-        r = 0.0
 
         for i in range(self.num_p):
             for j in range(i, self.num_p-1):
                 # ri_minus_rj = np.subtract(positions[i, :], positions[j+1, :])
+                r = 0.0
                 for k in range(self.num_d):
                     ri_minus_rj = positions[i, k] - positions[j+1, k]
                     r += ri_minus_rj**2

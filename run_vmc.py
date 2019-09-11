@@ -26,7 +26,7 @@ alpha = 0.4
 beta = 1.0
 a = 0.0043
 # a = 0.0
-omega = 1.0
+omega = 1
 learning_rate = 0.01
 gradient_iterations = 1000
 parameter = alpha
@@ -52,6 +52,7 @@ def run_vmc(parameter):
     sam = Sampler(omega, numerical_step_length, sys)
     met = Metropolis(step_metropolis, step_importance, num_particles,
                      num_dimensions, sam, 0.0)
+
     for i in range(monte_carlo_cycles):
 
         new_energy, new_positions, count = met.metropolis(positions)
@@ -67,7 +68,6 @@ def run_vmc(parameter):
     expec_val_both = accumulate_both/(monte_carlo_cycles)
 
     derivative_energy = 2*(expec_val_both - expec_val_psi*expec_val_energy)
-    print 'deri energy = ', derivative_energy
     print 'counter (accepted moves in metropolis) = ', count
     return derivative_energy, expec_val_energy
 
@@ -79,6 +79,7 @@ for i in range(gradient_iterations):
     parameter = new_parameter
     e = 0.5*num_dimensions*num_particles
     # prints total energy of the system, NOT divided by N
+    print 'deri energy = ', d_El
     print 'new alpha =  ', new_parameter
     print '----------------------------'
     print 'total energy =  ', energy, 'correct energy = ', e

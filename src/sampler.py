@@ -1,5 +1,7 @@
 """Sampler class."""
 import numpy as np
+import copy
+import math
 
 
 class Sampler:
@@ -11,10 +13,8 @@ class Sampler:
         self.step = numerical_step
         self.s = system
 
-    def kinetic_energy(self, positions):
-        """Numerical differentiation for solving kinetic energy."""
-        """The -0.5 part is added in local energy function"""
-        # kine_energy = 0.0
+    def laplacian(self, positions):
+        """Numerical differentiation for solving laplacian."""
 
         position_forward = np.array(positions)
         position_backward = np.array(positions)
@@ -34,14 +34,11 @@ class Sampler:
                 position_forward[i, j] = position_forward[i, j] - self.step
                 position_backward[i, j] = position_backward[i, j] + self.step
 
-        kine_energy = (psi_moved - psi_current)/(self.step*self.step)
-        # kine_energy = kine_energy/self.s.wavefunction(positions)
+        laplacian = (psi_moved - psi_current)/(self.step*self.step)
+        return laplacian
 
-        return kine_energy
-
-    def kinetic_analytic(self, positions):
+    def laplacian_analytic(self, positions):
         """Assumes beta = 1.0"""
-        """The -0.5 part is added in local energy function"""
 
         c = 0.0
         d = self.s.num_d
@@ -55,9 +52,93 @@ class Sampler:
             else:
                 c += x**2 + y**2
 
-        kine_energy_analytic = -2*d*n*self.s.alpha + 4*(self.s.alpha**2)*c
+        laplacian_analytic = -2*d*n*self.s.alpha + 4*(self.s.alpha**2)*c
 
-        return kine_energy_analytic
+        return laplacian_analytic
+
+    def laplacian_analytic_interaction(self, positions):
+        """The analytical term for the laplacian, with interaction"""
+
+        d = self.s.num_d
+        n = self.s.num_p
+        a = self.s.a
+        alpha = self.s.alpha
+        alpha_sq = alpha**2
+        beta = self.s.beta
+
+        rkj = np.zeros(d)
+        rki = np.zeros(d)
+        d_psi_rk = np.zeros(d)
+        laplace = 0.0
+
+        for k in range(n):
+            sum_2 = 0.0
+            sum_3 = 0.0
+
+            sum_1 = np.zeros(d)
+
+            xk = positions[k, 0]
+            yk = positions[k, 1]
+            zk = positions[k, 2]
+            rk = [xk, yk, zk]
+
+            d_psi_rk = [2*alpha*xk, 2*alpha*yk, 2*alpha*beta*zk]
+
+            dd_psi_rk = (-4*alpha - 2*alpha*beta +
+                         4*alpha_sq*(xk*xk + yk*yk + beta*zk*zk))
+
+            for j in range(n):
+
+                xj = positions[j, 0]
+                yj = positions[j, 1]
+                zj = positions[j, 2]
+                rj = [xj, yj, zj]
+
+                if(j != k):
+
+                    rkj = math.sqrt(np.sum((rk - rj)*(rk - rj)))
+
+                    d_u_rkj = -a/(a*rkj - rkj*rkj)
+
+                    xkj = xk - xj
+                    ykj = yk - yj
+                    zkj = zk - zj
+
+                    sum_1[0] += ((xkj)/rkj)*d_u_rkj
+                    sum_1[1] += ((ykj)/rkj)*d_u_rkj
+                    sum_1[2] += ((zkj)/rkj)*d_u_rkj
+
+                    dd_u_rkj = (a*(a - 2*rkj))/(rkj*rkj*(a - rkj)*(a - rkj))
+
+                    sum_3 += dd_u_rkj + (2/rkj)*d_u_rkj
+
+                    for i in range(n):
+
+                        xi = positions[i, 0]
+                        yi = positions[i, 1]
+                        zi = positions[i, 2]
+                        ri = [xi, yi, zi]
+
+                        if(i != k):
+
+                            rki = math.sqrt(np.sum((rk - ri)*(rk - ri)))
+
+                            d_u_rki = -a/(a*rki - rki*rki)
+
+                            xki = xk - xi
+                            yki = yk - yi
+                            zki = zk - zi
+
+                            rki_dot_rkj = xki*xkj + yki*ykj + zki*zkj
+
+                            sum_2 += (rki_dot_rkj/(rki*rkj))*d_u_rki*d_u_rkj
+
+            part = (d_psi_rk[0]*sum_1[0] + d_psi_rk[1]*sum_1[1]
+                    + d_psi_rk[2]*sum_1[2])
+
+            laplace += dd_psi_rk + 2*part + sum_2 + sum_3
+
+        return laplace
 
     def potential_energy(self, positions):
         """Return the potential energy of the system."""
@@ -69,12 +150,11 @@ class Sampler:
     def local_energy(self, positions):
         """Return the local energy."""
         # Run with analytical expression for kinetic energy
-        # k = self.kinetic_analytic(positions)
+        # k = -0.5*self.laplacian_analytic(positions)
         # Run with numerical expression for kinetic energy
-        k = self.kinetic_energy(positions)/self.s.wavefunction(positions)
+        k = -0.5*self.laplacian(positions)/self.s.wavefunction(positions)
         p = self.potential_energy(positions)
-        # i = self.interaction(positions)
-        energy = -0.5*k + p
+        energy = k + p
 
         return energy
 
@@ -98,7 +178,6 @@ class Sampler:
 
     def quantum_force(self, positions):
         """Return drift force."""
-
         """This surely is inefficient, rewrite so the quantum force matrix
         gets updated, than calculating it over and over again each time"""
         quantum_force = np.zeros((self.s.num_p, self.s.num_d))
