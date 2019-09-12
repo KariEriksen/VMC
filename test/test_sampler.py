@@ -40,7 +40,7 @@ def test_kinetic_energy_2d():
                 kine_energy += wf_forward + wf_backwawrd - wf_current
         kine_energy = kine_energy/(numerical_step*numerical_step)
 
-        assert kine_energy == pytest.approx(sam.kinetic_energy(positions),
+        assert kine_energy == pytest.approx(sam.laplacian(positions),
                                             abs=1e-10)
 
 
@@ -76,7 +76,7 @@ def test_kinetic_energy_2d_2p():
                 kine_energy += wf_forward + wf_backwawrd - wf_current
         kine_energy = kine_energy/(numerical_step*numerical_step)
 
-        assert kine_energy == pytest.approx(sam.kinetic_energy(positions),
+        assert kine_energy == pytest.approx(sam.laplacian(positions),
                                             abs=1e-10)
 
 
@@ -120,7 +120,7 @@ def test_kinetic_energy_3d():
         kine_energy = wf_forward + wf_backwawrd - wf_current
         kine_energy = kine_energy/(numerical_step*numerical_step)
 
-        assert kine_energy == pytest.approx(sam.kinetic_energy(positions),
+        assert kine_energy == pytest.approx(sam.laplacian(positions),
                                             abs=1e-10)
 
 
@@ -156,7 +156,7 @@ def test_kinetic_energy_3d_2p():
                 kine_energy += wf_forward + wf_backwawrd - wf_current
         kine_energy = kine_energy/(numerical_step*numerical_step)
 
-        assert kine_energy == pytest.approx(sam.kinetic_energy(positions),
+        assert kine_energy == pytest.approx(sam.laplacian(positions),
                                             abs=1e-10)
 
 
@@ -179,7 +179,7 @@ def test_kinetic_analytic_2d():
         positions[0, 0] = x
         positions[0, 1] = y
         energy = 4*alpha*alpha*(x*x + y*y) - 4*alpha
-        assert energy == pytest.approx(sam.kinetic_analytic(positions),
+        assert energy == pytest.approx(sam.laplacian_analytic(positions),
                                        abs=1e-14)
 
 
@@ -210,7 +210,7 @@ def test_kinetic_analytic_2d_2p():
             x = positions[i, 0]
             y = positions[i, 1]
             energy += 4*alpha*alpha*(x*x + y*y) - 4*alpha
-        assert energy == pytest.approx(sam.kinetic_analytic(positions),
+        assert energy == pytest.approx(sam.laplacian_analytic(positions),
                                        abs=1e-10)
 
 
@@ -235,7 +235,7 @@ def test_kinetic_analytic_3d():
         positions[0, 1] = y
         positions[0, 2] = z
         energy = 4*alpha*alpha*(x*x + y*y + z*z) - 6*alpha
-        assert energy == pytest.approx(sam.kinetic_analytic(positions),
+        assert energy == pytest.approx(sam.laplacian_analytic(positions),
                                        abs=1e-14)
 
 
@@ -271,7 +271,7 @@ def test_kinetic_analytic_3d_2p():
             y = positions[i, 1]
             z = positions[i, 2]
             energy += 4*alpha*alpha*(x*x + y*y + z*z) - 6*alpha
-        assert energy == pytest.approx(sam.kinetic_analytic(positions),
+        assert energy == pytest.approx(sam.laplacian_analytic(positions),
                                        abs=1e-10)
 
 
@@ -410,7 +410,7 @@ def test_local_energy_2d():
         positions[0, 1] = np.random.uniform(-2, 2)
         sys = System(num_particles, num_dimensions, alpha, beta, a)
         sam = Sampler(omega, numerical_step, sys)
-        k = sam.kinetic_energy(positions)/sys.wavefunction(positions)
+        k = sam.laplacian(positions)/sys.wavefunction(positions)
         p = sam.potential_energy(positions)
         local_energy = -0.5*k + p
         assert local_energy == pytest.approx(sam.local_energy(positions),
@@ -433,7 +433,7 @@ def test_local_energy_3d():
         positions[0, 2] = np.random.uniform(-2, 2)
         sys = System(num_particles, num_dimensions, alpha, beta, a)
         sam = Sampler(omega, numerical_step, sys)
-        k = sam.kinetic_energy(positions)/sys.wavefunction(positions)
+        k = sam.laplacian(positions)/sys.wavefunction(positions)
         p = sam.potential_energy(positions)
         local_energy = -0.5*k + p
         assert local_energy == pytest.approx(sam.local_energy(positions),

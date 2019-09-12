@@ -69,7 +69,7 @@ class Sampler:
         rkj = np.zeros(d)
         rki = np.zeros(d)
         d_psi_rk = np.zeros(d)
-        laplace = 0.0
+        laplacian = 0.0
 
         for k in range(n):
             sum_2 = 0.0
@@ -136,9 +136,9 @@ class Sampler:
             part = (d_psi_rk[0]*sum_1[0] + d_psi_rk[1]*sum_1[1]
                     + d_psi_rk[2]*sum_1[2])
 
-            laplace += dd_psi_rk + 2*part + sum_2 + sum_3
+            laplacian += dd_psi_rk + 2*part + sum_2 + sum_3
 
-        return laplace
+        return laplacian
 
     def potential_energy(self, positions):
         """Return the potential energy of the system."""
