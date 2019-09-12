@@ -21,12 +21,12 @@ num_dimensions = 3
 numerical_step_length = 0.001
 step_metropolis = 1.0
 step_importance = 0.01
-alpha = 0.4
-# beta = 2.82843
-beta = 1.0
-a = 0.0043
-# a = 0.0
-omega = 1
+alpha = 0.49
+beta = 2.82843
+# a = 0.43
+a = 0.0
+omega = 1.0
+# omega = 2.82843
 learning_rate = 0.01
 gradient_iterations = 1000
 parameter = alpha
@@ -81,5 +81,5 @@ for i in range(gradient_iterations):
     # prints total energy of the system, NOT divided by N
     print 'deri energy = ', d_El
     print 'new alpha =  ', new_parameter
-    print '----------------------------'
     print 'total energy =  ', energy, 'correct energy = ', e
+    print '----------------------------'

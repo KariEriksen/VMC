@@ -80,7 +80,7 @@ class Sampler:
             xk = positions[k, 0]
             yk = positions[k, 1]
             zk = positions[k, 2]
-            rk = [xk, yk, zk]
+            rk = np.array((xk, yk, zk))
 
             d_psi_rk = [2*alpha*xk, 2*alpha*yk, 2*alpha*beta*zk]
 
@@ -92,7 +92,7 @@ class Sampler:
                 xj = positions[j, 0]
                 yj = positions[j, 1]
                 zj = positions[j, 2]
-                rj = [xj, yj, zj]
+                rj = np.array((xj, yj, zj))
 
                 if(j != k):
 
@@ -117,7 +117,7 @@ class Sampler:
                         xi = positions[i, 0]
                         yi = positions[i, 1]
                         zi = positions[i, 2]
-                        ri = [xi, yi, zi]
+                        ri = np.array((xi, yi, zi))
 
                         if(i != k):
 
@@ -150,9 +150,9 @@ class Sampler:
     def local_energy(self, positions):
         """Return the local energy."""
         # Run with analytical expression for kinetic energy
-        # k = -0.5*self.laplacian_analytic(positions)
+        k = -0.5*self.laplacian_analytic_interaction(positions)
         # Run with numerical expression for kinetic energy
-        k = -0.5*self.laplacian(positions)/self.s.wavefunction(positions)
+        # k = -0.5*self.laplacian(positions)/self.s.wavefunction(positions)
         p = self.potential_energy(positions)
         energy = k + p
 
