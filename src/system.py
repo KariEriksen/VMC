@@ -68,7 +68,7 @@ class System:
                 if distance > self.a:
                     f *= 1.0 - (self.a/distance)
                 else:
-                    f *= 0
+                    f *= 1e-8
         return f
 
     def derivative_psi_term(self, positions):
