@@ -183,14 +183,15 @@ class Sampler:
         position_forward = np.array(positions)
         psi_current = self.s.wavefunction(positions)
         psi_moved = 0.0
+        step = 0.001
 
         for i in range(self.s.num_p):
             for j in range(self.s.num_d):
-                position_forward[i, j] = position_forward[i, j] + self.step
+                position_forward[i, j] = position_forward[i, j] + step
                 psi_moved = self.s.wavefunction(position_forward)
                 # Resett positions
-                position_forward[i, j] = position_forward[i, j] - self.step
-                derivative = (psi_moved - psi_current)/self.step
+                position_forward[i, j] = position_forward[i, j] - step
+                derivative = (psi_moved - psi_current)/step
                 quantum_force[i, j] = (2.0/psi_current)*derivative
 
         return quantum_force

@@ -18,7 +18,7 @@ def test_kinetic_energy_2d():
     alpha = 0.5
     beta = 1.0
     sys = System(num_particles, num_dimensions, alpha, beta, a)
-    sam = Sampler(omega, numerical_step, sys)
+    sam = Sampler(omega, sys)
     for _ in range(50):
         positions = np.random.uniform(-20, 20, (num_particles, num_dimensions))
         alpha = np.random.uniform(1e-3, 10)
@@ -54,7 +54,7 @@ def test_kinetic_energy_2d_2p():
     alpha = 0.5
     beta = 1.0
     sys = System(num_particles, num_dimensions, alpha, beta, a)
-    sam = Sampler(omega, numerical_step, sys)
+    sam = Sampler(omega, sys)
     for _ in range(50):
         positions = np.random.uniform(-20, 20, (num_particles, num_dimensions))
         alpha = np.random.uniform(1e-2, 10)
@@ -92,7 +92,7 @@ def test_kinetic_energy_3d():
         alpha = np.random.uniform(1e-3, 10)
         beta = np.random.uniform(1e-3, 10)
         sys = System(num_particles, num_dimensions, alpha, beta, a)
-        sam = Sampler(omega, numerical_step, sys)
+        sam = Sampler(omega, sys)
         x = np.random.uniform(-20, 20)
         y = np.random.uniform(-20, 20)
         z = np.random.uniform(-20, 20)
@@ -134,7 +134,7 @@ def test_kinetic_energy_3d_2p():
     alpha = 0.5
     beta = 1.0
     sys = System(num_particles, num_dimensions, alpha, beta, a)
-    sam = Sampler(omega, numerical_step, sys)
+    sam = Sampler(omega, sys)
     for _ in range(50):
         positions = np.random.uniform(-20, 20, (num_particles, num_dimensions))
         alpha = np.random.uniform(1e-3, 10)
@@ -165,7 +165,6 @@ def test_kinetic_analytic_2d():
     num_particles = 1
     num_dimensions = 2
     positions = np.zeros(shape=(num_particles, num_dimensions))
-    numerical_step = 0.001
     a = 0.0
     beta = 1.0
     omega = 1.0
@@ -173,7 +172,7 @@ def test_kinetic_analytic_2d():
         energy = 0.0
         alpha = np.random.uniform(1e-3, 10)
         sys = System(num_particles, num_dimensions, alpha, beta, a)
-        sam = Sampler(omega, numerical_step, sys)
+        sam = Sampler(omega, sys)
         x = np.random.uniform(-20, 20)
         y = np.random.uniform(-20, 20)
         positions[0, 0] = x
@@ -188,7 +187,6 @@ def test_kinetic_analytic_2d_2p():
     num_particles = 2
     num_dimensions = 2
     positions = np.zeros(shape=(num_particles, num_dimensions))
-    numerical_step = 0.001
     a = 0.0
     beta = 1.0
     omega = 1.0
@@ -197,7 +195,7 @@ def test_kinetic_analytic_2d_2p():
         alpha = np.random.uniform(1e-3, 10)
         omega = np.random.uniform(1e-3, 10)
         sys = System(num_particles, num_dimensions, alpha, beta, a)
-        sam = Sampler(omega, numerical_step, sys)
+        sam = Sampler(omega, sys)
         x1 = np.random.uniform(-20, 20)
         y1 = np.random.uniform(-20, 20)
         x2 = np.random.uniform(-20, 20)
@@ -219,7 +217,6 @@ def test_kinetic_analytic_3d():
     num_particles = 1
     num_dimensions = 3
     positions = np.zeros(shape=(num_particles, num_dimensions))
-    numerical_step = 0.001
     a = 0.0
     beta = 1.0
     omega = 1.0
@@ -227,7 +224,7 @@ def test_kinetic_analytic_3d():
         energy = 0.0
         alpha = np.random.uniform(1e-3, 10)
         sys = System(num_particles, num_dimensions, alpha, beta, a)
-        sam = Sampler(omega, numerical_step, sys)
+        sam = Sampler(omega, sys)
         x = np.random.uniform(-20, 20)
         y = np.random.uniform(-20, 20)
         z = np.random.uniform(-20, 20)
@@ -244,7 +241,6 @@ def test_kinetic_analytic_3d_2p():
     num_particles = 2
     num_dimensions = 3
     positions = np.zeros(shape=(num_particles, num_dimensions))
-    numerical_step = 0.001
     a = 0.0
     beta = 1.0
     omega = 1.0
@@ -253,7 +249,7 @@ def test_kinetic_analytic_3d_2p():
         alpha = np.random.uniform(1e-3, 10)
         omega = np.random.uniform(1e-3, 10)
         sys = System(num_particles, num_dimensions, alpha, beta, a)
-        sam = Sampler(omega, numerical_step, sys)
+        sam = Sampler(omega, sys)
         x1 = np.random.uniform(-20, 20)
         y1 = np.random.uniform(-20, 20)
         z1 = np.random.uniform(-20, 20)
@@ -287,7 +283,7 @@ def test_potential_energy_2d():
         beta = np.random.uniform(1e-3, 10)
         omega = np.random.uniform(1e-3, 10)
         sys = System(num_particles, num_dimensions, alpha, beta, a)
-        sam = Sampler(omega, numerical_step, sys)
+        sam = Sampler(omega, sys)
 
         x = np.random.uniform(-20, 20)
         y = np.random.uniform(-20, 20)
@@ -314,7 +310,7 @@ def test_potential_energy_2d_2p():
         beta = np.random.uniform(1e-3, 10)
         omega = np.random.uniform(1e-3, 10)
         sys = System(num_particles, num_dimensions, alpha, beta, a)
-        sam = Sampler(omega, numerical_step, sys)
+        sam = Sampler(omega, sys)
 
         x1 = np.random.uniform(-20, 20)
         y1 = np.random.uniform(-20, 20)
@@ -344,7 +340,7 @@ def test_potential_energy_3d():
         beta = np.random.uniform(1e-3, 10)
         omega = np.random.uniform(1e-3, 10)
         sys = System(num_particles, num_dimensions, alpha, beta, a)
-        sam = Sampler(omega, numerical_step, sys)
+        sam = Sampler(omega, sys)
 
         x = np.random.uniform(-20, 20)
         y = np.random.uniform(-20, 20)
@@ -373,7 +369,7 @@ def test_potential_energy_3d_2p():
             alpha = np.random.uniform(1e-3, 10)
             omega = np.random.uniform(1e-3, 10)
             sys = System(num_particles, num_dimensions, alpha, 1.0, a)
-            sam = Sampler(omega, numerical_step, sys)
+            sam = Sampler(omega, sys)
 
             x1 = np.random.uniform(-20, 20)
             y1 = np.random.uniform(-20, 20)
@@ -409,7 +405,7 @@ def test_local_energy_2d():
         positions[0, 0] = np.random.uniform(-2, 2)
         positions[0, 1] = np.random.uniform(-2, 2)
         sys = System(num_particles, num_dimensions, alpha, beta, a)
-        sam = Sampler(omega, numerical_step, sys)
+        sam = Sampler(omega, sys)
         k = sam.laplacian(positions)/sys.wavefunction(positions)
         p = sam.potential_energy(positions)
         local_energy = -0.5*k + p
@@ -432,7 +428,7 @@ def test_local_energy_3d():
         positions[0, 1] = np.random.uniform(-2, 2)
         positions[0, 2] = np.random.uniform(-2, 2)
         sys = System(num_particles, num_dimensions, alpha, beta, a)
-        sam = Sampler(omega, numerical_step, sys)
+        sam = Sampler(omega, sys)
         k = sam.laplacian(positions)/sys.wavefunction(positions)
         p = sam.potential_energy(positions)
         local_energy = -0.5*k + p
@@ -455,7 +451,7 @@ def test_local_energy_times_wf_2d():
         positions[0, 0] = np.random.uniform(-2, 2)
         positions[0, 1] = np.random.uniform(-2, 2)
         sys = System(num_particles, num_dimensions, alpha, beta, a)
-        sam = Sampler(omega, numerical_step, sys)
+        sam = Sampler(omega, sys)
 
         e = sam.local_energy(positions)
         t = sys.derivative_psi_term(positions)*e
@@ -478,7 +474,7 @@ def test_local_energy_times_wf_2d_2p():
         positions[0, 0] = np.random.uniform(-2, 2)
         positions[0, 1] = np.random.uniform(-2, 2)
         sys = System(num_particles, num_dimensions, alpha, beta, a)
-        sam = Sampler(omega, numerical_step, sys)
+        sam = Sampler(omega, sys)
 
         e = sam.local_energy(positions)
         t = sys.derivative_psi_term(positions)*e
@@ -502,7 +498,7 @@ def test_local_energy_times_wf_3d():
         positions[0, 1] = np.random.uniform(-2, 2)
         positions[0, 2] = np.random.uniform(-2, 2)
         sys = System(num_particles, num_dimensions, alpha, beta, a)
-        sam = Sampler(omega, numerical_step, sys)
+        sam = Sampler(omega, sys)
 
         e = sam.local_energy(positions)
         t = sys.derivative_psi_term(positions)*e
@@ -528,7 +524,7 @@ def test_probability_2d():
         new_positions[0, 0] = np.random.uniform(-2, 2)
         new_positions[0, 1] = np.random.uniform(-2, 2)
         sys = System(num_particles, num_dimensions, alpha, beta, a)
-        sam = Sampler(omega, numerical_step, sys)
+        sam = Sampler(omega, sys)
 
         P_old = sys.wavefunction(positions)*sys.wavefunction(positions)
         P_new = sys.wavefunction(new_positions)*sys.wavefunction(new_positions)
@@ -557,7 +553,7 @@ def test_probability_3d():
         new_positions[0, 1] = np.random.uniform(-2, 2)
         new_positions[0, 2] = np.random.uniform(-2, 2)
         sys = System(num_particles, num_dimensions, alpha, beta, a)
-        sam = Sampler(omega, numerical_step, sys)
+        sam = Sampler(omega, sys)
 
         P_old = sys.wavefunction(positions)*sys.wavefunction(positions)
         P_new = sys.wavefunction(new_positions)*sys.wavefunction(new_positions)
@@ -586,7 +582,7 @@ def test_drift_force_2d():
         positions_fw_x[0, 0] = positions[0, 0] + numerical_step
         positions_fw_y[0, 1] = positions[0, 1] + numerical_step
         sys = System(num_particles, num_dimensions, alpha, beta, a)
-        sam = Sampler(omega, numerical_step, sys)
+        sam = Sampler(omega, sys)
 
         wf_current = sys.wavefunction(positions)
         wf_forward_x = sys.wavefunction(positions_fw_x)
@@ -626,7 +622,7 @@ def test_drift_force_2d_2p():
         positions_fw_x2[1, 0] = positions[1, 0] + numerical_step
         positions_fw_y2[1, 1] = positions[1, 1] + numerical_step
         sys = System(num_particles, num_dimensions, alpha, beta, a)
-        sam = Sampler(omega, numerical_step, sys)
+        sam = Sampler(omega, sys)
 
         wf_current = sys.wavefunction(positions)
         wf_forward_x1 = sys.wavefunction(positions_fw_x1)
@@ -669,7 +665,7 @@ def test_drift_force_3d():
         positions_fw_y[0, 1] = positions[0, 1] + numerical_step
         positions_fw_z[0, 2] = positions[0, 2] + numerical_step
         sys = System(num_particles, num_dimensions, alpha, beta, a)
-        sam = Sampler(omega, numerical_step, sys)
+        sam = Sampler(omega, sys)
 
         wf_current = sys.wavefunction(positions)
         wf_forward_x = sys.wavefunction(positions_fw_x)
@@ -717,7 +713,7 @@ def test_drift_force_3d_2p():
         positions_fw_y2[1, 1] = positions[1, 1] + numerical_step
         positions_fw_z2[1, 2] = positions[1, 2] + numerical_step
         sys = System(num_particles, num_dimensions, alpha, beta, a)
-        sam = Sampler(omega, numerical_step, sys)
+        sam = Sampler(omega, sys)
 
         wf_current = sys.wavefunction(positions)
         wf_forward_x1 = sys.wavefunction(positions_fw_x1)
@@ -761,7 +757,7 @@ def test_greens_function_2d():
         new_positions[0, 0] = np.random.uniform(-2, 2)
         new_positions[0, 1] = np.random.uniform(-2, 2)
         sys = System(num_particles, num_dimensions, alpha, beta, a)
-        sam = Sampler(omega, numerical_step, sys)
+        sam = Sampler(omega, sys)
 
         F_old = sam.quantum_force(positions)
         F_new = sam.quantum_force(new_positions)
@@ -796,7 +792,7 @@ def test_greens_function_3d():
         new_positions[0, 1] = np.random.uniform(-2, 2)
         new_positions[0, 2] = np.random.uniform(-2, 2)
         sys = System(num_particles, num_dimensions, alpha, beta, a)
-        sam = Sampler(omega, numerical_step, sys)
+        sam = Sampler(omega, sys)
 
         F_old = sam.quantum_force(positions)
         F_new = sam.quantum_force(new_positions)
@@ -838,7 +834,7 @@ def test_greens_function_3d_2p():
         new_positions[1, 1] = np.random.uniform(-2, 2)
         new_positions[1, 2] = np.random.uniform(-2, 2)
         sys = System(num_particles, num_dimensions, alpha, beta, a)
-        sam = Sampler(omega, numerical_step, sys)
+        sam = Sampler(omega, sys)
 
         F_old = sam.quantum_force(positions)
         F_new = sam.quantum_force(new_positions)

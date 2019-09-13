@@ -16,11 +16,10 @@ def test_metropolis():
     num_dimensions = 2
     omega = 1.0
     a = 0.0
-    numerical_step = 0.001
     alpha = np.random.uniform(1e-3, 10)
     beta = np.random.uniform(1e-3, 10)
     sys = System(num_particles, num_dimensions, alpha, beta, a)
-    sam = Sampler(omega, numerical_step, sys)
+    sam = Sampler(omega, sys)
     met = Metropolis(delta_R, delta_t, num_particles, num_dimensions, sam, 0.0)
     positions = np.zeros(shape=(num_particles, num_dimensions))
     _, new_positions, _ = met.metropolis(positions)
@@ -36,11 +35,10 @@ def test_importance_sampling():
     num_dimensions = 2
     omega = 1.0
     a = 0.0
-    numerical_step = 0.001
     alpha = np.random.uniform(1e-3, 10)
     beta = np.random.uniform(1e-3, 10)
     sys = System(num_particles, num_dimensions, alpha, beta, a)
-    sam = Sampler(omega, numerical_step, sys)
+    sam = Sampler(omega, sys)
     met = Metropolis(delta_R, delta_t, num_particles, num_dimensions, sam, 0.0)
     positions = np.zeros(shape=(num_particles, num_dimensions))
     _, new_positions, _ = met.importance_sampling(positions)
