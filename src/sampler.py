@@ -1,21 +1,20 @@
 """Sampler class."""
 import numpy as np
-import copy
 import math
 
 
 class Sampler:
     """Calculate variables regarding energy of given system."""
 
-    def __init__(self, omega, numerical_step, system):
+    def __init__(self, omega, system):
         """Instance of class."""
         self.omega = omega
-        self.step = numerical_step
         self.s = system
 
     def laplacian(self, positions):
         """Numerical differentiation for solving laplacian."""
 
+        step = 0.001
         position_forward = np.array(positions)
         position_backward = np.array(positions)
         psi_current = 0.0
@@ -25,16 +24,16 @@ class Sampler:
             psi_current += 2*self.s.num_d*self.s.wavefunction(positions)
             for j in range(self.s.num_d):
 
-                position_forward[i, j] = position_forward[i, j] + self.step
-                position_backward[i, j] = position_backward[i, j] - self.step
+                position_forward[i, j] = position_forward[i, j] + step
+                position_backward[i, j] = position_backward[i, j] - step
                 wf_p = self.s.wavefunction(position_forward)
                 wf_n = self.s.wavefunction(position_backward)
                 psi_moved += wf_p + wf_n
                 # Resett positions
-                position_forward[i, j] = position_forward[i, j] - self.step
-                position_backward[i, j] = position_backward[i, j] + self.step
+                position_forward[i, j] = position_forward[i, j] - step
+                position_backward[i, j] = position_backward[i, j] + step
 
-        laplacian = (psi_moved - psi_current)/(self.step*self.step)
+        laplacian = (psi_moved - psi_current)/(step*step)
         return laplacian
 
     def laplacian_analytic(self, positions):

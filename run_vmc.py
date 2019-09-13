@@ -15,16 +15,16 @@ Variational Monte Carlo with Metropolis Hastings algorithm for selection of
 configurations. Optimizing using Gradient descent.
 """
 
-monte_carlo_cycles = 10000
-num_particles = 2
+monte_carlo_cycles = 1000
+num_particles = 20
 num_dimensions = 3
-numerical_step_length = 0.001
 step_metropolis = 1.0
 step_importance = 0.01
-alpha = 0.49
-beta = 2.82843
-# a = 0.43
-a = 0.0
+alpha = 0.46
+beta = 1.0
+# beta = 2.82843
+a = 0.0043
+# a = 0.0
 omega = 1.0
 # omega = 2.82843
 learning_rate = 0.01
@@ -49,7 +49,7 @@ def run_vmc(parameter):
 
     # Call system class in order to set new alpha parameter
     sys = System(num_particles, num_dimensions, parameter, beta, a)
-    sam = Sampler(omega, numerical_step_length, sys)
+    sam = Sampler(omega, sys)
     met = Metropolis(step_metropolis, step_importance, num_particles,
                      num_dimensions, sam, 0.0)
 
