@@ -23,8 +23,11 @@ step_metropolis = 1.0
 step_importance = 0.1
 alpha = 0.48
 beta = 1.0
-a = 0.0
+# beta = 2.82843
+a = 0.0043
+# a = 0.0
 omega = 1.0
+# omega = 2.82843
 learning_rate = 0.01
 gradient_iterations = 1000
 parameter = alpha
@@ -47,26 +50,27 @@ def run_vmc(parameter):
 
     # Call system class in order to set new alpha parameter
     sys = System(num_particles, num_dimensions, parameter, beta, a)
-    sam = Sampler(omega, numerical_step_length, sys)
+    sam = Sampler(omega, sys)
     met = Metropolis(step_metropolis, step_importance, num_particles,
                      num_dimensions, sam, 0.0)
+
     for i in range(monte_carlo_cycles):
 
         new_energy, new_positions, count = met.metropolis(positions)
+        # new_energy, new_positions, count = met.importance_sampling(positions)
         positions = new_positions
         accumulate_energy += sam.local_energy(positions)
 
         accumulate_psi_term += sys.derivative_psi_term(positions)
         accumulate_both += sam.local_energy_times_wf(positions)
 
-    expec_val_energy = accumulate_energy/(monte_carlo_cycles*num_particles)
-    expec_val_psi = accumulate_psi_term/(monte_carlo_cycles*num_particles)
-    expec_val_both = accumulate_both/(monte_carlo_cycles*num_particles)
+    expec_val_energy = accumulate_energy/(monte_carlo_cycles)
+    expec_val_psi = accumulate_psi_term/(monte_carlo_cycles)
+    expec_val_both = accumulate_both/(monte_carlo_cycles)
 
     derivative_energy = 2*(expec_val_both - expec_val_psi*expec_val_energy)
-    print ('deri energy = ', derivative_energy)
-    print ('counter (accepted moves in metropolis) = ', count)
-    return derivative_energy, new_energy
+    print 'counter (accepted moves in metropolis) = ', count
+    return derivative_energy, expec_val_energy
 
 
 for i in range(gradient_iterations):
@@ -74,7 +78,9 @@ for i in range(gradient_iterations):
     d_El, energy = run_vmc(parameter)
     new_parameter = opt.gradient_descent(parameter, d_El)
     parameter = new_parameter
-    print ('new alpha =  ', new_parameter)
-    print ('----------------------------')
-    print ('new energy =  ', energy, 'correct energy = ',
-           0.5*num_dimensions*num_particles)
+    e = 0.5*num_dimensions*num_particles
+    # prints total energy of the system, NOT divided by N
+    print 'deri energy = ', d_El
+    print 'new alpha =  ', new_parameter
+    print 'total energy =  ', energy, 'correct energy = ', e
+    print '----------------------------'

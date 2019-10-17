@@ -119,7 +119,7 @@ def test_system_wavefunction_3d_2p():
         assert wf == pytest.approx(test, abs=1e-14)
 
 
-def test_jastrow_factor_2d():
+def test_jastrow_factor_2d_2p():
 
     a = 0.43
     num_particles = 2
@@ -147,7 +147,7 @@ def test_jastrow_factor_2d():
         assert f == pytest.approx(s.jastrow_factor(positions), abs=1e-14)
 
 
-def test_jastrow_factor_3d():
+def test_jastrow_factor_3d_2p():
 
     a = 0.43
     num_particles = 2

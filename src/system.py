@@ -58,13 +58,17 @@ class System:
 
         for i in range(self.num_p):
             for j in range(i, self.num_p-1):
-                ri_minus_rj = np.subtract(positions[i, :], positions[j+1, :])
-                distance = math.sqrt(np.sum(np.square(ri_minus_rj)))
+                # ri_minus_rj = np.subtract(positions[i, :], positions[j+1, :])
+                r = 0.0
+                for k in range(self.num_d):
+                    ri_minus_rj = positions[i, k] - positions[j+1, k]
+                    r += ri_minus_rj**2
+                distance = math.sqrt(r)
+                # distance = math.sqrt(np.sum(np.square(ri_minus_rj)))
                 if distance > self.a:
                     f = f*(1.0 - (self.a/distance))
                 else:
-                    f *= 0
-
+                    f *= 1e-14
         return f
 
     def derivative_psi_term(self, positions):
@@ -73,7 +77,7 @@ class System:
         described by the single particle wave function as a the harmonic
         oscillator function and the correlation function
         """
-        deri_psi = 1.0
+        deri_psi = 0.0
 
         for i in range(self.num_p):
             x = positions[i, 0]
@@ -82,8 +86,14 @@ class System:
                 # if vector is 3 dimesions
                 # positions[i, 2] *= self.beta
                 z = positions[i, 2]
+<<<<<<< HEAD
                 deri_psi = deri_psi*(x*x + y*y + self.beta*z*z)
             else:
                 deri_psi = deri_psi*(x*x + y*y)
+=======
+                deri_psi += (x*x + y*y + self.beta*z*z)
+            else:
+                deri_psi += (x*x + y*y)
+>>>>>>> 90b993d19700310c8ff8c66cd87d0e420fce57dc
 
         return -deri_psi

@@ -23,14 +23,12 @@ class Metropolis:
         """Run the naive metropolis algorithm."""
         """with brute-force sampling of new positions."""
 
-        # new_positions = new_positions()
-        # r = np.random.rand(self.num_p, self.num_d)
-        # r = random.random()
         r = random.random()*random.choice((-1, 1))
-        # Pick a random particle and suggest a new move
+        # Pick a random particle
         random_index = random.randrange(len(positions))
         new_positions = np.array(positions)
         new_random_position = new_positions[random_index, :]
+        # Suggest a new move
         new_positions[random_index, :] = new_random_position + r*self.delta_R
         acceptance_ratio = self.s.probability(positions, new_positions)
         epsilon = np.random.sample()
@@ -54,25 +52,30 @@ class Metropolis:
         variable and delta_t is the time step between 0.001 and 0.01"""
 
         D = 0.5
-        F = self.s.drift_force(positions)
+        F = self.s.quantum_force(positions)
         r = random.random()*random.choice((-1, 1))
-        term1 = D*F*self.delta_t
+        # Pick a random particle and calculate new position
+        random_index = random.randrange(len(positions))
+        new_positions = np.array(positions)
+
+        term1 = D*F[random_index, :]*self.delta_t
         term2 = r*np.sqrt(self.delta_t)
-        new_positions = np.array(positions) + term1 + term2
+        new_random_position = new_positions[random_index, :] + term1 + term2
+        new_positions[random_index, :] = new_random_position
+        prob_ratio = self.s.probability(positions, new_positions)
+        greens_function = self.s.greens_function(positions, new_positions,
+                                                 self.delta_t)
 
-        acceptance_ratio = self.s.greens_function(positions, new_positions,
-                                                  self.delta_t)
         epsilon = np.random.sample()
+        acceptance_ratio = prob_ratio*greens_function
 
-        if acceptance_ratio <= epsilon:
+        if acceptance_ratio > epsilon:
             positions = new_positions
+            self.c += 1.0
 
         else:
             pass
 
         energy = self.s.local_energy(positions)
 
-        return energy, positions
-
-    def gibbs_sampling(self):
-        """Run Gibbs sampling."""
+        return energy, positions, self.c
