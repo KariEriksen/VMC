@@ -1,9 +1,9 @@
-"""Sampler class."""
+"""Hamiltonian class."""
 import numpy as np
 import math
 
 
-class Sampler:
+class Hamiltonian:
     """Calculate variables regarding energy of given wavefunction."""
 
     def __init__(self, omega, wavefunction):

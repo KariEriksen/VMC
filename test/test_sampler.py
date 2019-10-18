@@ -4,7 +4,7 @@ import sys
 import os
 
 sys.path.append(os.path.join(os.path.dirname(__file__), os.pardir, 'src'))
-from sampler import Sampler  # noqa: 401
+from Hamiltonian.hamiltonian import Hamiltonian  # noqa: 401
 from wavefunction import Wavefunction  # noqa: 401
 
 
@@ -18,7 +18,7 @@ def test_kinetic_energy_2d():
     alpha = 0.5
     beta = 1.0
     wave = Wavefunction(num_particles, num_dimensions, alpha, beta, a)
-    sam = Sampler(omega, wave)
+    ham = Hamiltonian(omega, wave)
     for _ in range(50):
         positions = np.random.uniform(-20, 20, (num_particles, num_dimensions))
         alpha = np.random.uniform(1e-3, 10)
@@ -40,7 +40,7 @@ def test_kinetic_energy_2d():
                 kine_energy += wf_forward + wf_backwawrd - wf_current
         kine_energy = kine_energy/(numerical_step*numerical_step)
 
-        assert kine_energy == pytest.approx(sam.laplacian(positions),
+        assert kine_energy == pytest.approx(ham.laplacian_numerical(positions),
                                             abs=1e-10)
 
 
@@ -54,7 +54,7 @@ def test_kinetic_energy_2d_2p():
     alpha = 0.5
     beta = 1.0
     wave = Wavefunction(num_particles, num_dimensions, alpha, beta, a)
-    sam = Sampler(omega, wave)
+    ham = Hamiltonian(omega, wave)
     for _ in range(50):
         positions = np.random.uniform(-20, 20, (num_particles, num_dimensions))
         alpha = np.random.uniform(1e-2, 10)
@@ -76,7 +76,7 @@ def test_kinetic_energy_2d_2p():
                 kine_energy += wf_forward + wf_backwawrd - wf_current
         kine_energy = kine_energy/(numerical_step*numerical_step)
 
-        assert kine_energy == pytest.approx(sam.laplacian(positions),
+        assert kine_energy == pytest.approx(ham.laplacian_numerical(positions),
                                             abs=1e-10)
 
 
@@ -92,7 +92,7 @@ def test_kinetic_energy_3d():
         alpha = np.random.uniform(1e-3, 10)
         beta = np.random.uniform(1e-3, 10)
         wave = Wavefunction(num_particles, num_dimensions, alpha, beta, a)
-        sam = Sampler(omega, wave)
+        ham = Hamiltonian(omega, wave)
         x = np.random.uniform(-20, 20)
         y = np.random.uniform(-20, 20)
         z = np.random.uniform(-20, 20)
@@ -120,7 +120,7 @@ def test_kinetic_energy_3d():
         kine_energy = wf_forward + wf_backwawrd - wf_current
         kine_energy = kine_energy/(numerical_step*numerical_step)
 
-        assert kine_energy == pytest.approx(sam.laplacian(positions),
+        assert kine_energy == pytest.approx(ham.laplacian_numerical(positions),
                                             abs=1e-10)
 
 
@@ -134,7 +134,7 @@ def test_kinetic_energy_3d_2p():
     alpha = 0.5
     beta = 1.0
     wave = Wavefunction(num_particles, num_dimensions, alpha, beta, a)
-    sam = Sampler(omega, wave)
+    ham = Hamiltonian(omega, wave)
     for _ in range(50):
         positions = np.random.uniform(-20, 20, (num_particles, num_dimensions))
         alpha = np.random.uniform(1e-3, 10)
@@ -156,7 +156,7 @@ def test_kinetic_energy_3d_2p():
                 kine_energy += wf_forward + wf_backwawrd - wf_current
         kine_energy = kine_energy/(numerical_step*numerical_step)
 
-        assert kine_energy == pytest.approx(sam.laplacian(positions),
+        assert kine_energy == pytest.approx(ham.laplacian_numerical(positions),
                                             abs=1e-10)
 
 
@@ -172,13 +172,13 @@ def test_kinetic_analytic_2d():
         energy = 0.0
         alpha = np.random.uniform(1e-3, 10)
         wave = Wavefunction(num_particles, num_dimensions, alpha, beta, a)
-        sam = Sampler(omega, wave)
+        ham = Hamiltonian(omega, wave)
         x = np.random.uniform(-20, 20)
         y = np.random.uniform(-20, 20)
         positions[0, 0] = x
         positions[0, 1] = y
         energy = 4*alpha*alpha*(x*x + y*y) - 4*alpha
-        assert energy == pytest.approx(sam.laplacian_analytic(positions),
+        assert energy == pytest.approx(ham.laplacian_analytic_non_interacting(positions),
                                        abs=1e-14)
 
 
@@ -195,7 +195,7 @@ def test_kinetic_analytic_2d_2p():
         alpha = np.random.uniform(1e-3, 10)
         omega = np.random.uniform(1e-3, 10)
         wave = Wavefunction(num_particles, num_dimensions, alpha, beta, a)
-        sam = Sampler(omega, wave)
+        ham = Hamiltonian(omega, wave)
         x1 = np.random.uniform(-20, 20)
         y1 = np.random.uniform(-20, 20)
         x2 = np.random.uniform(-20, 20)
@@ -208,7 +208,7 @@ def test_kinetic_analytic_2d_2p():
             x = positions[i, 0]
             y = positions[i, 1]
             energy += 4*alpha*alpha*(x*x + y*y) - 4*alpha
-        assert energy == pytest.approx(sam.laplacian_analytic(positions),
+        assert energy == pytest.approx(ham.laplacian_analytic_non_interacting(positions),
                                        abs=1e-10)
 
 
@@ -224,7 +224,7 @@ def test_kinetic_analytic_3d():
         energy = 0.0
         alpha = np.random.uniform(1e-3, 10)
         wave = Wavefunction(num_particles, num_dimensions, alpha, beta, a)
-        sam = Sampler(omega, wave)
+        ham = Hamiltonian(omega, wave)
         x = np.random.uniform(-20, 20)
         y = np.random.uniform(-20, 20)
         z = np.random.uniform(-20, 20)
@@ -232,7 +232,7 @@ def test_kinetic_analytic_3d():
         positions[0, 1] = y
         positions[0, 2] = z
         energy = 4*alpha*alpha*(x*x + y*y + z*z) - 6*alpha
-        assert energy == pytest.approx(sam.laplacian_analytic(positions),
+        assert energy == pytest.approx(ham.laplacian_analytic_non_interacting(positions),
                                        abs=1e-14)
 
 
@@ -249,7 +249,7 @@ def test_kinetic_analytic_3d_2p():
         alpha = np.random.uniform(1e-3, 10)
         omega = np.random.uniform(1e-3, 10)
         wave = Wavefunction(num_particles, num_dimensions, alpha, beta, a)
-        sam = Sampler(omega, wave)
+        ham = Hamiltonian(omega, wave)
         x1 = np.random.uniform(-20, 20)
         y1 = np.random.uniform(-20, 20)
         z1 = np.random.uniform(-20, 20)
@@ -267,7 +267,7 @@ def test_kinetic_analytic_3d_2p():
             y = positions[i, 1]
             z = positions[i, 2]
             energy += 4*alpha*alpha*(x*x + y*y + z*z) - 6*alpha
-        assert energy == pytest.approx(sam.laplacian_analytic(positions),
+        assert energy == pytest.approx(ham.laplacian_analytic_non_interacting(positions),
                                        abs=1e-10)
 
 
@@ -283,7 +283,7 @@ def test_potential_energy_2d():
         beta = np.random.uniform(1e-3, 10)
         omega = np.random.uniform(1e-3, 10)
         wave = Wavefunction(num_particles, num_dimensions, alpha, beta, a)
-        sam = Sampler(omega, wave)
+        ham = Hamiltonian(omega, wave)
 
         x = np.random.uniform(-20, 20)
         y = np.random.uniform(-20, 20)
@@ -294,7 +294,7 @@ def test_potential_energy_2d():
             sum += (positions[0, i]*positions[0, i])
 
         pot_energy = 0.5*omega*omega*(sum)
-        assert pot_energy == pytest.approx(sam.potential_energy(positions),
+        assert pot_energy == pytest.approx(ham.trap_potential_energy(positions),
                                            abs=1e-14)
 
 
@@ -310,7 +310,7 @@ def test_potential_energy_2d_2p():
         beta = np.random.uniform(1e-3, 10)
         omega = np.random.uniform(1e-3, 10)
         wave = Wavefunction(num_particles, num_dimensions, alpha, beta, a)
-        sam = Sampler(omega, wave)
+        ham = Hamiltonian(omega, wave)
 
         x1 = np.random.uniform(-20, 20)
         y1 = np.random.uniform(-20, 20)
@@ -324,7 +324,7 @@ def test_potential_energy_2d_2p():
         sum = x1*x1 + x2*x2 + y1*y1 + y2*y2
 
         pot_energy = 0.5*omega*omega*(sum)
-        assert pot_energy == pytest.approx(sam.potential_energy(positions),
+        assert pot_energy == pytest.approx(ham.trap_potential_energy(positions),
                                            abs=1e-10)
 
 
@@ -340,7 +340,7 @@ def test_potential_energy_3d():
         beta = np.random.uniform(1e-3, 10)
         omega = np.random.uniform(1e-3, 10)
         wave = Wavefunction(num_particles, num_dimensions, alpha, beta, a)
-        sam = Sampler(omega, wave)
+        ham = Hamiltonian(omega, wave)
 
         x = np.random.uniform(-20, 20)
         y = np.random.uniform(-20, 20)
@@ -354,7 +354,7 @@ def test_potential_energy_3d():
             sum += (positions[0, i]*positions[0, i])
 
         pot_energy = 0.5*omega*omega*(sum)
-        assert pot_energy == pytest.approx(sam.potential_energy(positions),
+        assert pot_energy == pytest.approx(ham.trap_potential_energy(positions),
                                            abs=1e-14)
 
 
@@ -369,7 +369,7 @@ def test_potential_energy_3d_2p():
             alpha = np.random.uniform(1e-3, 10)
             omega = np.random.uniform(1e-3, 10)
             wave = Wavefunction(num_particles, num_dimensions, alpha, 1.0, a)
-            sam = Sampler(omega, wave)
+            ham = Hamiltonian(omega, wave)
 
             x1 = np.random.uniform(-20, 20)
             y1 = np.random.uniform(-20, 20)
@@ -387,7 +387,7 @@ def test_potential_energy_3d_2p():
             sum = x1*x1 + x2*x2 + y1*y1 + y2*y2 + z1*z1 + z2*z2
 
             pot_energy = 0.5*omega*omega*(sum)
-            assert pot_energy == pytest.approx(sam.potential_energy(positions),
+            assert pot_energy == pytest.approx(ham.trap_potential_energy(positions),
                                                abs=1e-10)
 
 
@@ -405,12 +405,11 @@ def test_local_energy_2d():
         positions[0, 0] = np.random.uniform(-2, 2)
         positions[0, 1] = np.random.uniform(-2, 2)
         wave = Wavefunction(num_particles, num_dimensions, alpha, beta, a)
-        sam = Sampler(omega, wave)
-        k = sam.laplacian(positions)/wave.wavefunction(positions)
-        p = sam.potential_energy(positions)
+        ham = Hamiltonian(omega, wave)
+        k = ham.laplacian_numerical(positions)/wave.wavefunction(positions)
+        p = ham.trap_potential_energy(positions)
         local_energy = -0.5*k + p
-        assert local_energy == pytest.approx(sam.local_energy(positions),
-                                             abs=1e-14)
+        assert local_energy == pytest.approx(ham.local_energy_weak_interaction_numerical(positions), abs=1e-14)
 
 
 def test_local_energy_3d():
@@ -428,12 +427,11 @@ def test_local_energy_3d():
         positions[0, 1] = np.random.uniform(-2, 2)
         positions[0, 2] = np.random.uniform(-2, 2)
         wave = Wavefunction(num_particles, num_dimensions, alpha, beta, a)
-        sam = Sampler(omega, wave)
-        k = sam.laplacian(positions)/wave.wavefunction(positions)
-        p = sam.potential_energy(positions)
+        ham = Hamiltonian(omega, wave)
+        k = ham.laplacian_numerical(positions)/wave.wavefunction(positions)
+        p = ham.trap_potential_energy(positions)
         local_energy = -0.5*k + p
-        assert local_energy == pytest.approx(sam.local_energy(positions),
-                                             abs=1e-14)
+        assert local_energy == pytest.approx(ham.local_energy_weak_interaction_numerical(positions), abs=1e-14)
 
 
 def test_local_energy_times_wf_2d():
@@ -451,11 +449,11 @@ def test_local_energy_times_wf_2d():
         positions[0, 0] = np.random.uniform(-2, 2)
         positions[0, 1] = np.random.uniform(-2, 2)
         wave = Wavefunction(num_particles, num_dimensions, alpha, beta, a)
-        sam = Sampler(omega, wave)
+        ham = Hamiltonian(omega, wave)
 
-        e = sam.local_energy(positions)
+        e = ham.local_energy_weak_interaction_numerical(positions)
         t = wave.derivative_psi_term(positions)*e
-        assert t == pytest.approx(sam.local_energy_times_wf(positions),
+        assert t == pytest.approx(ham.local_energy_times_wf_weak_interaction(positions),
                                   abs=1e-14)
 
 
@@ -474,11 +472,11 @@ def test_local_energy_times_wf_2d_2p():
         positions[0, 0] = np.random.uniform(-2, 2)
         positions[0, 1] = np.random.uniform(-2, 2)
         wave = Wavefunction(num_particles, num_dimensions, alpha, beta, a)
-        sam = Sampler(omega, wave)
+        ham = Hamiltonian(omega, wave)
 
-        e = sam.local_energy(positions)
+        e = ham.local_energy_weak_interaction_numerical(positions)
         t = wave.derivative_psi_term(positions)*e
-        assert t == pytest.approx(sam.local_energy_times_wf(positions),
+        assert t == pytest.approx(ham.local_energy_times_wf_weak_interaction(positions),
                                   abs=1e-14)
 
 
@@ -498,11 +496,11 @@ def test_local_energy_times_wf_3d():
         positions[0, 1] = np.random.uniform(-2, 2)
         positions[0, 2] = np.random.uniform(-2, 2)
         wave = Wavefunction(num_particles, num_dimensions, alpha, beta, a)
-        sam = Sampler(omega, wave)
+        ham = Hamiltonian(omega, wave)
 
-        e = sam.local_energy(positions)
+        e = ham.local_energy_weak_interaction_numerical(positions)
         t = wave.derivative_psi_term(positions)*e
-        assert t == pytest.approx(sam.local_energy_times_wf(positions),
+        assert t == pytest.approx(ham.local_energy_times_wf_weak_interaction(positions),
                                   abs=1e-14)
 
 
@@ -524,12 +522,12 @@ def test_probability_2d():
         new_positions[0, 0] = np.random.uniform(-2, 2)
         new_positions[0, 1] = np.random.uniform(-2, 2)
         wave = Wavefunction(num_particles, num_dimensions, alpha, beta, a)
-        sam = Sampler(omega, wave)
+        ham = Hamiltonian(omega, wave)
 
         P_old = wave.wavefunction(positions)*wave.wavefunction(positions)
         P_new = wave.wavefunction(new_positions)*wave.wavefunction(new_positions)
         accept_ratio = P_new/P_old
-        assert accept_ratio == pytest.approx(sam.probability(positions,
+        assert accept_ratio == pytest.approx(ham.probability(positions,
                                              new_positions), abs=1e-14)
 
 
@@ -553,12 +551,12 @@ def test_probability_3d():
         new_positions[0, 1] = np.random.uniform(-2, 2)
         new_positions[0, 2] = np.random.uniform(-2, 2)
         wave = Wavefunction(num_particles, num_dimensions, alpha, beta, a)
-        sam = Sampler(omega, wave)
+        ham = Hamiltonian(omega, wave)
 
         P_old = wave.wavefunction(positions)*wave.wavefunction(positions)
         P_new = wave.wavefunction(new_positions)*wave.wavefunction(new_positions)
         accept_ratio = P_new/P_old
-        assert accept_ratio == pytest.approx(sam.probability(positions,
+        assert accept_ratio == pytest.approx(ham.probability(positions,
                                              new_positions), abs=1e-14)
 
 
@@ -582,7 +580,7 @@ def test_drift_force_2d():
         positions_fw_x[0, 0] = positions[0, 0] + numerical_step
         positions_fw_y[0, 1] = positions[0, 1] + numerical_step
         wave = Wavefunction(num_particles, num_dimensions, alpha, beta, a)
-        sam = Sampler(omega, wave)
+        ham = Hamiltonian(omega, wave)
 
         wf_current = wave.wavefunction(positions)
         wf_forward_x = wave.wavefunction(positions_fw_x)
@@ -592,7 +590,7 @@ def test_drift_force_2d():
         drift_force[0, 0] = (2.0/wf_current)*deri1
         drift_force[0, 1] = (2.0/wf_current)*deri2
 
-        assert drift_force == pytest.approx(sam.quantum_force(positions),
+        assert drift_force == pytest.approx(ham.quantum_force(positions),
                                             abs=1e-14)
 
 
@@ -622,7 +620,7 @@ def test_drift_force_2d_2p():
         positions_fw_x2[1, 0] = positions[1, 0] + numerical_step
         positions_fw_y2[1, 1] = positions[1, 1] + numerical_step
         wave = Wavefunction(num_particles, num_dimensions, alpha, beta, a)
-        sam = Sampler(omega, wave)
+        ham = Hamiltonian(omega, wave)
 
         wf_current = wave.wavefunction(positions)
         wf_forward_x1 = wave.wavefunction(positions_fw_x1)
@@ -638,7 +636,7 @@ def test_drift_force_2d_2p():
         drift_force[1, 0] = (2.0/wf_current)*deri3
         drift_force[1, 1] = (2.0/wf_current)*deri4
 
-        assert drift_force == pytest.approx(sam.quantum_force(positions),
+        assert drift_force == pytest.approx(ham.quantum_force(positions),
                                             abs=1e-14)
 
 
@@ -665,7 +663,7 @@ def test_drift_force_3d():
         positions_fw_y[0, 1] = positions[0, 1] + numerical_step
         positions_fw_z[0, 2] = positions[0, 2] + numerical_step
         wave = Wavefunction(num_particles, num_dimensions, alpha, beta, a)
-        sam = Sampler(omega, wave)
+        ham = Hamiltonian(omega, wave)
 
         wf_current = wave.wavefunction(positions)
         wf_forward_x = wave.wavefunction(positions_fw_x)
@@ -677,7 +675,7 @@ def test_drift_force_3d():
         drift_force[0, 0] = (2.0/wf_current)*deri1
         drift_force[0, 1] = (2.0/wf_current)*deri2
         drift_force[0, 2] = (2.0/wf_current)*deri3
-        assert drift_force == pytest.approx(sam.quantum_force(positions),
+        assert drift_force == pytest.approx(ham.quantum_force(positions),
                                             abs=1e-14)
 
 
@@ -713,7 +711,7 @@ def test_drift_force_3d_2p():
         positions_fw_y2[1, 1] = positions[1, 1] + numerical_step
         positions_fw_z2[1, 2] = positions[1, 2] + numerical_step
         wave = Wavefunction(num_particles, num_dimensions, alpha, beta, a)
-        sam = Sampler(omega, wave)
+        ham = Hamiltonian(omega, wave)
 
         wf_current = wave.wavefunction(positions)
         wf_forward_x1 = wave.wavefunction(positions_fw_x1)
@@ -735,7 +733,7 @@ def test_drift_force_3d_2p():
         drift_force[0, 2] = (2.0/wf_current)*deri5
         drift_force[1, 2] = (2.0/wf_current)*deri6
 
-        assert drift_force == pytest.approx(sam.quantum_force(positions),
+        assert drift_force == pytest.approx(ham.quantum_force(positions),
                                             abs=1e-14)
 
 
@@ -757,10 +755,10 @@ def test_greens_function_2d():
         new_positions[0, 0] = np.random.uniform(-2, 2)
         new_positions[0, 1] = np.random.uniform(-2, 2)
         wave = Wavefunction(num_particles, num_dimensions, alpha, beta, a)
-        sam = Sampler(omega, wave)
+        ham = Hamiltonian(omega, wave)
 
-        F_old = sam.quantum_force(positions)
-        F_new = sam.quantum_force(new_positions)
+        F_old = ham.quantum_force(positions)
+        F_new = ham.quantum_force(new_positions)
         D = 0.5
         delta_t = 0.01
         G = 0.0
@@ -768,7 +766,7 @@ def test_greens_function_2d():
              D*delta_t*(F_old - F_new))
         G = np.exp(np.sum(G))
 
-        assert G == pytest.approx(sam.greens_function(positions, new_positions,
+        assert G == pytest.approx(ham.greens_function(positions, new_positions,
                                                       delta_t), abs=1e-14)
 
 
@@ -792,10 +790,10 @@ def test_greens_function_3d():
         new_positions[0, 1] = np.random.uniform(-2, 2)
         new_positions[0, 2] = np.random.uniform(-2, 2)
         wave = Wavefunction(num_particles, num_dimensions, alpha, beta, a)
-        sam = Sampler(omega, wave)
+        ham = Hamiltonian(omega, wave)
 
-        F_old = sam.quantum_force(positions)
-        F_new = sam.quantum_force(new_positions)
+        F_old = ham.quantum_force(positions)
+        F_new = ham.quantum_force(new_positions)
         D = 0.5
         delta_t = 0.01
         G = 0.0
@@ -803,7 +801,7 @@ def test_greens_function_3d():
              D*delta_t*(F_old - F_new))
         G = np.exp(np.sum(G))
 
-        assert G == pytest.approx(sam.greens_function(positions,
+        assert G == pytest.approx(ham.greens_function(positions,
                                                       new_positions, delta_t),
                                   abs=1e-14)
 
@@ -834,10 +832,10 @@ def test_greens_function_3d_2p():
         new_positions[1, 1] = np.random.uniform(-2, 2)
         new_positions[1, 2] = np.random.uniform(-2, 2)
         wave = Wavefunction(num_particles, num_dimensions, alpha, beta, a)
-        sam = Sampler(omega, wave)
+        ham = Hamiltonian(omega, wave)
 
-        F_old = sam.quantum_force(positions)
-        F_new = sam.quantum_force(new_positions)
+        F_old = ham.quantum_force(positions)
+        F_new = ham.quantum_force(new_positions)
         D = 0.5
         delta_t = 0.01
         G = 0.0
@@ -845,6 +843,6 @@ def test_greens_function_3d_2p():
              D*delta_t*(F_old - F_new))
         G = np.exp(np.sum(G))
 
-        assert G == pytest.approx(sam.greens_function(positions,
+        assert G == pytest.approx(ham.greens_function(positions,
                                                       new_positions, delta_t),
                                   abs=1e-14)

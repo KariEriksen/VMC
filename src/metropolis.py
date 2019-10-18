@@ -6,22 +6,22 @@ import random
 class Metropolis:
     """Metropolis methods."""
 
-    # Sampler(omega, step)
+    # Hamiltonian(omega, step)
 
     def __init__(self, delta_R, delta_t, num_particles, num_dimensions,
-                 sampler, c):
+                 hamiltonian, c):
         """Instance of class."""
         self.delta_R = delta_R
         self.delta_t = delta_t
         self.num_p = num_particles
         self.num_d = num_dimensions
         # self.positions = positions
-        self.s = sampler
+        self.s = hamiltonian
         self.c = c
 
     def metropolis(self, positions):
         """Run the naive metropolis algorithm."""
-        """with brute-force sampling of new positions."""
+        """with brute-force hampling of new positions."""
 
         r = random.random()*random.choice((-1, 1))
         # Pick a random particle
@@ -40,12 +40,12 @@ class Metropolis:
         else:
             pass
 
-        energy = self.s.local_energy(positions)
+        energy = self.s.local_energy_weak_interaction_numerical(positions)
 
         return energy, positions, self.c
 
-    def importance_sampling(self, positions):
-        """Run Importance sampling."""
+    def importance_hampling(self, positions):
+        """Run Importance hampling."""
         """With upgrad method for suggetion of new positions."""
         """Given through the Langevin equation.
         D is the diffusion coefficient equal 0.5, xi is a gaussion random
@@ -76,6 +76,6 @@ class Metropolis:
         else:
             pass
 
-        energy = self.s.local_energy(positions)
+        energy = self.s.local_energy_weak_interaction_numerical(positions)
 
         return energy, positions, self.c

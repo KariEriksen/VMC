@@ -7,7 +7,7 @@ import os
 sys.path.append(os.path.join(os.path.dirname(__file__), 'src'))
 from metropolis import Metropolis # noqa: 401
 from optimizer import Optimizer # noqa: 401
-from sampler import Sampler # noqa: 401
+from Hamiltonian.hamiltonian import Hamiltonian # noqa: 401
 from wavefunction import Wavefunction # noqa: 401
 
 """
@@ -47,19 +47,19 @@ def run_vmc(parameter):
 
     # Call wavefunction class in order to set new alpha parameter
     wave = Wavefunction(num_particles, num_dimensions, parameter, beta, a)
-    sam = Sampler(omega, wave)
+    ham = Hamiltonian(omega, wave)
     met = Metropolis(step_metropolis, step_importance, num_particles,
-                     num_dimensions, sam, 0.0)
+                     num_dimensions, ham, 0.0)
 
     for i in range(monte_carlo_cycles):
 
         new_energy, new_positions, count = met.metropolis(positions)
-        # new_energy, new_positions, count = met.importance_sampling(positions)
+        # new_energy, new_positions, count = met.importance_hampling(positions)
         positions = new_positions
-        accumulate_energy += sam.local_energy(positions)
+        accumulate_energy += ham.local_energy_weak_interaction_numerical(positions)
 
         accumulate_psi_term += wave.derivative_psi_term(positions)
-        accumulate_both += sam.local_energy_times_wf(positions)
+        accumulate_both += ham.local_energy_times_wf(positions)
 
     expec_val_energy = accumulate_energy/(monte_carlo_cycles)
     expec_val_psi = accumulate_psi_term/(monte_carlo_cycles)
