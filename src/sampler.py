@@ -149,9 +149,9 @@ class Sampler:
     def local_energy(self, positions):
         """Return the local energy."""
         # Run with analytical expression for kinetic energy
-        # k = -0.5*self.laplacian_analytic_interaction(positions)
+        k = -0.5*self.laplacian_analytic_interaction(positions)
         # Run with numerical expression for kinetic energy
-        k = -0.5*self.laplacian(positions)/self.s.wavefunction(positions)
+        # k = -0.5*self.laplacian(positions)/self.s.wavefunction(positions)
         p = self.potential_energy(positions)
         energy = k + p
 

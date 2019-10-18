@@ -15,18 +15,16 @@ Variational Monte Carlo with Metropolis Hastings algorithm for selection of
 configurations. Optimizing using Gradient descent.
 """
 
-monte_carlo_cycles = 1000
-num_particles = 20
+monte_carlo_cycles = 10000
+num_particles = 2
 num_dimensions = 3
 step_metropolis = 1.0
 step_importance = 0.01
 alpha = 0.46
-beta = 1.0
-# beta = 2.82843
-a = 0.0043
+beta = omega = 1.0
+# beta = omega = 2.82843
+a = 0.00433
 # a = 0.0
-omega = 1.0
-# omega = 2.82843
 learning_rate = 0.01
 gradient_iterations = 1000
 parameter = alpha
@@ -81,5 +79,6 @@ for i in range(gradient_iterations):
     # prints total energy of the system, NOT divided by N
     print 'deri energy = ', d_El
     print 'new alpha =  ', new_parameter
-    print 'total energy =  ', energy, 'correct energy = ', e
+    print 'energy pr particle =  ', energy
+    # energy/num_particles
     print '----------------------------'
