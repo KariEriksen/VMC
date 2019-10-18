@@ -5,7 +5,7 @@ import os
 sys.path.append(os.path.join(os.path.dirname(__file__), os.pardir, 'src'))
 from metropolis import Metropolis  # noqa: 401
 from sampler import Sampler  # noqa; 401
-from system import System  # noqa: 401
+from wavefunction import Wavefunction  # noqa: 401
 
 
 def test_metropolis():
@@ -18,8 +18,8 @@ def test_metropolis():
     a = 0.0
     alpha = np.random.uniform(1e-3, 10)
     beta = np.random.uniform(1e-3, 10)
-    sys = System(num_particles, num_dimensions, alpha, beta, a)
-    sam = Sampler(omega, sys)
+    wave = Wavefunction(num_particles, num_dimensions, alpha, beta, a)
+    sam = Sampler(omega, wave)
     met = Metropolis(delta_R, delta_t, num_particles, num_dimensions, sam, 0.0)
     positions = np.zeros(shape=(num_particles, num_dimensions))
     _, new_positions, _ = met.metropolis(positions)
@@ -37,8 +37,8 @@ def test_importance_sampling():
     a = 0.0
     alpha = np.random.uniform(1e-3, 10)
     beta = np.random.uniform(1e-3, 10)
-    sys = System(num_particles, num_dimensions, alpha, beta, a)
-    sam = Sampler(omega, sys)
+    wave = Wavefunction(num_particles, num_dimensions, alpha, beta, a)
+    sam = Sampler(omega, wave)
     met = Metropolis(delta_R, delta_t, num_particles, num_dimensions, sam, 0.0)
     positions = np.zeros(shape=(num_particles, num_dimensions))
     _, new_positions, _ = met.importance_sampling(positions)

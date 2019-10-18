@@ -5,16 +5,16 @@ import sys
 import os
 
 sys.path.append(os.path.join(os.path.dirname(__file__), os.pardir, 'src'))
-from system import System  # noqa: 401
+from wavefunction import Wavefunction  # noqa: 401
 
 
-def test_system_wavefunction_2d():
+def test_wavefunction_wavefunction_2d():
     num_particles = 1
     num_dimensions = 2
     alpha = 1.0
     beta = 1.0
     a = 0.0
-    s = System(num_particles, num_dimensions, alpha, beta, a)
+    s = Wavefunction(num_particles, num_dimensions, alpha, beta, a)
     positions = np.zeros(shape=(num_particles, num_dimensions))
     x = 2.92858925782756
     y = 0.00925285752985
@@ -36,13 +36,13 @@ def test_system_wavefunction_2d():
         assert wf == pytest.approx(np.exp(-alpha*(x**2 + y**2)), abs=1e-14)
 
 
-def test_system_wavefunction_2d_2p():
+def test_wavefunction_wavefunction_2d_2p():
     num_particles = 2
     num_dimensions = 2
     alpha = 1.0
     beta = 1.0
     a = 0.0
-    s = System(num_particles, num_dimensions, alpha, beta, a)
+    s = Wavefunction(num_particles, num_dimensions, alpha, beta, a)
 
     for _ in range(50):
         alpha = np.random.uniform(1e-3, 10)
@@ -57,13 +57,13 @@ def test_system_wavefunction_2d_2p():
         assert wf == pytest.approx(test, abs=1e-14)
 
 
-def test_system_wavefunction_3d():
+def test_wavefunction_wavefunction_3d():
     num_particles = 1
     num_dimensions = 3
     alpha = 1.0
     beta = 1.0
     a = 0.0
-    s = System(num_particles, num_dimensions, alpha, beta, a)
+    s = Wavefunction(num_particles, num_dimensions, alpha, beta, a)
     positions = np.zeros(shape=(num_particles, num_dimensions))
 
     for _ in range(50):
@@ -84,13 +84,13 @@ def test_system_wavefunction_3d():
                                    abs=1e-14)
 
 
-def test_system_wavefunction_3d_2p():
+def test_wavefunction_wavefunction_3d_2p():
     num_particles = 2
     num_dimensions = 3
     alpha = 1.0
     beta = 1.0
     a = 0.0
-    s = System(num_particles, num_dimensions, alpha, beta, a)
+    s = Wavefunction(num_particles, num_dimensions, alpha, beta, a)
     positions = np.zeros(shape=(num_particles, num_dimensions))
 
     for _ in range(50):
@@ -130,7 +130,7 @@ def test_jastrow_factor_2d_2p():
 
     for _ in range(50):
         alpha = np.random.uniform(1e-3, 10)
-        s = System(num_particles, num_dimensions, alpha, beta, a)
+        s = Wavefunction(num_particles, num_dimensions, alpha, beta, a)
         positions[0, 0] = np.random.uniform(-20, 20)
         positions[0, 1] = np.random.uniform(-20, 20)
         positions[1, 0] = np.random.uniform(-20, 20)
@@ -159,7 +159,7 @@ def test_jastrow_factor_3d_2p():
     for _ in range(50):
         alpha = np.random.uniform(1e-3, 10)
         beta = np.random.uniform(1e-3, 10)
-        s = System(num_particles, num_dimensions, alpha, beta, a)
+        s = Wavefunction(num_particles, num_dimensions, alpha, beta, a)
         positions[0, 0] = np.random.uniform(-20, 20)
         positions[0, 1] = np.random.uniform(-20, 20)
         positions[0, 2] = np.random.uniform(-20, 20)
@@ -178,13 +178,13 @@ def test_jastrow_factor_3d_2p():
         assert f == pytest.approx(s.jastrow_factor(positions), abs=1e-14)
 
 
-def test_system_derivative_psi_term_2d():
+def test_wavefunction_derivative_psi_term_2d():
     num_particles = 1
     num_dimensions = 2
     alpha = 1.0
     beta = 1.0
     a = 0.0
-    s = System(num_particles, num_dimensions, alpha, beta, a)
+    s = Wavefunction(num_particles, num_dimensions, alpha, beta, a)
     positions = np.zeros(shape=(num_particles, num_dimensions))
 
     for _ in range(50):
@@ -201,13 +201,13 @@ def test_system_derivative_psi_term_2d():
         assert wf == pytest.approx((-x**2 - y**2), abs=1e-14)
 
 
-def test_system_derivative_psi_term_3d():
+def test_wavefunction_derivative_psi_term_3d():
     num_particles = 1
     num_dimensions = 3
     alpha = 1.0
     beta = 1.0
     a = 0.0
-    s = System(num_particles, num_dimensions, alpha, beta, a)
+    s = Wavefunction(num_particles, num_dimensions, alpha, beta, a)
     positions = np.zeros(shape=(num_particles, num_dimensions))
 
     for _ in range(50):

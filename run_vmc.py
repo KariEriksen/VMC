@@ -8,7 +8,7 @@ sys.path.append(os.path.join(os.path.dirname(__file__), 'src'))
 from metropolis import Metropolis # noqa: 401
 from optimizer import Optimizer # noqa: 401
 from sampler import Sampler # noqa: 401
-from system import System # noqa: 401
+from wavefunction import Wavefunction # noqa: 401
 
 """
 Variational Monte Carlo with Metropolis Hastings algorithm for selection of
@@ -45,9 +45,9 @@ def run_vmc(parameter):
     # Initialize the posistions for each new Monte Carlo run
     positions = np.random.rand(num_particles, num_dimensions)
 
-    # Call system class in order to set new alpha parameter
-    sys = System(num_particles, num_dimensions, parameter, beta, a)
-    sam = Sampler(omega, sys)
+    # Call wavefunction class in order to set new alpha parameter
+    wave = Wavefunction(num_particles, num_dimensions, parameter, beta, a)
+    sam = Sampler(omega, wave)
     met = Metropolis(step_metropolis, step_importance, num_particles,
                      num_dimensions, sam, 0.0)
 
@@ -58,7 +58,7 @@ def run_vmc(parameter):
         positions = new_positions
         accumulate_energy += sam.local_energy(positions)
 
-        accumulate_psi_term += sys.derivative_psi_term(positions)
+        accumulate_psi_term += wave.derivative_psi_term(positions)
         accumulate_both += sam.local_energy_times_wf(positions)
 
     expec_val_energy = accumulate_energy/(monte_carlo_cycles)
@@ -76,7 +76,7 @@ for i in range(gradient_iterations):
     new_parameter = opt.gradient_descent(parameter, d_El)
     parameter = new_parameter
     e = 0.5*num_dimensions*num_particles
-    # prints total energy of the system, NOT divided by N
+    # prints total energy of the wavefunction, NOT divided by N
     print 'deri energy = ', d_El
     print 'new alpha =  ', new_parameter
     print 'energy pr particle =  ', energy

@@ -1,10 +1,10 @@
-"""System class."""
+"""Wavefunction class."""
 import math
 import numpy as np
 
 
-class System:
-    """Contains parameters of system and wave equation."""
+class Wavefunction:
+    """Contains parameters of wavefunction and wave equation."""
 
     # deri_psi = 0.0
     # g        = 0.0

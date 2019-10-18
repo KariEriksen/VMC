@@ -4,12 +4,12 @@ import math
 
 
 class Hamiltonian:
-    """Calculate variables regarding the Hamiltonian of given system."""
+    """Calculate variables regarding the Hamiltonian of given wavefunction."""
 
-    def __init__(self, omega, system):
+    def __init__(self, omega, wavefunction):
         """Instance of class."""
         self.omega = omega
-        self.s = system
+        self.s = wavefunction
 
     def laplacian(self, positions):
         """Numerical differentiation for solving laplacian."""
@@ -59,7 +59,7 @@ class Hamiltonian:
 
     def laplacian_analytic_weak_interaction(self, positions):
         """The analytical term for the laplacian, with weak interaction"""
-        """In the weak interacting case the system is described by a
+        """In the weak interacting case the wavefunction is described by a
         harmonic oscillator with a trap potential"""
         """The analytic solution to kinetic energy given wave functions
         where a = scattering length"""
@@ -146,7 +146,7 @@ class Hamiltonian:
         return laplacian
 
     def trap_potential_energy(self, positions):
-        """Return the potential energy of the system."""
+        """Return the potential energy of the wavefunction."""
         """omega < 1.0 sylinder"""
         """omega = 1.0 symmetric"""
         """omega > 1.0 elliptic"""

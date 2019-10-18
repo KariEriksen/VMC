@@ -4,12 +4,12 @@ import math
 
 
 class Sampler:
-    """Calculate variables regarding energy of given system."""
+    """Calculate variables regarding energy of given wavefunction."""
 
-    def __init__(self, omega, system):
+    def __init__(self, omega, wavefunction):
         """Instance of class."""
         self.omega = omega
-        self.s = system
+        self.s = wavefunction
 
     def laplacian(self, positions):
         """Numerical differentiation for solving laplacian."""
@@ -140,7 +140,7 @@ class Sampler:
         return laplacian
 
     def potential_energy(self, positions):
-        """Return the potential energy of the system."""
+        """Return the potential energy of the wavefunction."""
         omega_sq = self.omega*self.omega
 
         # 0.5*omega_sq*np.sum(np.multiply(positions, positions))
