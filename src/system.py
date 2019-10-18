@@ -66,7 +66,7 @@ class System:
                 distance = math.sqrt(r)
                 # distance = math.sqrt(np.sum(np.square(ri_minus_rj)))
                 if distance > self.a:
-                    f *= 1.0 - (self.a/distance)
+                    f = f*(1.0 - (self.a/distance))
                 else:
                     f *= 1e-14
         return f
@@ -86,6 +86,7 @@ class System:
                 # if vector is 3 dimesions
                 # positions[i, 2] *= self.beta
                 z = positions[i, 2]
+
                 deri_psi += (x*x + y*y + self.beta*z*z)
             else:
                 deri_psi += (x*x + y*y)
