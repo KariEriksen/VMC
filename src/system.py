@@ -71,7 +71,7 @@ class Wavefunction:
                     f *= 1e-14
         return f
 
-    def derivative_psi_term(self, positions):
+    def gradient_wavefunction(self, positions):
         """Calculate derivative of wave function divided by wave function."""
         """This expression holds for the case of the trail wave function
         described by the single particle wave function as a the harmonic

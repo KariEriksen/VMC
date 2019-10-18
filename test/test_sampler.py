@@ -452,7 +452,7 @@ def test_local_energy_times_wf_2d():
         ham = Hamiltonian(omega, wave)
 
         e = ham.local_energy_weak_interaction_numerical(positions)
-        t = wave.derivative_psi_term(positions)*e
+        t = wave.gradient_wavefunction(positions)*e
         assert t == pytest.approx(ham.local_energy_times_wf_weak_interaction(positions),
                                   abs=1e-14)
 
@@ -475,7 +475,7 @@ def test_local_energy_times_wf_2d_2p():
         ham = Hamiltonian(omega, wave)
 
         e = ham.local_energy_weak_interaction_numerical(positions)
-        t = wave.derivative_psi_term(positions)*e
+        t = wave.gradient_wavefunction(positions)*e
         assert t == pytest.approx(ham.local_energy_times_wf_weak_interaction(positions),
                                   abs=1e-14)
 
@@ -499,7 +499,7 @@ def test_local_energy_times_wf_3d():
         ham = Hamiltonian(omega, wave)
 
         e = ham.local_energy_weak_interaction_numerical(positions)
-        t = wave.derivative_psi_term(positions)*e
+        t = wave.gradient_wavefunction(positions)*e
         assert t == pytest.approx(ham.local_energy_times_wf_weak_interaction(positions),
                                   abs=1e-14)
 

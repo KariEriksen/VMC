@@ -27,7 +27,7 @@ def test_metropolis():
     assert new_positions.shape == (num_particles, num_dimensions)
 
 
-def test_importance_hampling():
+def test_importance_sampling():
 
     delta_R = 1.0
     delta_t = 0.01
@@ -41,6 +41,6 @@ def test_importance_hampling():
     ham = Hamiltonian(omega, wave)
     met = Metropolis(delta_R, delta_t, num_particles, num_dimensions, ham, 0.0)
     positions = np.zeros(shape=(num_particles, num_dimensions))
-    _, new_positions, _ = met.importance_hampling(positions)
+    _, new_positions, _ = met.importance_sampling(positions)
 
     assert new_positions.shape == (num_particles, num_dimensions)

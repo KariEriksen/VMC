@@ -44,7 +44,7 @@ class Metropolis:
 
         return energy, positions, self.c
 
-    def importance_hampling(self, positions):
+    def importance_sampling(self, positions):
         """Run Importance hampling."""
         """With upgrad method for suggetion of new positions."""
         """Given through the Langevin equation.

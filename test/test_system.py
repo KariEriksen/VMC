@@ -196,7 +196,7 @@ def test_wavefunction_derivative_psi_term_2d():
 
         positions[0, 0] = x
         positions[0, 1] = y
-        wf = s.derivative_psi_term(positions)
+        wf = s.gradient_wavefunction(positions)
 
         assert wf == pytest.approx((-x**2 - y**2), abs=1e-14)
 
@@ -223,6 +223,6 @@ def test_wavefunction_derivative_psi_term_3d():
         positions[0, 0] = x
         positions[0, 1] = y
         positions[0, 2] = z
-        wf = s.derivative_psi_term(positions)
+        wf = s.gradient_wavefunction(positions)
 
         assert wf == pytest.approx((-x**2 - y**2 - beta*z**2), abs=1e-12)

@@ -8,6 +8,7 @@ sys.path.append(os.path.join(os.path.dirname(__file__), 'src'))
 from metropolis import Metropolis # noqa: 401
 from optimizer import Optimizer # noqa: 401
 from Hamiltonian.hamiltonian import Hamiltonian # noqa: 401
+from Hamiltonian.non_interaction import Non_Interaction # noqa: 401
 from wavefunction import Wavefunction # noqa: 401
 
 """
@@ -58,8 +59,8 @@ def run_vmc(parameter):
         positions = new_positions
         accumulate_energy += ham.local_energy_weak_interaction_numerical(positions)
 
-        accumulate_psi_term += wave.derivative_psi_term(positions)
-        accumulate_both += ham.local_energy_times_wf(positions)
+        accumulate_psi_term += wave.gradient_wavefunction(positions)
+        accumulate_both += ham.local_energy_times_wf_weak_interaction(positions)
 
     expec_val_energy = accumulate_energy/(monte_carlo_cycles)
     expec_val_psi = accumulate_psi_term/(monte_carlo_cycles)
