@@ -40,8 +40,8 @@ def non_interaction_case():
     wave = Wavefunction(num_particles, num_dimensions, alpha, beta, a)
     # Run with numerical expression of local energy = true
     hamilton = Non_Interaction(omega, wave, 'true')
-    met = Metropolis(step_metropolis, step_importance, num_particles,
-                     num_dimensions, hamilton, 0.0)
+    met = Metropolis(monte_carlo_cycles, step_metropolis, step_importance,
+                     num_particles, num_dimensions, wave, hamilton, 0.0)
     met.metropolis(positions)
     # met.importance_sampling(positions)
 
@@ -52,8 +52,6 @@ def weak_interaction_case():
     a = 0.00433
     beta = omega = 1.0
     alpha = 0.48
-    # Initialize the posistions for each new Monte Carlo run
-    positions = np.random.rand(num_particles, num_dimensions)
 
     # Call wavefunction class in order to set new alpha parameter
     wave = Wavefunction(num_particles, num_dimensions, alpha, beta, a)
@@ -61,8 +59,8 @@ def weak_interaction_case():
     ham = Hamiltonian(omega, wave, 'true')
     met = Metropolis(step_metropolis, step_importance, num_particles,
                      num_dimensions, ham, 0.0)
-    met.metropolis(positions)
-    # met.importance_sampling(positions)
+    met.run_metropolis()
+    # met.run_importance_sampling()
 
 
 def elliptic_weak_interaction_case():

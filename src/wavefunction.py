@@ -92,3 +92,35 @@ class Wavefunction:
                 deri_psi += (x*x + y*y)
 
         return -deri_psi
+
+    def wavefunction_ratio(self, positions, new_positions):
+        """Wave function with new positions squared divided by."""
+        """wave equation with old positions squared"""
+        wf_old = self.wavefunction(positions)
+        wf_new = self.wavefunction(new_positions)
+        numerator = wf_new*wf_new
+        denominator = wf_old*wf_old
+        acceptance_ratio = numerator/denominator
+
+        return acceptance_ratio
+
+    def quantum_force(self, positions):
+        """Return drift force."""
+        """This surely is inefficient, rewrite so the quantum force matrix
+        gets updated, than calculating it over and over again each time"""
+        quantum_force = np.zeros((self.num_p, self.num_d))
+        position_forward = np.array(positions)
+        psi_current = self.wavefunction(positions)
+        psi_moved = 0.0
+        step = 0.001
+
+        for i in range(self.s.num_p):
+            for j in range(self.s.num_d):
+                position_forward[i, j] = position_forward[i, j] + step
+                psi_moved = self.wavefunction(position_forward)
+                # Resett positions
+                position_forward[i, j] = position_forward[i, j] - step
+                derivative = (psi_moved - psi_current)/step
+                quantum_force[i, j] = (2.0/psi_current)*derivative
+
+        return quantum_force
