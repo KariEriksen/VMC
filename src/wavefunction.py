@@ -38,15 +38,14 @@ class Wavefunction:
         for i in range(self.num_p):
             # self.num_d = j
             x = positions[i, 0]
-            y = positions[i, 1]
-            if self.num_d > 2:
-                # positions[i, 2] *= self.beta
-                # if vector is 3 dimesions
+            if self.num_d == 1:
+                g = g*math.exp(-self.alpha*(x*x))
+            elif self.num_d == 2:
+                y = positions[i, 1]
+                g = g*math.exp(-self.alpha*(x*x + y*y))
+            else:
                 z = positions[i, 2]
                 g = g*math.exp(-self.alpha*(x*x + y*y + self.beta*z*z))
-
-            else:
-                g = g*math.exp(-self.alpha*(x*x + y*y))
                 # g = np.prod(math.exp(-self.alpha*(np.sum(
                 # np.power(positions, 2)axis=1))))
 
@@ -81,15 +80,15 @@ class Wavefunction:
 
         for i in range(self.num_p):
             x = positions[i, 0]
-            y = positions[i, 1]
-            if self.num_d > 2:
-                # if vector is 3 dimesions
-                # positions[i, 2] *= self.beta
-                z = positions[i, 2]
-
-                deri_psi += (x*x + y*y + self.beta*z*z)
-            else:
+            if self.num_d == 1:
+                deri_psi += x*x
+            elif self.num_d == 2:
+                y = positions[i, 1]
                 deri_psi += (x*x + y*y)
+            else:
+                z = positions[i, 2]
+                deri_psi += (x*x + y*y + self.beta*z*z)
+
 
         return -deri_psi
 
