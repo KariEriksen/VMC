@@ -1,6 +1,7 @@
 """Metropolis class."""
 import numpy as np
 import random
+from sampler import Sampler # noqa: 401
 
 
 class Metropolis:
@@ -9,7 +10,7 @@ class Metropolis:
     # Hamiltonian(omega, step)
 
     def __init__(self, monte_carlo_steps, delta_R, delta_t, num_particles,
-                 num_dimensions, wavefunction, hamiltonian, c):
+                 num_dimensions, wavefunction, hamiltonian):
         """Instance of class."""
         self.mc_cycles = monte_carlo_steps
         self.delta_R = delta_R
@@ -19,7 +20,8 @@ class Metropolis:
         # self.positions = positions
         self.w = wavefunction
         self.h = hamiltonian
-        self.c = c
+        self.sampler = Sampler(wavefunction, hamiltonian)
+        self.c = 0.0
 
     def metropolis_step(self, positions):
         """Calculate new metropolis step."""
@@ -96,23 +98,31 @@ class Metropolis:
 
         return greens_function
 
-    def run_metropolis(self):
+    def run_metropolis(self, positions):
         """Run the naive metropolis algorithm."""
 
         # Initialize the posistions for each new Monte Carlo run
         positions = np.random.rand(self.num_p, self.num_d)
         for i in range(self.mc_cycles):
 
-            new_energy, new_positions, count = self.metropolis_step(positions)
-            # new_energy, new_positions, count = met.importance_hampling(positions)
+            new_positions, count = self.metropolis_step(positions)
             positions = new_positions
-            accumulate_energy += ham.local_energy_weak_interaction_numerical(positions)
+            self.sampler.sample_values(positions)
+        self.sampler.average_values(self.mc_cycles)
+        d_El = self.sampler.derivative_energy
+        print (self.c)
+        return d_El
 
-            accumulate_psi_term += wave.gradient_wavefunction(positions)
-            accumulate_both += ham.local_energy_times_wf_weak_interaction(positions)
+    def run_importance_sampling(self, positions):
+        """Run importance algorithm."""
 
-        expec_val_energy = accumulate_energy/(monte_carlo_cycles)
-        expec_val_psi = accumulate_psi_term/(monte_carlo_cycles)
-        expec_val_both = accumulate_both/(monte_carlo_cycles)
+        # Initialize the posistions for each new Monte Carlo run
+        positions = np.random.rand(self.num_p, self.num_d)
+        for i in range(self.mc_cycles):
 
-        derivative_energy = 2*(expec_val_both - expec_val_psi*expec_val_energy)
+            new_positions, count = self.importance_sampling_step(positions)
+            positions = new_positions
+            self.sampler.sample_values(positions)
+        self.sampler.average_values(self.mc_cycles)
+        d_El = self.sampler.derivative_energy
+        return d_El
