@@ -4,7 +4,7 @@ import sys
 import os
 
 sys.path.append(os.path.join(os.path.dirname(__file__), os.pardir, 'src'))
-from Hamiltonian.hamiltonian import Hamiltonian  # noqa: 401
+from Hamiltonian.hamiltonian_testing import Hamiltonian  # noqa: 401
 from wavefunction import Wavefunction  # noqa: 401
 
 
@@ -178,8 +178,8 @@ def test_kinetic_analytic_2d():
         positions[0, 0] = x
         positions[0, 1] = y
         energy = 4*alpha*alpha*(x*x + y*y) - 4*alpha
-        assert energy == pytest.approx(ham.laplacian_analytic_non_interacting(positions),
-                                       abs=1e-14)
+        assert energy == pytest.approx(ham.laplacian_analytic_non_interacting
+                                       (positions), abs=1e-14)
 
 
 def test_kinetic_analytic_2d_2p():
@@ -208,8 +208,8 @@ def test_kinetic_analytic_2d_2p():
             x = positions[i, 0]
             y = positions[i, 1]
             energy += 4*alpha*alpha*(x*x + y*y) - 4*alpha
-        assert energy == pytest.approx(ham.laplacian_analytic_non_interacting(positions),
-                                       abs=1e-10)
+        assert energy == pytest.approx(ham.laplacian_analytic_non_interacting
+                                       (positions), abs=1e-10)
 
 
 def test_kinetic_analytic_3d():

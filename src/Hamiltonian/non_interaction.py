@@ -1,6 +1,5 @@
 """Hamiltonian class."""
 import numpy as np
-import math
 
 
 class Non_Interaction:
@@ -82,42 +81,3 @@ class Non_Interaction:
         energy = -0.5*k + p
 
         return energy
-
-    def quantum_force(self, positions):
-        """Return drift force."""
-        """This surely is inefficient, rewrite so the quantum force matrix
-        gets updated, than calculating it over and over again each time"""
-        quantum_force = np.zeros((self.s.num_p, self.s.num_d))
-        position_forward = np.array(positions)
-        psi_current = self.s.wavefunction(positions)
-        psi_moved = 0.0
-        step = 0.001
-
-        for i in range(self.s.num_p):
-            for j in range(self.s.num_d):
-                position_forward[i, j] = position_forward[i, j] + step
-                psi_moved = self.s.wavefunction(position_forward)
-                # Resett positions
-                position_forward[i, j] = position_forward[i, j] - step
-                derivative = (psi_moved - psi_current)/step
-                quantum_force[i, j] = (2.0/psi_current)*derivative
-
-        return quantum_force
-
-    def greens_function(self, positions, new_positions, delta_t):
-        """Calculate Greens function."""
-        greens_function = 0.0
-
-        D = 0.5
-        F_old = self.quantum_force(positions)
-        F_new = self.quantum_force(new_positions)
-        for i in range(self.s.num_p):
-            for j in range(self.s.num_d):
-                term1 = 0.5*((F_old[i, j] + F_new[i, j]) *
-                             (positions[i, j] - new_positions[i, j]))
-                term2 = D*delta_t*(F_old[i, j] - F_new[i, j])
-                greens_function += term1 + term2
-
-        greens_function = np.exp(greens_function)
-
-        return greens_function

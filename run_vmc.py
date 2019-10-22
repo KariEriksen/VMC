@@ -57,10 +57,12 @@ def run_vmc(parameter):
         new_energy, new_positions, count = met.metropolis(positions)
         # new_energy, new_positions, count = met.importance_hampling(positions)
         positions = new_positions
-        accumulate_energy += ham.local_energy_weak_interaction_numerical(positions)
+        acc_1 = ham.local_energy_weak_interaction_numerical(positions)
+        accumulate_energy += acc_1
 
         accumulate_psi_term += wave.gradient_wavefunction(positions)
-        accumulate_both += ham.local_energy_times_wf_weak_interaction(positions)
+        acc_2 = ham.local_energy_times_wf_weak_interaction(positions)
+        accumulate_both += acc_2
 
     expec_val_energy = accumulate_energy/(monte_carlo_cycles)
     expec_val_psi = accumulate_psi_term/(monte_carlo_cycles)
