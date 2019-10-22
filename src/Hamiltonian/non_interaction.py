@@ -52,6 +52,7 @@ class Non_Interaction:
                 y = positions[i, 1]
                 c += x**2 + y**2
             else:
+                y = positions[i, 1]
                 z = positions[i, 2]
                 c += x**2 + y**2 + z**2
 

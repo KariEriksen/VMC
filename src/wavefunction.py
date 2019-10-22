@@ -44,6 +44,7 @@ class Wavefunction:
                 y = positions[i, 1]
                 g = g*math.exp(-self.alpha*(x*x + y*y))
             else:
+                y = positions[i, 1]
                 z = positions[i, 2]
                 g = g*math.exp(-self.alpha*(x*x + y*y + self.beta*z*z))
                 # g = np.prod(math.exp(-self.alpha*(np.sum(
@@ -86,9 +87,9 @@ class Wavefunction:
                 y = positions[i, 1]
                 deri_psi += (x*x + y*y)
             else:
+                y = positions[i, 1]
                 z = positions[i, 2]
                 deri_psi += (x*x + y*y + self.beta*z*z)
-
 
         return -deri_psi
 
