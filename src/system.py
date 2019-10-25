@@ -1,6 +1,5 @@
 """Wavefunction class."""
 import math
-import numpy as np
 
 
 class Wavefunction:

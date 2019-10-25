@@ -40,7 +40,7 @@ class Sampler:
 
     def print_avereges(self):
 
-        print 'deri energy = ', self.derivative_energy
-        print 'total energy =  ', self.local_energy
+        print ('deri energy = ', self.derivative_energy)
+        print ('total energy =  ', self.local_energy)
         # energy/num_particles
-        print '----------------------------'
+        print ('----------------------------')

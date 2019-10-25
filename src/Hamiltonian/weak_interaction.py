@@ -6,11 +6,11 @@ import math
 class Weak_Interaction:
     """Calculate variables regarding the Hamiltonian of given wavefunction."""
 
-    def __init__(self, omega, wavefunction, numerical):
+    def __init__(self, omega, wavefunction, analytical):
         """Instance of class."""
         self.omega = omega
         self.s = wavefunction
-        self.num = numerical
+        self.analytical = analytical
 
     def laplacian_numerical(self, positions):
         """Numerical differentiation for solving laplacian."""
@@ -137,13 +137,13 @@ class Weak_Interaction:
 
     def local_energy(self, positions):
         """Return the local energy."""
-        if self.num:
+        if self.analytical:
             # Run with numerical expression for kinetic energy
-            k = (self.laplacian_numerical(positions) /
+            k = (self.laplacian_analytical(positions) /
                  self.s.wavefunction(positions))
         else:
             # Run with analytical expression for kinetic energy
-            k = self.laplacian_analytical(positions)
+            k = self.laplacian_numerical(positions)
 
         p = self.trap_potential_energy(positions)
         energy = -0.5*k + p
