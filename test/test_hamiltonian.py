@@ -407,7 +407,7 @@ def test_local_energy_2d():
         positions[0, 1] = np.random.uniform(-2, 2)
         wave = Wavefunction(num_particles, num_dimensions, alpha, beta, a)
         ham = Non_Interaction(omega, wave, True)
-        k = ham.laplacian_analytical(positions)/wave.wavefunction(positions)
+        k = ham.laplacian_analytical(positions)
         p = ham.trap_potential_energy(positions)
         local_energy = -0.5*k + p
         test_loc_ener = ham.local_energy(positions)
@@ -429,7 +429,7 @@ def test_local_energy_3d():
         positions[0, 2] = np.random.uniform(-2, 2)
         wave = Wavefunction(num_particles, num_dimensions, alpha, beta, a)
         ham = Non_Interaction(omega, wave, True)
-        k = ham.laplacian_analytical(positions)/wave.wavefunction(positions)
+        k = ham.laplacian_analytical(positions)
         p = ham.trap_potential_energy(positions)
         local_energy = -0.5*k + p
         test_loc_ener = ham.local_energy(positions)
