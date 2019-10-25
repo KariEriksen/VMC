@@ -20,7 +20,6 @@ class Metropolis:
         # self.positions = positions
         self.w = wavefunction
         self.h = hamiltonian
-        self.sampler = Sampler(wavefunction, hamiltonian)
         self.c = 0.0
 
     def metropolis_step(self, positions):
@@ -98,20 +97,22 @@ class Metropolis:
 
         return greens_function
 
-    def run_metropolis(self, positions):
+    def run_metropolis(self):
         """Run the naive metropolis algorithm."""
 
         # Initialize the posistions for each new Monte Carlo run
         positions = np.random.rand(self.num_p, self.num_d)
+        # Initialize sampler method for each new Monte Carlo run
+        sampler = Sampler(self.w, self.h)
         for i in range(self.mc_cycles):
 
             new_positions, count = self.metropolis_step(positions)
             positions = new_positions
-            self.sampler.sample_values(positions)
-        self.sampler.average_values(self.mc_cycles)
+            sampler.sample_values(positions)
+        sampler.average_values(self.mc_cycles)
         print 'accepted states = ', self.c
-        d_El = self.sampler.derivative_energy
-        self.sampler.print_avereges()
+        d_El = sampler.derivative_energy
+        sampler.print_avereges()
         return d_El
 
     def run_importance_sampling(self, positions):

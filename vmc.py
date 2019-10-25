@@ -36,9 +36,6 @@ def non_interaction_case(monte_carlo_cycles, num_particles, num_dimensions,
     parameter = alpha
     for i in range(gradient_iterations):
 
-        # Initialize the posistions for each new Monte Carlo run
-        positions = np.random.rand(num_particles, num_dimensions)
-
         # Call wavefunction class in order to set new alpha parameter
         wave = Wavefunction(num_particles, num_dimensions, alpha, beta, a)
         # Run with analytical expression of local energy = true
@@ -46,7 +43,7 @@ def non_interaction_case(monte_carlo_cycles, num_particles, num_dimensions,
         met = Metropolis(monte_carlo_cycles, step_metropolis, step_importance,
                          num_particles, num_dimensions, wave, hamilton)
 
-        d_El = met.run_metropolis(positions)
+        d_El = met.run_metropolis()
         # d_El = met.run_importance_sampling(positions)
         new_parameter = opt.gradient_descent(parameter, d_El)
         parameter = new_parameter
@@ -64,9 +61,6 @@ def weak_interaction_case(monte_carlo_cycles, num_particles, num_dimensions,
     parameter = alpha
     for i in range(gradient_iterations):
 
-        # Initialize the posistions for each new Monte Carlo run
-        positions = np.random.rand(num_particles, num_dimensions)
-
         # Call wavefunction class in order to set new alpha parameter
         wave = Wavefunction(num_particles, num_dimensions, alpha, beta, a)
         # Run with numerical expression of local energy = true
@@ -74,7 +68,7 @@ def weak_interaction_case(monte_carlo_cycles, num_particles, num_dimensions,
         met = Metropolis(monte_carlo_cycles, step_metropolis, step_importance,
                          num_particles, num_dimensions, ham)
 
-        d_El = met.run_metropolis(positions)
+        d_El = met.run_metropolis()
         # d_El = met.run_importance_sampling(positions)
         new_parameter = opt.gradient_descent(parameter, d_El)
         parameter = new_parameter
@@ -92,9 +86,6 @@ def elliptic_weak_interaction_case(monte_carlo_cycles, num_particles,
     parameter = alpha
     for i in range(gradient_iterations):
 
-        # Initialize the posistions for each new Monte Carlo run
-        positions = np.random.rand(num_particles, num_dimensions)
-
         # Call wavefunction class in order to set new alpha parameter
         wave = Wavefunction(num_particles, num_dimensions, alpha, beta, a)
         # Run with numerical expression of local energy = true
@@ -102,7 +93,7 @@ def elliptic_weak_interaction_case(monte_carlo_cycles, num_particles,
         met = Metropolis(monte_carlo_cycles, step_metropolis, step_importance,
                          num_particles, num_dimensions, ham)
 
-        d_El = met.run_metropolis(positions)
+        d_El = met.run_metropolis()
         # d_El = met.run_importance_sampling(positions)
         new_parameter = opt.gradient_descent(parameter, d_El)
         parameter = new_parameter
