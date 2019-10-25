@@ -9,7 +9,7 @@ from metropolis import Metropolis # noqa: 401
 from optimizer import Optimizer # noqa: 401
 from Hamiltonian.non_interaction import Non_Interaction # noqa: 401
 from Hamiltonian.weak_interaction import Weak_Interaction # noqa: 401
-from wavefunction import Wavefunction # noqa: 401
+from Wavefunction.wavefunction import Wavefunction # noqa: 401
 from sampler import Sampler # noqa: 401
 
 """
@@ -41,7 +41,7 @@ def non_interaction_case(monte_carlo_cycles, num_particles, num_dimensions,
 
         # Call wavefunction class in order to set new alpha parameter
         wave = Wavefunction(num_particles, num_dimensions, alpha, beta, a)
-        # Run with numerical expression of local energy = true
+        # Run with analytical expression of local energy = true
         hamilton = Non_Interaction(omega, wave, 'true')
         met = Metropolis(monte_carlo_cycles, step_metropolis, step_importance,
                          num_particles, num_dimensions, wave, hamilton)
@@ -109,5 +109,5 @@ def elliptic_weak_interaction_case(monte_carlo_cycles, num_particles,
 
 
 non_interaction_case(10000, 2, 3, None)
-# weak_interaction_case()
-# elliptic_weak_interaction_case()
+# weak_interaction_case(10000, 2, 3, None)
+# elliptic_weak_interaction_case(10000, 2, 3, None)
