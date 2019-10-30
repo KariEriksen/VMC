@@ -86,8 +86,8 @@ class Metropolis:
         D = 0.5
         F_old = self.w.quantum_force(positions)
         F_new = self.w.quantum_force(new_positions)
-        for i in range(self.s.num_p):
-            for j in range(self.s.num_d):
+        for i in range(self.num_p):
+            for j in range(self.num_d):
                 term1 = 0.5*((F_old[i, j] + F_new[i, j]) *
                              (positions[i, j] - new_positions[i, j]))
                 term2 = D*delta_t*(F_old[i, j] - F_new[i, j])
@@ -115,16 +115,20 @@ class Metropolis:
         sampler.print_avereges()
         return d_El
 
-    def run_importance_sampling(self, positions):
+    def run_importance_sampling(self):
         """Run importance algorithm."""
 
         # Initialize the posistions for each new Monte Carlo run
         positions = np.random.rand(self.num_p, self.num_d)
-        for i in range(self.mc_cycles):
+        # Initialize sampler method for each new Monte Carlo run
+        sampler = Sampler(self.w, self.h)
 
+        for i in range(self.mc_cycles):
             new_positions = self.importance_sampling_step(positions)
             positions = new_positions
-            self.sampler.sample_values(positions)
-        self.sampler.average_values(self.mc_cycles)
-        d_El = self.sampler.derivative_energy
+            sampler.sample_values(positions)
+        sampler.average_values(self.mc_cycles)
+        print 'accepted states = ', self.c
+        d_El = sampler.derivative_energy
+        sampler.print_avereges()
         return d_El

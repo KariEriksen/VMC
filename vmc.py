@@ -42,8 +42,8 @@ def non_interaction_case(monte_carlo_cycles, num_particles, num_dimensions,
         met = Metropolis(monte_carlo_cycles, step_metropolis, step_importance,
                          num_particles, num_dimensions, wave, hamilton)
 
-        d_El = met.run_metropolis()
-        # d_El = met.run_importance_sampling()
+        # d_El = met.run_metropolis()
+        d_El = met.run_importance_sampling()
         new_parameter = opt.gradient_descent(parameter, d_El)
         print 'new alpha = ', new_parameter
         parameter = new_parameter
@@ -63,14 +63,15 @@ def weak_interaction_case(monte_carlo_cycles, num_particles, num_dimensions,
 
         # Call wavefunction class in order to set new alpha parameter
         wave = Wavefunction(num_particles, num_dimensions, parameter, beta, a)
-        # Run with numerical expression of local energy = true
-        ham = Weak_Interaction(omega, wave, 'true')
+        # Run with analytical expression of local energy = true
+        hamilton = Weak_Interaction(omega, wave, 'false')
         met = Metropolis(monte_carlo_cycles, step_metropolis, step_importance,
-                         num_particles, num_dimensions, ham)
+                         num_particles, num_dimensions, wave, hamilton)
 
         d_El = met.run_metropolis()
         # d_El = met.run_importance_sampling(positions)
         new_parameter = opt.gradient_descent(parameter, d_El)
+        print 'new alpha = ', new_parameter
         parameter = new_parameter
 
 
@@ -88,10 +89,10 @@ def elliptic_weak_interaction_case(monte_carlo_cycles, num_particles,
 
         # Call wavefunction class in order to set new alpha parameter
         wave = Wavefunction(num_particles, num_dimensions, parameter, beta, a)
-        # Run with numerical expression of local energy = true
-        ham = Weak_Interaction(omega, wave, 'true')
+        # Run with analytical expression of local energy = true
+        hamilton = Weak_Interaction(omega, wave, 'true')
         met = Metropolis(monte_carlo_cycles, step_metropolis, step_importance,
-                         num_particles, num_dimensions, ham)
+                         num_particles, num_dimensions, wave, hamilton)
 
         d_El = met.run_metropolis()
         # d_El = met.run_importance_sampling(positions)
@@ -99,6 +100,6 @@ def elliptic_weak_interaction_case(monte_carlo_cycles, num_particles,
         parameter = new_parameter
 
 
-non_interaction_case(10000, 2, 3, 0.46)
-# weak_interaction_case(10000, 2, 3, None)
+# non_interaction_case(10000, 2, 3, 0.46)
+weak_interaction_case(10000, 2, 3, 0.495)
 # elliptic_weak_interaction_case(10000, 2, 3, None)
