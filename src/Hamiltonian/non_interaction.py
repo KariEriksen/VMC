@@ -73,10 +73,10 @@ class Non_Interaction:
     def local_energy(self, positions):
         """Return the local energy."""
         if self.analytical:
-            # Run with numerical expression for kinetic energy
+            # Run with analyticalnumerical expression for kinetic energy
             k = self.laplacian_analytical(positions)
         else:
-            # Run with analytical expression for kinetic energy
+            # Run with numerical expression for kinetic energy
             k = (self.laplacian_numerical(positions) /
                  self.s.wavefunction(positions))
 

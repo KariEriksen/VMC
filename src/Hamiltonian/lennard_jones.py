@@ -1,6 +1,4 @@
 """Hamiltonian class."""
-import numpy as np
-import math
 
 
 class Lennard_Jones:

@@ -51,8 +51,8 @@ class Weak_Interaction:
         alpha_sq = alpha**2
         beta = self.s.beta
 
-        rkj = np.zeros(d)
-        rki = np.zeros(d)
+        # rkj = np.zeros(d)
+        # rki = np.zeros(d)
         d_psi_rk = np.zeros(d)
         laplacian = 0.0
 
@@ -138,12 +138,13 @@ class Weak_Interaction:
     def local_energy(self, positions):
         """Return the local energy."""
         if self.analytical:
-            # Run with numerical expression for kinetic energy
-            k = (self.laplacian_analytical(positions) /
-                 self.s.wavefunction(positions))
-        else:
             # Run with analytical expression for kinetic energy
-            k = self.laplacian_numerical(positions)
+            k = self.laplacian_analytical(positions)
+
+        else:
+            # Run with numerical expression for kinetic energy
+            k = (self.laplacian_numerical(positions) /
+                 self.s.wavefunction(positions))
 
         p = self.trap_potential_energy(positions)
         energy = -0.5*k + p

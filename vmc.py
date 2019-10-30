@@ -1,6 +1,5 @@
 """Variational Monte Carlo."""
 
-import numpy as np
 import sys
 import os
 
@@ -46,6 +45,7 @@ def non_interaction_case(monte_carlo_cycles, num_particles, num_dimensions,
         d_El = met.run_metropolis()
         # d_El = met.run_importance_sampling(positions)
         new_parameter = opt.gradient_descent(parameter, d_El)
+        print 'new alpha = ', new_parameter
         parameter = new_parameter
 
 
@@ -99,6 +99,6 @@ def elliptic_weak_interaction_case(monte_carlo_cycles, num_particles,
         parameter = new_parameter
 
 
-non_interaction_case(10000, 2, 3, None)
+non_interaction_case(10000, 2, 3, 0.46)
 # weak_interaction_case(10000, 2, 3, None)
 # elliptic_weak_interaction_case(10000, 2, 3, None)

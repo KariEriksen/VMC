@@ -43,7 +43,7 @@ class Metropolis:
         else:
             pass
 
-        return positions, self.c
+        return positions
 
     def importance_sampling_step(self, positions):
         """Calculate new step with Importance sampling."""
@@ -77,7 +77,7 @@ class Metropolis:
         else:
             pass
 
-        return positions, self.c
+        return positions
 
     def greens_function(self, positions, new_positions, delta_t):
         """Calculate Greens function."""
@@ -104,9 +104,9 @@ class Metropolis:
         positions = np.random.rand(self.num_p, self.num_d)
         # Initialize sampler method for each new Monte Carlo run
         sampler = Sampler(self.w, self.h)
-        for i in range(self.mc_cycles):
 
-            new_positions, count = self.metropolis_step(positions)
+        for i in range(self.mc_cycles):
+            new_positions = self.metropolis_step(positions)
             positions = new_positions
             sampler.sample_values(positions)
         sampler.average_values(self.mc_cycles)
@@ -122,7 +122,7 @@ class Metropolis:
         positions = np.random.rand(self.num_p, self.num_d)
         for i in range(self.mc_cycles):
 
-            new_positions, count = self.importance_sampling_step(positions)
+            new_positions = self.importance_sampling_step(positions)
             positions = new_positions
             self.sampler.sample_values(positions)
         self.sampler.average_values(self.mc_cycles)
