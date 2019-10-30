@@ -36,14 +36,14 @@ def non_interaction_case(monte_carlo_cycles, num_particles, num_dimensions,
     for i in range(gradient_iterations):
 
         # Call wavefunction class in order to set new alpha parameter
-        wave = Wavefunction(num_particles, num_dimensions, alpha, beta, a)
+        wave = Wavefunction(num_particles, num_dimensions, parameter, beta, a)
         # Run with analytical expression of local energy = true
         hamilton = Non_Interaction(omega, wave, 'true')
         met = Metropolis(monte_carlo_cycles, step_metropolis, step_importance,
                          num_particles, num_dimensions, wave, hamilton)
 
         d_El = met.run_metropolis()
-        # d_El = met.run_importance_sampling(positions)
+        # d_El = met.run_importance_sampling()
         new_parameter = opt.gradient_descent(parameter, d_El)
         print 'new alpha = ', new_parameter
         parameter = new_parameter
@@ -62,7 +62,7 @@ def weak_interaction_case(monte_carlo_cycles, num_particles, num_dimensions,
     for i in range(gradient_iterations):
 
         # Call wavefunction class in order to set new alpha parameter
-        wave = Wavefunction(num_particles, num_dimensions, alpha, beta, a)
+        wave = Wavefunction(num_particles, num_dimensions, parameter, beta, a)
         # Run with numerical expression of local energy = true
         ham = Weak_Interaction(omega, wave, 'true')
         met = Metropolis(monte_carlo_cycles, step_metropolis, step_importance,
@@ -87,7 +87,7 @@ def elliptic_weak_interaction_case(monte_carlo_cycles, num_particles,
     for i in range(gradient_iterations):
 
         # Call wavefunction class in order to set new alpha parameter
-        wave = Wavefunction(num_particles, num_dimensions, alpha, beta, a)
+        wave = Wavefunction(num_particles, num_dimensions, parameter, beta, a)
         # Run with numerical expression of local energy = true
         ham = Weak_Interaction(omega, wave, 'true')
         met = Metropolis(monte_carlo_cycles, step_metropolis, step_importance,
