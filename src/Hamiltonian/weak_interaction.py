@@ -37,7 +37,7 @@ class Weak_Interaction:
         laplacian = (psi_moved - psi_current)/(step*step)
         return laplacian
 
-    def laplacian_analytic_weak_interaction(self, positions):
+    def laplacian_analytical(self, positions):
         """The analytical term for the laplacian, with weak interaction"""
         """In the weak interacting case the wavefunction is described by a
         harmonic oscillator with a trap potential"""
