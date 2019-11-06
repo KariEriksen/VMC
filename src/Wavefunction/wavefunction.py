@@ -68,7 +68,7 @@ class Wavefunction:
                 if distance > self.a:
                     f = f*(1.0 - (self.a/distance))
                 else:
-                    f *= 1e-14
+                    f *= 0.0
         return f
 
     def gradient_wavefunction(self, positions):
@@ -105,6 +105,46 @@ class Wavefunction:
         return acceptance_ratio
 
     def quantum_force(self, positions):
+        """Return drift force."""
+
+        n = self.num_p
+        d = self.num_d
+        a = self.a
+        alpha = self.alpha
+        beta = self.beta
+        r_kj = np.zeros(d)
+        d_psi_k = np.zeros(d)
+        d_u_rkj = np.zeros(d)
+
+        quantum_force = np.zeros((self.num_p, self.num_d))
+
+        for k in range(n):
+            xk = positions[k, 0]
+            yk = positions[k, 1]
+            zk = positions[k, 2]
+            rk = np.array((xk, yk, zk))
+
+            d_psi_k[0] = -4*alpha*xk
+            d_psi_k[1] = -4*alpha*yk
+            d_psi_k[2] = -4*alpha*beta*zk
+
+            for j in range(n):
+                xj = positions[j, 0]
+                yj = positions[j, 1]
+                zj = positions[j, 2]
+                rj = np.array((xj, yj, zj))
+
+                if(j != k):
+                    r_kj = rk - rj
+                    rkj = math.sqrt(np.sum((rk - rj)*(rk - rj)))
+
+                    d_u_rkj += -a/(a*rkj*rkj - rkj*rkj*rkj)*r_kj
+
+            quantum_force[k, :] += d_psi_k + d_u_rkj
+
+        return quantum_force
+
+    def quantum_force_numerical(self, positions):
         """Return drift force."""
         """This surely is inefficient, rewrite so the quantum force matrix
         gets updated, than calculating it over and over again each time"""
