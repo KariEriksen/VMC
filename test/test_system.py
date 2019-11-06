@@ -308,8 +308,8 @@ def test_drift_force_2d():
         drift_force[0, 0] = (2.0/wf_current)*deri1
         drift_force[0, 1] = (2.0/wf_current)*deri2
 
-        assert drift_force == pytest.approx(wave.quantum_force(positions),
-                                            abs=1e-14)
+        assert drift_force == pytest.approx(wave.quantum_force_numerical
+                                            (positions), abs=1e-14)
 
 
 def test_drift_force_2d_2p():
@@ -352,8 +352,8 @@ def test_drift_force_2d_2p():
         drift_force[1, 0] = (2.0/wf_current)*deri3
         drift_force[1, 1] = (2.0/wf_current)*deri4
 
-        assert drift_force == pytest.approx(wave.quantum_force(positions),
-                                            abs=1e-14)
+        assert drift_force == pytest.approx(wave.quantum_force_numerical
+                                            (positions), abs=1e-14)
 
 
 def test_drift_force_3d():
@@ -389,8 +389,8 @@ def test_drift_force_3d():
         drift_force[0, 0] = (2.0/wf_current)*deri1
         drift_force[0, 1] = (2.0/wf_current)*deri2
         drift_force[0, 2] = (2.0/wf_current)*deri3
-        assert drift_force == pytest.approx(wave.quantum_force(positions),
-                                            abs=1e-14)
+        assert drift_force == pytest.approx(wave.quantum_force_numerical
+                                            (positions), abs=1e-14)
 
 
 def test_drift_force_3d_2p():
@@ -445,5 +445,5 @@ def test_drift_force_3d_2p():
         drift_force[0, 2] = (2.0/wf_current)*deri5
         drift_force[1, 2] = (2.0/wf_current)*deri6
 
-        assert drift_force == pytest.approx(wave.quantum_force(positions),
-                                            abs=1e-14)
+        assert drift_force == pytest.approx(wave.quantum_force_numerical
+                                            (positions), abs=1e-14)
