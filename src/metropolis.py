@@ -45,7 +45,7 @@ class Metropolis:
 
         return positions
 
-    def importance_sampling_step(self, positions):
+    def importance_sampling_step(self, positions, analytic):
         """Calculate new step with Importance sampling."""
         """With upgrad method for suggetion of new positions."""
         """Given through the Langevin equation.
@@ -53,19 +53,37 @@ class Metropolis:
         variable and delta_t is the time step between 0.001 and 0.01"""
 
         D = 0.5
-        F = self.w.quantum_force(positions)
+        greens_function = 0.0
+
+        if analytic:
+            F_old = self.w.quantum_force(positions)
+        else:
+            F_old = self.w.quantum_force_numerical(positions)
+
         r = random.random()*random.choice((-1, 1))
         # Pick a random particle and calculate new position
         random_index = random.randrange(len(positions))
         new_positions = np.array(positions)
 
-        term1 = D*F[random_index, :]*self.delta_t
+        term1 = D*F_old[random_index, :]*self.delta_t
         term2 = r*np.sqrt(self.delta_t)
         new_random_position = new_positions[random_index, :] + term1 + term2
         new_positions[random_index, :] = new_random_position
         prob_ratio = self.w.wavefunction_ratio(positions, new_positions)
-        greens_function = self.greens_function(positions, new_positions,
-                                               self.delta_t)
+
+        if analytic:
+            F_new = self.w.quantum_force(new_positions)
+        else:
+            F_new = self.w.quantum_force_numerical(new_positions)
+
+        for i in range(self.num_p):
+            for j in range(self.num_d):
+                term1 = 0.5*((F_old[i, j] + F_new[i, j]) *
+                             (positions[i, j] - new_positions[i, j]))
+                term2 = D*self.delta_t*(F_old[i, j] - F_new[i, j])
+                greens_function += term1 + term2
+
+        greens_function = np.exp(greens_function)
 
         epsilon = np.random.sample()
         acceptance_ratio = prob_ratio*greens_function
@@ -78,24 +96,6 @@ class Metropolis:
             pass
 
         return positions
-
-    def greens_function(self, positions, new_positions, delta_t):
-        """Calculate Greens function."""
-        greens_function = 0.0
-
-        D = 0.5
-        F_old = self.w.quantum_force(positions)
-        F_new = self.w.quantum_force(new_positions)
-        for i in range(self.num_p):
-            for j in range(self.num_d):
-                term1 = 0.5*((F_old[i, j] + F_new[i, j]) *
-                             (positions[i, j] - new_positions[i, j]))
-                term2 = D*delta_t*(F_old[i, j] - F_new[i, j])
-                greens_function += term1 + term2
-
-        greens_function = np.exp(greens_function)
-
-        return greens_function
 
     def run_metropolis(self):
         """Run the naive metropolis algorithm."""
@@ -115,7 +115,7 @@ class Metropolis:
         sampler.print_avereges()
         return d_El
 
-    def run_importance_sampling(self):
+    def run_importance_sampling(self, analytic):
         """Run importance algorithm."""
 
         # Initialize the posistions for each new Monte Carlo run
@@ -124,7 +124,7 @@ class Metropolis:
         sampler = Sampler(self.w, self.h)
 
         for i in range(self.mc_cycles):
-            new_positions = self.importance_sampling_step(positions)
+            new_positions = self.importance_sampling_step(positions, analytic)
             positions = new_positions
             sampler.sample_values(positions)
         sampler.average_values(self.mc_cycles)
