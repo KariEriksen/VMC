@@ -1,4 +1,5 @@
 """Hamiltonian class."""
+from hamiltonian import Hamiltonian # noqa: 401
 
 
 class Lennard_Jones:
@@ -9,6 +10,20 @@ class Lennard_Jones:
         self.epsilon = epsilon
         self.sigma = sigma
         self.s = wavefunction
+
+    def laplacian_numerical(self, positions):
+        """Numerical differentiation for solving laplacian."""
+
+        omega = 1.0
+        Hamiltonian(omega, self.s.wavefunction)
+        laplacian = Hamiltonian.laplacian_numerical(positions)
+
+        return laplacian
+
+    def laplacian_analytical(self, positions):
+        """Analytical solution to the laplacian"""
+
+        return 0
 
     def lennard_jones_potential(self, positions):
         """Regular Lennard-Jones potential"""
