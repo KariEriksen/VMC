@@ -10,7 +10,7 @@ class Sampler:
         self.h = hamiltonian
 
         self.local_energy = 0.0
-        self.gradient_wavefunction = 0.0
+        self.alpha_gradient_wf = 0.0
         self.accumulate_energy = 0.0
         self.accumulate_psi_term = 0.0
         self.accumulate_both = 0.0
@@ -24,10 +24,10 @@ class Sampler:
         """Sample important values"""
 
         self.local_energy = self.h.local_energy(positions)
-        self.gradient_wavefunction = self.w.gradient_wavefunction(positions)
+        self.alpha_gradient_wf = self.w.alpha_gradient_wavefunction(positions)
         self.accumulate_energy += self.h.local_energy(positions)
-        self.accumulate_psi_term += self.w.gradient_wavefunction(positions)
-        self.accumulate_both += self.local_energy*self.gradient_wavefunction
+        self.accumulate_psi_term += self.w.alpha_gradient_wavefunction(positions)
+        self.accumulate_both += self.local_energy*self.alpha_gradient_wf
 
     def average_values(self, monte_carlo_cycles):
 

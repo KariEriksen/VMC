@@ -71,7 +71,7 @@ class Wavefunction:
                     f *= 0.0
         return f
 
-    def gradient_wavefunction(self, positions):
+    def alpha_gradient_wavefunction(self, positions):
         """Calculate derivative of wave function divided by wave function."""
         """This expression holds for the case of the trail wave function
         described by the single particle wave function as a the harmonic
@@ -138,9 +138,11 @@ class Wavefunction:
                     r_kj = rk - rj
                     rkj = math.sqrt(np.sum((rk - rj)*(rk - rj)))
 
-                    d_u_rkj += -a/(a*rkj*rkj - rkj*rkj*rkj)*r_kj
+                    # factor = -2*a/(a*rkj*rkj - rkj*rkj*rkj)
+                    factor = 2*a/pow(rkj, 1.5)
+                    d_u_rkj += factor*r_kj
 
-            quantum_force[k, :] += d_psi_k + d_u_rkj
+            quantum_force[k, :] = d_psi_k + d_u_rkj
 
         return quantum_force
 

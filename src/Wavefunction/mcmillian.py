@@ -39,7 +39,7 @@ class McMillian_Wavefunction:
 
         return w
 
-    def gradient_wavefunction(self, positions):
+    def alpha_gradient_wavefunction(self, positions):
         """Calculate derivative of wave function divided by wave function."""
         """This expression holds for the case of the trail wave function
         described by the single particle wave function as a the harmonic

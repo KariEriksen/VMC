@@ -60,7 +60,7 @@ def run_vmc(parameter):
         acc_1 = ham.local_energy_weak_interaction_numerical(positions)
         accumulate_energy += acc_1
 
-        accumulate_psi_term += wave.gradient_wavefunction(positions)
+        accumulate_psi_term += wave.alpha_gradient_wavefunction(positions)
         acc_2 = ham.local_energy_times_wf_weak_interaction(positions)
         accumulate_both += acc_2
 
