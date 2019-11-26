@@ -21,6 +21,7 @@ learning_rate = 0.01
 gradient_iterations = 1000
 
 opt = Optimizer(learning_rate)
+# Hamiltonian.update(self, alpha)
 
 
 def non_interaction_case(monte_carlo_cycles, num_particles, num_dimensions,
@@ -44,7 +45,9 @@ def non_interaction_case(monte_carlo_cycles, num_particles, num_dimensions,
 
         # d_El = met.run_metropolis()
         d_El = met.run_importance_sampling('true')
-        new_parameter = opt.gradient_descent(parameter, d_El)
+        # new_parameter = opt.gradient_descent(parameter, d_El)
+        new_parameter = opt.gradient_descent_barzilai_borwein(parameter,
+                                                              d_El, i)
         print 'new alpha = ', new_parameter
         print 'number of gradien descent runs = ', i
         parameter = new_parameter
@@ -72,7 +75,9 @@ def weak_interaction_case(monte_carlo_cycles, num_particles, num_dimensions,
         # d_El = met.run_metropolis()
         # Run with analytical expression for quantum force = true
         d_El = met.run_importance_sampling('true')
-        new_parameter = opt.gradient_descent(parameter, d_El)
+        # new_parameter = opt.gradient_descent(parameter, d_El)
+        new_parameter = opt.gradient_descent_barzilai_borwein(parameter,
+                                                              d_El, i)
         print 'new alpha = ', new_parameter
         print 'number of gradien descent runs = ', i
         parameter = new_parameter
@@ -104,6 +109,9 @@ def elliptic_weak_interaction_case(monte_carlo_cycles, num_particles,
         print 'number of gradien descent runs = ', i
         parameter = new_parameter
 
+
+"""case(monte_carlo_cycles, number of particles,
+        number of dimensions, interaction parameter)"""
 
 # non_interaction_case(100000, 2, 3, 0.48)
 weak_interaction_case(100000, 2, 3, 0.47)
