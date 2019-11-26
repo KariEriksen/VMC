@@ -1,5 +1,4 @@
 """Optimizer class."""
-import nupy as np
 
 
 class Optimizer:
