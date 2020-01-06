@@ -48,8 +48,8 @@ def non_interaction_case(monte_carlo_cycles, num_particles, num_dimensions,
         new_parameter = opt.gradient_descent(parameter, d_El)
         # new_parameter = opt.gradient_descent_barzilai_borwein(parameter,
         #                                                       d_El, i)
-        print 'new alpha = ', new_parameter
-        print 'number of gradien descent runs = ', i
+        print ('new alpha = ', new_parameter)
+        print ('number of gradien descent runs = ', i)
         parameter = new_parameter
 
 
@@ -78,8 +78,8 @@ def weak_interaction_case(monte_carlo_cycles, num_particles, num_dimensions,
         new_parameter = opt.gradient_descent(parameter, d_El)
         # new_parameter = opt.gradient_descent_barzilai_borwein(parameter,
         #                                                      d_El, i)
-        print 'new alpha = ', new_parameter
-        print 'number of gradien descent runs = ', i
+        print ('new alpha = ', new_parameter)
+        print ('number of gradien descent runs = ', i)
         parameter = new_parameter
 
 
@@ -105,8 +105,8 @@ def elliptic_weak_interaction_case(monte_carlo_cycles, num_particles,
         d_El = met.run_metropolis()
         # d_El = met.run_importance_sampling('false')
         new_parameter = opt.gradient_descent(parameter, d_El)
-        print 'new alpha = ', new_parameter
-        print 'number of gradien descent runs = ', i
+        print ('new alpha = ', new_parameter)
+        print ('number of gradien descent runs = ', i)
         parameter = new_parameter
 
 
@@ -121,9 +121,6 @@ def brute_force(monte_carlo_cycles, num_particles, num_dimensions, alpha):
     alpha_step = 0.02
     n = int((alpha_stop - alpha_start)/alpha_step)
 
-    f = open('data.csv', 'w')
-    f.write('alpha')
-    f.write('\n')
     parameter = alpha_start
     for i in range(n):
 
@@ -138,11 +135,8 @@ def brute_force(monte_carlo_cycles, num_particles, num_dimensions, alpha):
         d_El = met.run_importance_sampling('true')
         # new_parameter = opt.gradient_descent_barzilai_borwein(parameter,
         #                                                       d_El, i)
-        f.write('%f' % parameter)
-        f.write('\n')
-        parameter += alpha_step
 
-    f.close()
+        parameter += alpha_step
 
 
 """case(monte_carlo_cycles, number of particles,

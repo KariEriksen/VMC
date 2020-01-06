@@ -110,9 +110,9 @@ class Metropolis:
             positions = new_positions
             sampler.sample_values(positions)
         sampler.average_values(self.mc_cycles)
-        print 'accepted states = ', self.c
+        print ('accepted states = ', self.c)
         d_El = sampler.derivative_energy
-        sampler.print_avereges()
+        #sampler.print_avereges()
         return d_El
 
     def run_importance_sampling(self, analytic):
@@ -128,7 +128,7 @@ class Metropolis:
             positions = new_positions
             sampler.sample_values(positions)
         sampler.average_values(self.mc_cycles)
-        print 'accepted states = ', self.c
+        print ('accepted states = ', self.c)
         d_El = sampler.derivative_energy
-        sampler.print_avereges()
+        #sampler.print_avereges()
         return d_El
