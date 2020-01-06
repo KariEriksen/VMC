@@ -71,7 +71,7 @@ class Metropolis:
         new_positions[random_index, :] = new_random_position
         prob_ratio = self.w.wavefunction_ratio(positions, new_positions)
 
-        if analytic:
+        if analytic == 'true':
             F_new = self.w.quantum_force(new_positions)
         else:
             F_new = self.w.quantum_force_numerical(new_positions)
