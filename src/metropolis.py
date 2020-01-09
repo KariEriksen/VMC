@@ -2,6 +2,7 @@
 import numpy as np
 import random
 from sampler import Sampler # noqa: 401
+from data_sampler import *  # noqa: 401
 
 
 class Metropolis:
@@ -21,6 +22,8 @@ class Metropolis:
         self.w = wavefunction
         self.h = hamiltonian
         self.c = 0.0
+
+        self.s = Sampler(self.w, self.h)
 
     def metropolis_step(self, positions):
         """Calculate new metropolis step."""
@@ -103,16 +106,16 @@ class Metropolis:
         # Initialize the posistions for each new Monte Carlo run
         positions = np.random.rand(self.num_p, self.num_d)
         # Initialize sampler method for each new Monte Carlo run
-        sampler = Sampler(self.w, self.h)
+        self.s.initialize()
 
         for i in range(self.mc_cycles):
             new_positions = self.metropolis_step(positions)
             positions = new_positions
-            sampler.sample_values(positions)
-        sampler.average_values(self.mc_cycles)
-        print ('accepted states = ', self.c)
-        d_El = sampler.derivative_energy
-        #sampler.print_avereges()
+            self.s.sample_values(positions)
+
+        self.s.average_values(self.mc_cycles)
+        d_El = self.s.derivative_energy
+        self.print_averages()
         return d_El
 
     def run_importance_sampling(self, analytic):
@@ -121,14 +124,26 @@ class Metropolis:
         # Initialize the posistions for each new Monte Carlo run
         positions = np.random.rand(self.num_p, self.num_d)
         # Initialize sampler method for each new Monte Carlo run
-        sampler = Sampler(self.w, self.h)
+        self.s.initialize()
 
         for i in range(self.mc_cycles):
             new_positions = self.importance_sampling_step(positions, analytic)
             positions = new_positions
-            sampler.sample_values(positions)
-        sampler.average_values(self.mc_cycles)
-        print ('accepted states = ', self.c)
-        d_El = sampler.derivative_energy
-        #sampler.print_avereges()
+            self.s.sample_values(positions)
+
+        self.s.average_values(self.mc_cycles)
+        d_El = self.s.derivative_energy
+        self.print_averages()
         return d_El
+
+    def print_averages(self):
+
+        print ('acceptence rate = ', self.c/self.mc_cycles)
+        print ('new alpha = ', self.w.alpha)
+        print ('deri energy = ', self.s.derivative_energy)
+        print ('total energy =  ', self.s.local_energy)
+        # energy/num_particles
+        print ('----------------------------')
+
+    def data_to_file(self):
+        """"""

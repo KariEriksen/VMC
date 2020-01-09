@@ -9,16 +9,6 @@ class Sampler:
         self.w = wavefunction
         self.h = hamiltonian
 
-        self.local_energy = 0.0
-        self.alpha_gradient_wf = 0.0
-        self.accumulate_energy = 0.0
-        self.accumulate_psi_term = 0.0
-        self.accumulate_both = 0.0
-        self.expec_val_energy = 0.0
-        self.expec_val_psi = 0.0
-        self.expec_val_both = 0.0
-        self.derivative_energy = 0.0
-
     def sample_values(self, positions):
         """Get the local energy from Hamiltonian class"""
         """Sample important values"""
@@ -38,9 +28,15 @@ class Sampler:
         self.derivative_energy = 2*(self.expec_val_both -
                                     self.expec_val_psi*self.expec_val_energy)
 
-    def print_avereges(self):
+    def initialize(self):
+        """Set all sampling values to zero"""
 
-        print ('deri energy = ', self.derivative_energy)
-        print ('total energy =  ', self.local_energy)
-        # energy/num_particles
-        print ('----------------------------')
+        self.local_energy = 0.0
+        self.alpha_gradient_wf = 0.0
+        self.accumulate_energy = 0.0
+        self.accumulate_psi_term = 0.0
+        self.accumulate_both = 0.0
+        self.expec_val_energy = 0.0
+        self.expec_val_psi = 0.0
+        self.expec_val_both = 0.0
+        self.derivative_energy = 0.0
