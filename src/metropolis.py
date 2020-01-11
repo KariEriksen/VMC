@@ -1,6 +1,7 @@
 """Metropolis class."""
 import numpy as np
 import random
+import math
 from sampler import Sampler # noqa: 401
 from data_sampler import *  # noqa: 401
 
@@ -134,7 +135,57 @@ class Metropolis:
         self.s.average_values(self.mc_cycles)
         d_El = self.s.derivative_energy
         self.print_averages()
+        self.csv_write_to_file()
         return d_El
+
+    def run_one_body_sampling(self):
+        """Sample position of particles."""
+
+        # Initialize the posistions for each new Monte Carlo run
+        positions = np.random.rand(self.num_p, self.num_d)
+        # Initialize sampler method for each new Monte Carlo run
+        self.s.initialize()
+        density_adding = np.zeros(41)
+
+        # Run Metropolis while finding one body density
+        for i in range(self.mc_cycles):
+            new_positions = self.metropolis_step(positions)
+            positions = new_positions
+            density = self.one_body_density(positions)
+            density_adding += density
+            # self.s.sample_values(positions)
+
+        # self.s.average_values(self.mc_cycles)
+
+        return density_adding
+
+    def one_body_density(self, positions):
+        """Run one-body density count."""
+
+        num_radii = 41
+        density = np.zeros(num_radii)
+        r_vec = np.linspace(0, 4, num_radii)
+        step = r_vec[1] - r_vec[0]
+
+        # Calculate the distance from origo of each particle
+        radii = np.zeros(self.num_p)
+        for i in range(self.num_p):
+            r = 0
+            for j in range(self.num_d):
+                r += positions[i, j]*positions[i, j]
+            radii[i] = math.sqrt(r)
+
+        # Check in which segment each particle is in
+        for i in range(self.num_p):
+            dr = 0.0
+            for j in range(num_radii):
+                if(dr <= radii[i] < dr+step):
+                    density[j] += 1
+                    break
+                else:
+                    dr += step
+
+        return density
 
     def print_averages(self):
 
@@ -144,6 +195,3 @@ class Metropolis:
         print ('total energy =  ', self.s.local_energy)
         # energy/num_particles
         print ('----------------------------')
-
-    def data_to_file(self):
-        """"""

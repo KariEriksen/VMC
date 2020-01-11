@@ -1,7 +1,9 @@
 """Variational Monte Carlo."""
 
+import numpy as np
 import sys
 import os
+import csv
 
 sys.path.append(os.path.join(os.path.dirname(__file__), 'src'))
 from metropolis import Metropolis # noqa: 401
@@ -139,10 +141,34 @@ def brute_force(monte_carlo_cycles, num_particles, num_dimensions, alpha):
         parameter += alpha_step
 
 
+def one_body_density(monte_carlo_cycles, num_particles, num_dimensions, alpha):
+    """Run the variational monte carlo"""
+    """using brute force"""
+
+    a = 0.0
+    beta = omega = 1.0
+    alpha = 0.5
+
+    # Call wavefunction class in order to set new alpha parameter
+    wave = Wavefunction(num_particles, num_dimensions, alpha, beta, a)
+    # Run with analytical expression of local energy = true
+    hamilton = Non_Interaction(omega, wave, 'true')
+    met = Metropolis(monte_carlo_cycles, step_metropolis, step_importance,
+                     num_particles, num_dimensions, wave, hamilton)
+
+    r_vec = np.linspace(0, 4, 41)
+    p_r = met.run_one_body_sampling()
+    with open('/home/kari/VMC/data/obd_data.csv', 'w', newline='') as file:
+        writer = csv.writer(file)
+        writer.writerow(["r", "density"])
+        writer.writerow([r_vec, p_r])
+
+
 """case(monte_carlo_cycles, number of particles,
         number of dimensions, interaction parameter)"""
 
 # non_interaction_case(100000, 2, 3, 0.48)
 # weak_interaction_case(100000, 2, 3, 0.47)
 # elliptic_weak_interaction_case(10000, 2, 3, None)
-brute_force(100000, 2, 3, None)
+# brute_force(100000, 2, 3, None)
+one_body_density(1000, 3, 3, None)
