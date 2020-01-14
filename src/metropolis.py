@@ -115,9 +115,10 @@ class Metropolis:
             self.s.sample_values(positions)
 
         self.s.average_values(self.mc_cycles)
+        energy = self.s.local_energy
         d_El = self.s.derivative_energy
         self.print_averages()
-        return d_El
+        return d_El, energy
 
     def run_importance_sampling(self, analytic):
         """Run importance algorithm."""
@@ -133,10 +134,10 @@ class Metropolis:
             self.s.sample_values(positions)
 
         self.s.average_values(self.mc_cycles)
+        energy = self.s.local_energy
         d_El = self.s.derivative_energy
         self.print_averages()
-        self.csv_write_to_file()
-        return d_El
+        return d_El, energy
 
     def run_one_body_sampling(self):
         """Sample position of particles."""
