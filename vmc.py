@@ -20,7 +20,7 @@ configurations. Optimizing using Gradient descent.
 step_metropolis = 1.0
 step_importance = 0.01
 learning_rate = 0.01
-gradient_iterations = 10
+gradient_iterations = 1000
 
 opt = Optimizer(learning_rate)
 # Hamiltonian.update(self, alpha)
@@ -228,3 +228,31 @@ def one_body_density(monte_carlo_cycles, num_particles, num_dimensions, alpha):
         writer.writerow(["r", "density"])
         for i in range(len(r_vec)):
             writer.writerow([r_vec[i], p_r[i]/monte_carlo_cycles])
+
+
+def run_blocking(monte_carlo_cycles, num_particles, num_dimensions,
+                 alpha):
+    """Run the sampling in metropolis to be used for blocking."""
+
+    a = 0.0
+    beta = omega = 1.0
+    if alpha is None:
+        alpha = 0.5
+
+    # Call wavefunction class in order to set new alpha parameter
+    wave = Wavefunction(num_particles, num_dimensions, alpha, beta, a)
+    # Run with analytical expression of local energy = true
+    hamilton = Weak_Interaction(omega, wave, 'true')
+    met = Metropolis(monte_carlo_cycles, step_metropolis, step_importance,
+                     num_particles, num_dimensions, wave, hamilton)
+
+    # d_El, energy = met.run_metropolis()
+    # Run with analytical expression for quantum force = true
+    energy = met.blocking('true')
+
+    with open('/home/kari/VMC/data/blocking.csv', 'w',
+              newline='') as file:
+        writer = csv.writer(file)
+        writer.writerow(["local_energy"])
+        for i in range(len(energy)):
+            writer.writerow([energy[i]])

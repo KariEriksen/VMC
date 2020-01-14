@@ -188,6 +188,26 @@ class Metropolis:
 
         return density
 
+    def blocking(self, analytic):
+        """Sample for blocking"""
+        """using importance sampling"""
+
+        # Initialize the posistions for each new Monte Carlo run
+        positions = np.random.rand(self.num_p, self.num_d)
+        # Initialize sampler method for each new Monte Carlo run
+        self.s.initialize()
+        energy = np.zeros(self.mc_cycles)
+
+        for i in range(self.mc_cycles):
+            new_positions = self.importance_sampling_step(positions, analytic)
+            positions = new_positions
+            self.s.sample_values(positions)
+            energy[i] = self.s.local_energy
+
+        self.s.average_values(self.mc_cycles)
+        self.print_averages()
+        return energy
+
     def print_averages(self):
 
         print ('acceptence rate = ', self.c/self.mc_cycles)
