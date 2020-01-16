@@ -30,7 +30,9 @@ class Metropolis:
         """Calculate new metropolis step."""
         """with brute-force sampling of new positions."""
 
-        r = random.random()*random.choice((-1, 1))
+        # r = random.random()*random.choice((-1, 1))
+        # r is a random number drawn from the uniform prob. dist. in [0,1]
+        r = random.uniform(-1, 1)
         # Pick a random particle
         random_index = random.randrange(len(positions))
         new_positions = np.array(positions)
@@ -64,7 +66,9 @@ class Metropolis:
         else:
             F_old = self.w.quantum_force_numerical(positions)
 
-        r = random.random()*random.choice((-1, 1))
+        # r = random.random()*random.choice((-1, 1))
+        # r = np.random.normal()
+        r = random.gauss(0, 1)
         # Pick a random particle and calculate new position
         random_index = random.randrange(len(positions))
         new_positions = np.array(positions)
@@ -117,8 +121,9 @@ class Metropolis:
         self.s.average_values(self.mc_cycles)
         energy = self.s.local_energy
         d_El = self.s.derivative_energy
+        var = self.s.variance
         self.print_averages()
-        return d_El, energy
+        return d_El, energy, var
 
     def run_importance_sampling(self, analytic):
         """Run importance algorithm."""
@@ -136,8 +141,9 @@ class Metropolis:
         self.s.average_values(self.mc_cycles)
         energy = self.s.local_energy
         d_El = self.s.derivative_energy
+        var = self.s.variance
         self.print_averages()
-        return d_El, energy
+        return d_El, energy, var
 
     def run_one_body_sampling(self):
         """Sample position of particles."""
@@ -214,5 +220,6 @@ class Metropolis:
         print ('new alpha = ', self.w.alpha)
         print ('deri energy = ', self.s.derivative_energy)
         print ('total energy =  ', self.s.local_energy)
+        print ('variance energy =  ', self.s.variance)
         # energy/num_particles
         print ('----------------------------')

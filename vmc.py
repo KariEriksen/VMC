@@ -4,6 +4,7 @@ import numpy as np
 import sys
 import os
 import csv
+import timeit
 
 sys.path.append(os.path.join(os.path.dirname(__file__), 'src'))
 from metropolis import Metropolis # noqa: 401
@@ -20,7 +21,7 @@ configurations. Optimizing using Gradient descent.
 step_metropolis = 1.0
 step_importance = 0.01
 learning_rate = 0.01
-gradient_iterations = 1000
+gradient_iterations = 500
 
 opt = Optimizer(learning_rate)
 # Hamiltonian.update(self, alpha)
@@ -39,37 +40,52 @@ def non_interaction_case(monte_carlo_cycles, num_particles, num_dimensions,
     # parameter_array = np.empty(0)
     d_El_array = np.zeros(gradient_iterations)
     energy_array = np.zeros(gradient_iterations)
+    var_array = np.zeros(gradient_iterations)
     parameter_array = np.zeros(gradient_iterations)
 
     parameter = alpha
+    d_El = 1.0
     for i in range(gradient_iterations):
 
-        # Call wavefunction class in order to set new alpha parameter
-        wave = Wavefunction(num_particles, num_dimensions, parameter, beta, a)
-        # Run with analytical expression of local energy = true
-        hamilton = Non_Interaction(omega, wave, 'true')
-        met = Metropolis(monte_carlo_cycles, step_metropolis, step_importance,
-                         num_particles, num_dimensions, wave, hamilton)
+        if abs(d_El) > 1e-8:
 
-        # d_El, energy = met.run_metropolis()
-        d_El, energy = met.run_importance_sampling('true')
-        new_parameter = opt.gradient_descent(parameter, d_El)
-        # new_parameter = opt.gradient_descent_barzilai_borwein(parameter,
-        #                                                       d_El, i)
-        print ('new alpha = ', new_parameter)
-        print ('number of gradien descent runs = ', i)
-        parameter = new_parameter
-        d_El_array[i] = d_El
-        energy_array[i] = energy
-        parameter_array[i] = new_parameter
+            # Call wavefunction class in order to set new alpha parameter
+            wave = Wavefunction(num_particles, num_dimensions, parameter,
+                                beta, a)
+            # Run with analytical expression of local energy = true
+            hamilton = Non_Interaction(omega, wave, 'true')
+            met = Metropolis(monte_carlo_cycles, step_metropolis,
+                             step_importance, num_particles, num_dimensions,
+                             wave, hamilton)
+
+            start = timeit.default_timer()
+            d_El, energy, var = met.run_metropolis()
+            # d_El, energy, var = met.run_importance_sampling('true')
+            stop = timeit.default_timer()
+            new_parameter = opt.gradient_descent(parameter, d_El)
+            # new_parameter = opt.gradient_descent_barzilai_borwein(parameter,
+            #                                                       d_El, i)
+            print ('new alpha = ', new_parameter)
+            print ('number of gradien descent runs = ', i)
+            print ('run time: ', stop - start)
+
+            d_El_array[i] = d_El
+            energy_array[i] = energy
+            var_array[i] = var
+            parameter_array[i] = new_parameter
+            parameter = new_parameter
+
+        else:
+            break
 
     with open('/home/kari/VMC/data/non_interaction_case_data.csv', 'w',
               newline='') as file:
         writer = csv.writer(file)
-        writer.writerow(["alpha", "derivative_energy", "local_energy"])
+        writer.writerow(["alpha", "derivative_energy", "local_energy",
+                        "variance"])
         for i in range(len(d_El_array)):
             writer.writerow([parameter_array[i], d_El_array[i],
-                            energy_array[i]])
+                            energy_array[i], var_array[i]])
 
 
 def weak_interaction_case(monte_carlo_cycles, num_particles, num_dimensions,
@@ -103,11 +119,11 @@ def weak_interaction_case(monte_carlo_cycles, num_particles, num_dimensions,
         #                                                      d_El, i)
         print ('new alpha = ', new_parameter)
         print ('number of gradien descent runs = ', i)
-        parameter = new_parameter
 
         d_El_array[i] = d_El
         energy_array[i] = energy
         parameter_array[i] = new_parameter
+        parameter = new_parameter
 
     with open('/home/kari/VMC/data/non_interaction_case_data.csv', 'w',
               newline='') as file:
@@ -146,11 +162,11 @@ def elliptic_weak_interaction_case(monte_carlo_cycles, num_particles,
         new_parameter = opt.gradient_descent(parameter, d_El)
         print ('new alpha = ', new_parameter)
         print ('number of gradien descent runs = ', i)
-        parameter = new_parameter
 
         d_El_array[i] = d_El
         energy_array[i] = energy
         parameter_array[i] = new_parameter
+        parameter = new_parameter
 
     with open('/home/kari/VMC/data/non_interaction_case_data.csv', 'w',
               newline='') as file:
@@ -172,10 +188,10 @@ def brute_force(monte_carlo_cycles, num_particles, num_dimensions, alpha):
     alpha_step = 0.02
     n = int((alpha_stop - alpha_start)/alpha_step)
 
-    d_El_array = np.zeros(gradient_iterations)
-    energy_array = np.zeros(gradient_iterations)
-    parameter_array = np.zeros(gradient_iterations)
-
+    d_El_array = np.zeros(n)
+    energy_array = np.zeros(n)
+    parameter_array = np.zeros(n)
+    var_array = np.zeros(n)
     parameter = alpha_start
     for i in range(n):
 
@@ -186,24 +202,25 @@ def brute_force(monte_carlo_cycles, num_particles, num_dimensions, alpha):
         met = Metropolis(monte_carlo_cycles, step_metropolis, step_importance,
                          num_particles, num_dimensions, wave, hamilton)
 
-        # d_El, energy = met.run_metropolis()
-        d_El, energy = met.run_importance_sampling('true')
+        d_El, energy, var = met.run_metropolis()
+        # d_El, energy, var = met.run_importance_sampling('true')
         # new_parameter = opt.gradient_descent_barzilai_borwein(parameter,
         #                                                       d_El, i)
 
-        parameter += alpha_step
-
+        var_array[i] = var
         d_El_array[i] = d_El
         energy_array[i] = energy
         parameter_array[i] = parameter
+        parameter += alpha_step
 
-    with open('/home/kari/VMC/data/non_interaction_case_data.csv', 'w',
+    with open('/home/kari/VMC/data/non_interaction_brute_force.csv', 'w',
               newline='') as file:
         writer = csv.writer(file)
-        writer.writerow(["alpha", "derivative_energy", "local_energy"])
+        writer.writerow(["alpha", "derivative_energy", "local_energy",
+                        "variance"])
         for i in range(len(d_El_array)):
             writer.writerow([parameter_array[i], d_El_array[i],
-                            energy_array[i]])
+                            energy_array[i], var_array[i]])
 
 
 def one_body_density(monte_carlo_cycles, num_particles, num_dimensions, alpha):
@@ -234,10 +251,10 @@ def run_blocking(monte_carlo_cycles, num_particles, num_dimensions,
                  alpha):
     """Run the sampling in metropolis to be used for blocking."""
 
-    a = 0.0
+    a = 0.00433
     beta = omega = 1.0
     if alpha is None:
-        alpha = 0.5
+        alpha = 0.495
 
     # Call wavefunction class in order to set new alpha parameter
     wave = Wavefunction(num_particles, num_dimensions, alpha, beta, a)
