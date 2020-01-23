@@ -11,6 +11,8 @@ class Optimizer:
     def __init__(self, learning_rate):
         """Instance of class."""
         self.learning_rate = learning_rate
+        self.old_alpha = 0.0
+        self.old_gradient = 0.0
 
     def gradient_descent(self, alpha, derivative_energy):
         """Orinary gradient descent."""
@@ -21,17 +23,20 @@ class Optimizer:
     def gradient_descent_barzilai_borwein(self, alpha, derivative_energy, k):
         """gradient descent with Barzilai-Borwein update on learning rate"""
 
-        old_derivative_energy = derivative_energy
-        old_alpha = alpha
-
         if k == 0:
-            gamma = self.learning_rate
-            new_alpha = alpha - gamma*derivative_energy
+            new_alpha = alpha - self.learning_rate*derivative_energy
+            self.old_alpha = alpha
+            self.old_gradient = derivative_energy
 
         else:
-            diff_alpha = alpha - old_alpha
-            diff_derivative_energy = derivative_energy - old_derivative_energy
-            gamma = diff_alpha - 1/diff_derivative_energy
-            new_alpha = alpha - gamma*derivative_energy
+
+            diff_alpha = alpha - self.old_alpha
+            diff_derivative_energy = derivative_energy - self.old_gradient
+            new_gamma = diff_alpha/diff_derivative_energy
+
+            new_alpha = alpha - new_gamma*derivative_energy
+
+        self.old_alpha = alpha
+        self.old_gradient = derivative_energy
 
         return new_alpha
