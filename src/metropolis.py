@@ -122,7 +122,7 @@ class Metropolis:
         energy = self.s.local_energy
         d_El = self.s.derivative_energy
         var = self.s.variance
-        self.print_averages()
+        # self.print_averages()
         return d_El, energy, var
 
     def run_importance_sampling(self, analytic):
@@ -142,7 +142,7 @@ class Metropolis:
         energy = self.s.local_energy
         d_El = self.s.derivative_energy
         var = self.s.variance
-        self.print_averages()
+        # self.print_averages()
         return d_El, energy, var
 
     def run_one_body_sampling(self):
