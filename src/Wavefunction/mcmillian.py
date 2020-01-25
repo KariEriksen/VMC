@@ -17,12 +17,9 @@ class McMillian_Wavefunction:
         self.alpha = alpha
         self.beta = beta
         self.a = a
-        self.k = 1.0
-        self.T = 1.0
 
-    def mcmillian_wavefunction(self, positions):
+    def wavefunction(self, positions):
         """Return wave equation."""
-        w = 1.0
         term = 0.0
 
         for i in range(self.num_p):
@@ -34,7 +31,7 @@ class McMillian_Wavefunction:
                     r += ri_minus_rj**2
                 distance = math.sqrt(r)
                 # distance = math.sqrt(np.sum(np.square(ri_minus_rj)))
-                term += (self.k*self.T/distance)**5
+                term += (self.alpha/distance)**5
         w = math.exp(-0.5*term)
 
         return w
@@ -42,23 +39,19 @@ class McMillian_Wavefunction:
     def alpha_gradient_wavefunction(self, positions):
         """Calculate derivative of wave function divided by wave function."""
         """This expression holds for the case of the trail wave function
-        described by the single particle wave function as a the harmonic
-        oscillator function and the correlation function
-        """
-        gradient = np.zeros((self.num_p, self.num_d))
-        for k in range(self.num_p):
-            xk = positions[k, 0]
-            yk = positions[k, 1]
-            zk = positions[k, 2]
-            rk = np.array((xk, yk, zk))
-            for j in range(self.num_p):
-                xj = positions[j, 0]
-                yj = positions[j, 1]
-                zj = positions[j, 2]
-                rj = np.array((xj, yj, zj))
-                if(j != k):
-                    rkj = math.sqrt(np.sum((rk - rj)*(rk - rj)))
-                    gradient[k, :] = 5*0.5*self.k*self.T*(rk-rj)/rkj
+        described by the McMillian wave function"""
+        term = 0.0
+
+        for i in range(self.num_p):
+            for j in range(i, self.num_p-1):
+                r = 0.0
+                for k in range(self.num_d):
+                    ri_minus_rj = positions[i, k] - positions[j+1, k]
+                    r += ri_minus_rj**2
+                distance = math.sqrt(r)
+                term += (1/distance)**5
+
+        gradient = -(5/2)*term*(self.alpha)**4
 
         return gradient
 
@@ -74,6 +67,31 @@ class McMillian_Wavefunction:
         return acceptance_ratio
 
     def quantum_force(self, positions):
+        """Return drift force."""
+
+        quantum_force = np.zeros((self.num_p, self.num_d))
+
+        for k in range(self.num_p):
+            xk = positions[k, 0]
+            yk = positions[k, 1]
+            zk = positions[k, 2]
+            rk = np.array((xk, yk, zk))
+            for j in range(self.num_p):
+                xj = positions[j, 0]
+                yj = positions[j, 1]
+                zj = positions[j, 2]
+                rj = np.array((xj, yj, zj))
+                if(j != k):
+                    for d in range(self.num_d):
+                        r_kj = rk - rj
+                        rkj = math.sqrt(np.sum((rk - rj)*(rk - rj)))
+
+            # rewrite this
+            quantum_force[k, :] = 5*(self.alpha*r_kj/rkj**2)**4
+
+        return quantum_force
+
+    def quantum_force_numerical(self, positions):
         """Return drift force."""
         """This surely is inefficient, rewrite so the quantum force matrix
         gets updated, than calculating it over and over again each time"""
