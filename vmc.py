@@ -45,9 +45,10 @@ def non_interaction_case(monte_carlo_cycles, num_particles, num_dimensions,
 
     parameter = alpha
     d_El = 1.0
+    start = timeit.default_timer()
     for i in range(gradient_iterations):
 
-        if abs(d_El) > 1e-8:
+        if abs(d_El) > 1e-20:
 
             # Call wavefunction class in order to set new alpha parameter
             wave = Wavefunction(num_particles, num_dimensions, parameter,
@@ -58,9 +59,8 @@ def non_interaction_case(monte_carlo_cycles, num_particles, num_dimensions,
                              step_importance, num_particles, num_dimensions,
                              wave, hamilton)
 
-            start = timeit.default_timer()
-            d_El, energy, var = met.run_metropolis()
-            # d_El, energy, var = met.run_importance_sampling('true')
+            # d_El, energy, var = met.run_metropolis()
+            d_El, energy, var = met.run_importance_sampling('true')
             stop = timeit.default_timer()
             new_parameter = opt.gradient_descent(parameter, d_El)
             # new_parameter = opt.gradient_descent_barzilai_borwein(parameter,
@@ -78,14 +78,16 @@ def non_interaction_case(monte_carlo_cycles, num_particles, num_dimensions,
         else:
             break
 
+    print ('final run time: ', stop - start)
     with open('/home/kari/VMC/data/non_interaction_case_data.csv', 'w',
               newline='') as file:
         writer = csv.writer(file)
         writer.writerow(["alpha", "derivative_energy", "local_energy",
                         "variance"])
         for i in range(len(d_El_array)):
-            writer.writerow([parameter_array[i], d_El_array[i],
-                            energy_array[i], var_array[i]])
+            if parameter_array[i] != 0:
+                writer.writerow([parameter_array[i], d_El_array[i],
+                                energy_array[i], var_array[i]])
 
 
 def weak_interaction_case(monte_carlo_cycles, num_particles, num_dimensions,
@@ -100,6 +102,7 @@ def weak_interaction_case(monte_carlo_cycles, num_particles, num_dimensions,
     d_El_array = np.zeros(gradient_iterations)
     energy_array = np.zeros(gradient_iterations)
     parameter_array = np.zeros(gradient_iterations)
+    var_array = np.zeros(gradient_iterations)
 
     parameter = alpha
     for i in range(gradient_iterations):
@@ -113,7 +116,7 @@ def weak_interaction_case(monte_carlo_cycles, num_particles, num_dimensions,
 
         # d_El, energy = met.run_metropolis()
         # Run with analytical expression for quantum force = true
-        d_El, energy = met.run_importance_sampling('true')
+        d_El, energy, var = met.run_importance_sampling('true')
         new_parameter = opt.gradient_descent(parameter, d_El)
         # new_parameter = opt.gradient_descent_barzilai_borwein(parameter,
         #                                                      d_El, i)
@@ -122,16 +125,18 @@ def weak_interaction_case(monte_carlo_cycles, num_particles, num_dimensions,
 
         d_El_array[i] = d_El
         energy_array[i] = energy
+        var_array[i] = var
         parameter_array[i] = new_parameter
         parameter = new_parameter
 
-    with open('/home/kari/VMC/data/non_interaction_case_data.csv', 'w',
+    with open('/home/kari/VMC/data/weak_interaction_case_data.csv', 'w',
               newline='') as file:
         writer = csv.writer(file)
-        writer.writerow(["alpha", "derivative_energy", "local_energy"])
+        writer.writerow(["alpha", "derivative_energy", "local_energy",
+                        "variance"])
         for i in range(len(d_El_array)):
             writer.writerow([parameter_array[i], d_El_array[i],
-                            energy_array[i]])
+                            energy_array[i], var_array[i]])
 
 
 def elliptic_weak_interaction_case(monte_carlo_cycles, num_particles,
