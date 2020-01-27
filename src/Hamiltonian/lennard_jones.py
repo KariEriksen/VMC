@@ -66,9 +66,20 @@ class Lennard_Jones:
 
     def lennard_jones_potential(self, positions):
         """Regular Lennard-Jones potential"""
-        C6 = (self.sigma/positions)**6
-        C12 = (self.sigma/positions)**12
-        V = 4*self.epsilon*(C12 - C6)
+
+        V = 0.0
+        for i in range(self.num_p):
+            for j in range(i, self.num_p-1):
+                # ri_minus_rj = np.subtract(positions[i, :], positions[j+1, :])
+                r = 0.0
+                for k in range(self.num_d):
+                    ri_minus_rj = positions[i, k] - positions[j+1, k]
+                    r += ri_minus_rj**2
+                distance = math.sqrt(r)
+                # distance = math.sqrt(np.sum(np.square(ri_minus_rj)))
+            C6 = (self.sigma/distance)**6
+            C12 = (self.sigma/distance)**12
+            V += 4*self.epsilon*(C12 - C6)
 
         return V
 
