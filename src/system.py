@@ -1,93 +1,57 @@
-"""Wavefunction class."""
+"""System class."""
 import math
+import numpy as np
 
 
-class Wavefunction:
-    """Contains parameters of wavefunction and wave equation."""
+class System:
+    """Contains position matrix."""
 
     # deri_psi = 0.0
     # g        = 0.0
     # f        = 0.0
 
-    def __init__(self, num_particles, num_dimensions, alpha, beta, a):
+    def __init__(self, num_particles, num_dimensions):
         """Instance of class."""
         self.num_p = num_particles
         self.num_d = num_dimensions
-        self.alpha = alpha
-        self.beta = beta
-        self.a = a
+        self.positions = np.random.rand(self.num_p, self.num_d)
+        self.r_squared = np.zeros(self.num_p)
+        self.distances = np.zeros((self.num_p, self.num_p))
 
-    def wavefunction(self, positions):
-        """Return wave equation."""
-        spf = self.single_particle_function(positions)
-        jf = self.jastrow_factor(positions)
-        wf = spf*jf
-
-        return wf
-
-    def single_particle_function(self, positions):
-        """Return the single particle wave function."""
-        """Take in position matrix of the particles and calculate the
-        single particle wave function."""
-        """Returns g, type float, product of all single particle wave functions
-        of all particles."""
-
-        g = 1.0
+    def positions_squared(self):
+        """Calculate the distance from origo"""
 
         for i in range(self.num_p):
-            # self.num_d = j
-            x = positions[i, 0]
-            y = positions[i, 1]
-            if self.num_d > 2:
-                # positions[i, 2] *= self.beta
-                # if vector is 3 dimesions
-                z = positions[i, 2]
-                g = g*math.exp(-self.alpha*(x*x + y*y + self.beta*z*z))
+            x = self.positions[i, 0]
+            y = self.positions[i, 1]
+            z = self.positions[i, 2]
+            self.r_squared[i] = x*x + y*y + z*z
 
-            else:
-                g = g*math.exp(-self.alpha*(x*x + y*y))
-                # g = np.prod(math.exp(-self.alpha*(np.sum(
-                # np.power(positions, 2)axis=1))))
+        return self.r_squared
 
-        return g
-
-    def jastrow_factor(self, positions):
-        """Calculate correlation factor."""
-        f = 1.0
+    def positions_distances(self):
+        """Calculate the distances between particles"""
 
         for i in range(self.num_p):
             for j in range(i, self.num_p-1):
                 # ri_minus_rj = np.subtract(positions[i, :], positions[j+1, :])
-                r = 0.0
                 for k in range(self.num_d):
-                    ri_minus_rj = positions[i, k] - positions[j+1, k]
-                    r += ri_minus_rj**2
-                distance = math.sqrt(r)
-                # distance = math.sqrt(np.sum(np.square(ri_minus_rj)))
-                if distance > self.a:
-                    f = f*(1.0 - (self.a/distance))
-                else:
-                    f *= 1e-14
-        return f
+                    ri_minus_rj = (self.positions[i, k] -
+                                   self.positions[j+1, k])
+                    r = ri_minus_rj**2
+                self.distances[i, j] = math.sqrt(r)
+        print (self.distances)
 
-    def alpha_gradient_wavefunction(self, positions):
-        """Calculate derivative of wave function divided by wave function."""
-        """This expression holds for the case of the trail wave function
-        described by the single particle wave function as a the harmonic
-        oscillator function and the correlation function
-        """
-        deri_psi = 0.0
+        return self.distances
 
-        for i in range(self.num_p):
-            x = positions[i, 0]
-            y = positions[i, 1]
-            if self.num_d > 2:
-                # if vector is 3 dimesions
-                # positions[i, 2] *= self.beta
-                z = positions[i, 2]
+    def positions_update(self, i):
+        """Update the distance matrix for movement of one particle"""
 
-                deri_psi += (x*x + y*y + self.beta*z*z)
-            else:
-                deri_psi += (x*x + y*y)
+        for j in range(self.num_p):
+            for k in range(self.num_d):
+                ri_minus_rj = self.positions[i, k] - self.positions[j, k]
+                r = ri_minus_rj**2
+            self.distances[i, j] = math.sqrt(r)
+            # self.distances[j, i] = self.distances[i, j]
 
-        return -deri_psi
+        return 0
