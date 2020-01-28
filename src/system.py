@@ -39,7 +39,7 @@ class System:
                     ri_minus_rj = (self.positions[i, k] -
                                    self.positions[j+1, k])
                     r = ri_minus_rj**2
-                self.distances[i, j] = math.sqrt(r)
+                self.distances[i, j+1] = math.sqrt(r)
         print (self.distances)
 
         return self.distances
