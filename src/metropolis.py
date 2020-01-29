@@ -3,7 +3,7 @@ import numpy as np
 import random
 import math
 from sampler import Sampler # noqa: 401
-from data_sampler import *  # noqa: 401
+from system import System  # noqa: 401
 
 
 class Metropolis:
@@ -24,7 +24,8 @@ class Metropolis:
         self.h = hamiltonian
         self.c = 0.0
 
-        self.s = Sampler(self.w, self.h)
+        self.sam = Sampler(self.w, self.h)
+        self.sys = System(self.num_p, self.num_d)
 
     def metropolis_step(self, positions):
         """Calculate new metropolis step."""
@@ -110,18 +111,19 @@ class Metropolis:
 
         # Initialize the posistions for each new Monte Carlo run
         positions = np.random.rand(self.num_p, self.num_d)
+        sys.
         # Initialize sampler method for each new Monte Carlo run
-        self.s.initialize()
+        self.sam.initialize()
 
         for i in range(self.mc_cycles):
             new_positions = self.metropolis_step(positions)
             positions = new_positions
-            self.s.sample_values(positions)
+            self.sam.sample_values(positions)
 
-        self.s.average_values(self.mc_cycles)
-        energy = self.s.local_energy
-        d_El = self.s.derivative_energy
-        var = self.s.variance
+        self.sam.average_values(self.mc_cycles)
+        energy = self.sam.local_energy
+        d_El = self.sam.derivative_energy
+        var = self.sam.variance
         # self.print_averages()
         return d_El, energy, var
 
@@ -131,17 +133,17 @@ class Metropolis:
         # Initialize the posistions for each new Monte Carlo run
         positions = np.random.rand(self.num_p, self.num_d)
         # Initialize sampler method for each new Monte Carlo run
-        self.s.initialize()
+        self.sam.initialize()
 
         for i in range(self.mc_cycles):
             new_positions = self.importance_sampling_step(positions, analytic)
             positions = new_positions
-            self.s.sample_values(positions)
+            self.sam.sample_values(positions)
 
-        self.s.average_values(self.mc_cycles)
-        energy = self.s.local_energy
-        d_El = self.s.derivative_energy
-        var = self.s.variance
+        self.sam.average_values(self.mc_cycles)
+        energy = self.sam.local_energy
+        d_El = self.sam.derivative_energy
+        var = self.sam.variance
         # self.print_averages()
         return d_El, energy, var
 
@@ -151,7 +153,7 @@ class Metropolis:
         # Initialize the posistions for each new Monte Carlo run
         positions = np.random.rand(self.num_p, self.num_d)
         # Initialize sampler method for each new Monte Carlo run
-        self.s.initialize()
+        self.sam.initialize()
         density_adding = np.zeros(41)
 
         # Run Metropolis while finding one body density
@@ -201,16 +203,16 @@ class Metropolis:
         # Initialize the posistions for each new Monte Carlo run
         positions = np.random.rand(self.num_p, self.num_d)
         # Initialize sampler method for each new Monte Carlo run
-        self.s.initialize()
+        self.sam.initialize()
         energy = np.zeros(self.mc_cycles)
 
         for i in range(self.mc_cycles):
             new_positions = self.importance_sampling_step(positions, analytic)
             positions = new_positions
-            self.s.sample_values(positions)
-            energy[i] = self.s.local_energy
+            self.sam.sample_values(positions)
+            energy[i] = self.sam.local_energy
 
-        self.s.average_values(self.mc_cycles)
+        self.sam.average_values(self.mc_cycles)
         self.print_averages()
         return energy
 
@@ -218,8 +220,8 @@ class Metropolis:
 
         print ('acceptence rate = ', self.c/self.mc_cycles)
         print ('new alpha = ', self.w.alpha)
-        print ('deri energy = ', self.s.derivative_energy)
-        print ('total energy =  ', self.s.local_energy)
-        print ('variance energy =  ', self.s.variance)
+        print ('deri energy = ', self.sam.derivative_energy)
+        print ('total energy =  ', self.sam.local_energy)
+        print ('variance energy =  ', self.sam.variance)
         # energy/num_particles
         print ('----------------------------')
