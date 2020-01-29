@@ -57,10 +57,12 @@ class System:
         """particle i = particle index"""
 
         for j in range(self.num_p):
-            for k in range(self.num_d):
-                ri_minus_rj = self.positions[i, k] - self.positions[j, k]
-                r = ri_minus_rj**2
-            self.distances[i, j] = math.sqrt(r)
-            self.distances[j, i] = self.distances[i, j]
+            if j != i:
+                r = 0.0
+                for k in range(self.num_d):
+                    ri_minus_rj = self.positions[i, k] - self.positions[j, k]
+                    r += ri_minus_rj**2
+                self.distances[i, j] = math.sqrt(r)
+                self.distances[j, i] = self.distances[i, j]
 
         return self.distances
