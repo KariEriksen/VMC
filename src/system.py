@@ -40,18 +40,26 @@ class System:
                                    self.positions[j+1, k])
                     r = ri_minus_rj**2
                 self.distances[i, j+1] = math.sqrt(r)
-        print (self.distances)
 
         return self.distances
 
-    def positions_update(self, i):
+    def positions_update(self, new_position, i):
+        """Update the position matrix for movement of one particle"""
+        """particle i = particle number"""
+
+        self.positions[i, :] = new_position
+
+        return self.positions
+
+    def distances_update(self, i):
         """Update the distance matrix for movement of one particle"""
+        """particle i = particle index"""
 
         for j in range(self.num_p):
             for k in range(self.num_d):
                 ri_minus_rj = self.positions[i, k] - self.positions[j, k]
                 r = ri_minus_rj**2
             self.distances[i, j] = math.sqrt(r)
-            # self.distances[j, i] = self.distances[i, j]
+            self.distances[j, i] = self.distances[i, j]
 
-        return 0
+        return self.distances
