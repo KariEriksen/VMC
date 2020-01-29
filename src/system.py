@@ -35,10 +35,11 @@ class System:
         for i in range(self.num_p):
             for j in range(i, self.num_p-1):
                 # ri_minus_rj = np.subtract(positions[i, :], positions[j+1, :])
+                r = 0.0
                 for k in range(self.num_d):
                     ri_minus_rj = (self.positions[i, k] -
                                    self.positions[j+1, k])
-                    r = ri_minus_rj**2
+                    r += ri_minus_rj**2
                 self.distances[i, j+1] = math.sqrt(r)
 
         return self.distances
