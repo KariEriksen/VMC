@@ -45,6 +45,7 @@ class Metropolis:
 
         if acceptance_ratio > epsilon:
             positions = new_positions
+            self.sys.distances_update(positions)
             self.c += 1.0
 
         else:
@@ -111,7 +112,8 @@ class Metropolis:
 
         # Initialize the posistions for each new Monte Carlo run
         positions = np.random.rand(self.num_p, self.num_d)
-        sys.
+        # Initialize the distance matrix
+        self.sys.positions_distances(positions)
         # Initialize sampler method for each new Monte Carlo run
         self.sam.initialize()
 
