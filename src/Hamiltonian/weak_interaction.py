@@ -6,10 +6,11 @@ import math
 class Weak_Interaction:
     """Calculate variables regarding the Hamiltonian of given wavefunction."""
 
-    def __init__(self, omega, wavefunction, analytical):
+    def __init__(self, omega, wavefunction, system, analytical):
         """Instance of class."""
         self.omega = omega
-        self.s = wavefunction
+        self.w = wavefunction
+        self.s = system
         self.analytical = analytical
 
     def laplacian_numerical(self, positions):
@@ -21,14 +22,14 @@ class Weak_Interaction:
         psi_current = 0.0
         psi_moved = 0.0
 
-        for i in range(self.s.num_p):
-            psi_current += 2*self.s.num_d*self.s.wavefunction(positions)
-            for j in range(self.s.num_d):
+        for i in range(self.w.num_p):
+            psi_current += 2*self.w.num_d*self.w.wavefunction(positions)
+            for j in range(self.w.num_d):
 
                 position_forward[i, j] = position_forward[i, j] + step
                 position_backward[i, j] = position_backward[i, j] - step
-                wf_p = self.s.wavefunction(position_forward)
-                wf_n = self.s.wavefunction(position_backward)
+                wf_p = self.w.wavefunction(position_forward)
+                wf_n = self.w.wavefunction(position_backward)
                 psi_moved += wf_p + wf_n
                 # Resett positions
                 position_forward[i, j] = position_forward[i, j] - step
@@ -44,12 +45,12 @@ class Weak_Interaction:
         """The analytic solution to kinetic energy given wave functions
         where a = scattering length"""
 
-        d = self.s.num_d
-        n = self.s.num_p
-        a = self.s.a
-        alpha = self.s.alpha
+        d = self.w.num_d
+        n = self.w.num_p
+        a = self.w.a
+        alpha = self.w.alpha
         alpha_sq = alpha**2
-        beta = self.s.beta
+        beta = self.w.beta
 
         # rkj = np.zeros(d)
         # rki = np.zeros(d)
@@ -144,7 +145,7 @@ class Weak_Interaction:
         else:
             # Run with numerical expression for kinetic energy
             k = (self.laplacian_numerical(positions) /
-                 self.s.wavefunction(positions))
+                 self.w.wavefunction(positions))
 
         p = self.trap_potential_energy(positions)
         energy = -0.5*k + p

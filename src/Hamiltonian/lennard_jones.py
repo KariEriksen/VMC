@@ -6,11 +6,12 @@ import math
 class Lennard_Jones:
     """Calculate variables regarding the Hamiltonian of given wavefunction."""
 
-    def __init__(self, epsilon, sigma, wavefunction):
+    def __init__(self, epsilon, sigma, wavefunction, system):
         """Instance of class."""
         self.epsilon = epsilon
         self.sigma = sigma
         self.s = wavefunction
+        self.s = system
         self.alpha5 = self.alpha**5
         self.fraction = 25/4
 

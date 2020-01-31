@@ -10,13 +10,14 @@ class Wavefunction:
     # g        = 0.0
     # f        = 0.0
 
-    def __init__(self, num_particles, num_dimensions, alpha, beta, a):
+    def __init__(self, num_particles, num_dimensions, alpha, beta, a, system):
         """Instance of class."""
         self.num_p = num_particles
         self.num_d = num_dimensions
         self.alpha = alpha
         self.beta = beta
         self.a = a
+        self.s = system
 
     def wavefunction(self, positions):
         """Return wave equation."""

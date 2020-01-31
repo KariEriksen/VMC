@@ -10,7 +10,7 @@ class McMillian_Wavefunction:
     # g        = 0.0
     # f        = 0.0
 
-    def __init__(self, num_particles, num_dimensions, alpha, beta, a):
+    def __init__(self, num_particles, num_dimensions, alpha, beta, a, system):
         """Instance of class."""
         self.num_p = num_particles
         self.num_d = num_dimensions
@@ -19,6 +19,7 @@ class McMillian_Wavefunction:
         self.a = a
         self.alpha4 = alpha**4
         self.alpha5 = alpha**5
+        self.s = system
 
     def wavefunction(self, positions):
         """Return wave equation."""
