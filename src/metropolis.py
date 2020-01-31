@@ -52,6 +52,34 @@ class Metropolis:
 
         return positions
 
+    def metropolis_step_PBC(self, positions):
+        """Calculate new metropolis step."""
+        """with brute-force sampling of new positions."""
+
+        # r = random.random()*random.choice((-1, 1))
+        # r is a random number drawn from the uniform prob. dist. in [0,1]
+        r = random.uniform(-1, 1)
+        # Pick a random particle
+        random_index = random.randrange(len(positions))
+        new_positions = np.array(positions)
+        new_random_position = new_positions[random_index, :]
+        # Suggest a new move
+        new_positions[random_index, :] = new_random_position + r*self.delta_R
+        # Check boundarys, apply PBC if necessary
+        self.periodic_boundary_conditions(new_positions)
+        acceptance_ratio = self.w.wavefunction_ratio(positions, new_positions)
+        epsilon = np.random.sample()
+
+        if acceptance_ratio > epsilon:
+            positions = new_positions
+            self.s.distances_update(positions)
+            self.c += 1.0
+
+        else:
+            pass
+
+        return positions
+
     def importance_sampling_step(self, positions, analytic):
         """Calculate new step with Importance sampling."""
         """With upgrad method for suggetion of new positions."""
@@ -128,6 +156,28 @@ class Metropolis:
         # self.print_averages()
         return d_El, energy, var
 
+    def run_metropolis_PBC(self):
+        """Run the naive metropolis algorithm."""
+
+        # Initialize the posistions for each new Monte Carlo run
+        positions = np.random.rand(self.num_p, self.num_d)
+        # Initialize the distance matrix
+        self.s.positions_distances(positions)
+        # Initialize sampler method for each new Monte Carlo run
+        self.sam.initialize()
+
+        for i in range(self.mc_cycles):
+            new_positions = self.metropolis_step_PBC(positions)
+            positions = new_positions
+            self.sam.sample_values(positions)
+
+        self.sam.average_values(self.mc_cycles)
+        energy = self.sam.local_energy
+        d_El = self.sam.derivative_energy
+        var = self.sam.variance
+        # self.print_averages()
+        return d_El, energy, var
+
     def run_importance_sampling(self, analytic):
         """Run importance algorithm."""
 
@@ -151,6 +201,8 @@ class Metropolis:
     def periodic_boundary_conditions(self, positions):
         """Apply periodic boundary conditions"""
         """for the case of strong interaction between particles"""
+
+        return 0.0
 
     def run_one_body_sampling(self):
         """Sample position of particles."""
