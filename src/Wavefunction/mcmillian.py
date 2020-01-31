@@ -17,6 +17,8 @@ class McMillian_Wavefunction:
         self.alpha = alpha
         self.beta = beta
         self.a = a
+        self.alpha4 = alpha**4
+        self.alpha5 = alpha**5
 
     def wavefunction(self, positions):
         """Return wave equation."""
@@ -51,7 +53,7 @@ class McMillian_Wavefunction:
                 distance = math.sqrt(r)
                 term += (1/distance)**5
 
-        gradient = -(5/2)*term*(self.alpha)**4
+        gradient = -2.5*term*self.alpha4
 
         return gradient
 
@@ -71,6 +73,7 @@ class McMillian_Wavefunction:
 
         quantum_force = np.zeros((self.num_p, self.num_d))
 
+        sum = 0.0
         for k in range(self.num_p):
             xk = positions[k, 0]
             yk = positions[k, 1]
@@ -82,12 +85,13 @@ class McMillian_Wavefunction:
                 zj = positions[j, 2]
                 rj = np.array((xj, yj, zj))
                 if(j != k):
-                    for d in range(self.num_d):
-                        r_kj = rk - rj
-                        rkj = math.sqrt(np.sum((rk - rj)*(rk - rj)))
+                    r_kj = rk - rj
+                    rkj = math.sqrt(np.sum((rk - rj)*(rk - rj)))
 
-            # rewrite this
-            quantum_force[k, :] = 5*(self.alpha*r_kj/rkj**2)**4
+                rkj7 = rkj**7
+                sum += r_kj/rkj7
+
+            quantum_force[k, :] = 5*self.alpha5*sum
 
         return quantum_force
 

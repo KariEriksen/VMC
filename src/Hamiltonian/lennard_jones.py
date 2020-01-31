@@ -11,6 +11,8 @@ class Lennard_Jones:
         self.epsilon = epsilon
         self.sigma = sigma
         self.s = wavefunction
+        self.alpha5 = self.alpha**5
+        self.fraction = 25/4
 
     def laplacian_numerical(self, positions):
         """Numerical differentiation for solving laplacian."""
@@ -40,27 +42,27 @@ class Lennard_Jones:
     def laplacian_analytical(self, positions):
         """Analytical solution to the laplacian"""
 
-        sum = 0.0
-        for i in range(self.s.num_p):
-            xi = positions[i, 0]
-            yi = positions[i, 1]
-            zi = positions[i, 2]
-            ri = np.array((xi, yi, zi))
-            r_i = xi + yi + zi
+        sum1 = 0.0
+        sum2 = 0.0
+        for k in range(self.num_p):
+            xk = positions[k, 0]
+            yk = positions[k, 1]
+            zk = positions[k, 2]
+            rk = np.array((xk, yk, zk))
             for j in range(self.num_p):
                 xj = positions[j, 0]
                 yj = positions[j, 1]
                 zj = positions[j, 2]
                 rj = np.array((xj, yj, zj))
-                if(j != i):
-                    for d in range(self.num_d):
-                        r_ij = ri - rj
-                        rij = math.sqrt(np.sum((ri - rj)*(ri - rj)))
+                if(j != k):
+                    r_kj = rk - rj
+                    rkj = math.sqrt(np.sum((rk - rj)*(rk - rj)))
 
-            term1 = 10*(self.s.alpha*r_i - 2/(rij**2))
-            term2 = (25/4)*((self.s.alpha*r_ij)/rij)**8
-            sum += term1 + term2
-        laplacian = sum
+            rkj7 = rkj**7
+            sum1 += 1/rkj7
+            sum2 += r_kj
+        term = sum1*sum2
+        laplacian = self.fraction*(self.alpha5*term)**2 - 10*self.alpha5*sum1
 
         return laplacian
 
