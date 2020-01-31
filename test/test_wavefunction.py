@@ -6,6 +6,7 @@ import os
 
 sys.path.append(os.path.join(os.path.dirname(__file__), os.pardir, 'src'))
 from Wavefunction.wavefunction import Wavefunction  # noqa: 401
+from system import System # noqa: 401
 
 
 def test_wavefunction_wavefunction_2d():
@@ -14,7 +15,8 @@ def test_wavefunction_wavefunction_2d():
     alpha = 1.0
     beta = 1.0
     a = 0.0
-    s = Wavefunction(num_particles, num_dimensions, alpha, beta, a)
+    sys = System(num_particles, num_dimensions)
+    s = Wavefunction(num_particles, num_dimensions, alpha, beta, a, sys)
     positions = np.zeros(shape=(num_particles, num_dimensions))
     x = 2.92858925782756
     y = 0.00925285752985
@@ -42,7 +44,8 @@ def test_wavefunction_wavefunction_2d_2p():
     alpha = 1.0
     beta = 1.0
     a = 0.0
-    s = Wavefunction(num_particles, num_dimensions, alpha, beta, a)
+    sys = System(num_particles, num_dimensions)
+    s = Wavefunction(num_particles, num_dimensions, alpha, beta, a, sys)
 
     for _ in range(50):
         alpha = np.random.uniform(1e-3, 10)
@@ -63,7 +66,8 @@ def test_wavefunction_wavefunction_3d():
     alpha = 1.0
     beta = 1.0
     a = 0.0
-    s = Wavefunction(num_particles, num_dimensions, alpha, beta, a)
+    sys = System(num_particles, num_dimensions)
+    s = Wavefunction(num_particles, num_dimensions, alpha, beta, a, sys)
     positions = np.zeros(shape=(num_particles, num_dimensions))
 
     for _ in range(50):
@@ -90,7 +94,8 @@ def test_wavefunction_wavefunction_3d_2p():
     alpha = 1.0
     beta = 1.0
     a = 0.0
-    s = Wavefunction(num_particles, num_dimensions, alpha, beta, a)
+    sys = System(num_particles, num_dimensions)
+    s = Wavefunction(num_particles, num_dimensions, alpha, beta, a, sys)
     positions = np.zeros(shape=(num_particles, num_dimensions))
 
     for _ in range(50):
@@ -130,7 +135,8 @@ def test_jastrow_factor_2d_2p():
 
     for _ in range(50):
         alpha = np.random.uniform(1e-3, 10)
-        s = Wavefunction(num_particles, num_dimensions, alpha, beta, a)
+        sys = System(num_particles, num_dimensions)
+        s = Wavefunction(num_particles, num_dimensions, alpha, beta, a, sys)
         positions[0, 0] = np.random.uniform(-20, 20)
         positions[0, 1] = np.random.uniform(-20, 20)
         positions[1, 0] = np.random.uniform(-20, 20)
@@ -159,7 +165,8 @@ def test_jastrow_factor_3d_2p():
     for _ in range(50):
         alpha = np.random.uniform(1e-3, 10)
         beta = np.random.uniform(1e-3, 10)
-        s = Wavefunction(num_particles, num_dimensions, alpha, beta, a)
+        sys = System(num_particles, num_dimensions)
+        s = Wavefunction(num_particles, num_dimensions, alpha, beta, a, sys)
         positions[0, 0] = np.random.uniform(-20, 20)
         positions[0, 1] = np.random.uniform(-20, 20)
         positions[0, 2] = np.random.uniform(-20, 20)
@@ -184,7 +191,8 @@ def test_wavefunction_derivative_psi_term_2d():
     alpha = 1.0
     beta = 1.0
     a = 0.0
-    s = Wavefunction(num_particles, num_dimensions, alpha, beta, a)
+    sys = System(num_particles, num_dimensions)
+    s = Wavefunction(num_particles, num_dimensions, alpha, beta, a, sys)
     positions = np.zeros(shape=(num_particles, num_dimensions))
 
     for _ in range(50):
@@ -207,7 +215,8 @@ def test_wavefunction_derivative_psi_term_3d():
     alpha = 1.0
     beta = 1.0
     a = 0.0
-    s = Wavefunction(num_particles, num_dimensions, alpha, beta, a)
+    sys = System(num_particles, num_dimensions)
+    s = Wavefunction(num_particles, num_dimensions, alpha, beta, a, sys)
     positions = np.zeros(shape=(num_particles, num_dimensions))
 
     for _ in range(50):
@@ -243,7 +252,8 @@ def test_probability_2d():
         positions[0, 1] = np.random.uniform(-2, 2)
         new_positions[0, 0] = np.random.uniform(-2, 2)
         new_positions[0, 1] = np.random.uniform(-2, 2)
-        wave = Wavefunction(num_particles, num_dimensions, alpha, beta, a)
+        sys = System(num_particles, num_dimensions)
+        wave = Wavefunction(num_particles, num_dimensions, alpha, beta, a, sys)
 
         P_old = wave.wavefunction(positions)*wave.wavefunction(positions)
         P_new = (wave.wavefunction(new_positions) *
@@ -270,7 +280,8 @@ def test_probability_3d():
         new_positions[0, 0] = np.random.uniform(-2, 2)
         new_positions[0, 1] = np.random.uniform(-2, 2)
         new_positions[0, 2] = np.random.uniform(-2, 2)
-        wave = Wavefunction(num_particles, num_dimensions, alpha, beta, a)
+        sys = System(num_particles, num_dimensions)
+        wave = Wavefunction(num_particles, num_dimensions, alpha, beta, a, sys)
 
         P_old = wave.wavefunction(positions)*wave.wavefunction(positions)
         P_new = (wave.wavefunction(new_positions) *
@@ -298,7 +309,8 @@ def test_drift_force_2d():
         positions_fw_y = np.array(positions)
         positions_fw_x[0, 0] = positions[0, 0] + numerical_step
         positions_fw_y[0, 1] = positions[0, 1] + numerical_step
-        wave = Wavefunction(num_particles, num_dimensions, alpha, beta, a)
+        sys = System(num_particles, num_dimensions)
+        wave = Wavefunction(num_particles, num_dimensions, alpha, beta, a, sys)
 
         wf_current = wave.wavefunction(positions)
         wf_forward_x = wave.wavefunction(positions_fw_x)
@@ -336,7 +348,8 @@ def test_drift_force_2d_2p():
         positions_fw_y1[0, 1] = positions[0, 1] + numerical_step
         positions_fw_x2[1, 0] = positions[1, 0] + numerical_step
         positions_fw_y2[1, 1] = positions[1, 1] + numerical_step
-        wave = Wavefunction(num_particles, num_dimensions, alpha, beta, a)
+        sys = System(num_particles, num_dimensions)
+        wave = Wavefunction(num_particles, num_dimensions, alpha, beta, a, sys)
 
         wf_current = wave.wavefunction(positions)
         wf_forward_x1 = wave.wavefunction(positions_fw_x1)
@@ -377,7 +390,8 @@ def test_drift_force_3d():
         positions_fw_x[0, 0] = positions[0, 0] + numerical_step
         positions_fw_y[0, 1] = positions[0, 1] + numerical_step
         positions_fw_z[0, 2] = positions[0, 2] + numerical_step
-        wave = Wavefunction(num_particles, num_dimensions, alpha, beta, a)
+        sys = System(num_particles, num_dimensions)
+        wave = Wavefunction(num_particles, num_dimensions, alpha, beta, a, sys)
 
         wf_current = wave.wavefunction(positions)
         wf_forward_x = wave.wavefunction(positions_fw_x)
@@ -423,7 +437,8 @@ def test_drift_force_3d_2p():
         positions_fw_x2[1, 0] = positions[1, 0] + numerical_step
         positions_fw_y2[1, 1] = positions[1, 1] + numerical_step
         positions_fw_z2[1, 2] = positions[1, 2] + numerical_step
-        wave = Wavefunction(num_particles, num_dimensions, alpha, beta, a)
+        sys = System(num_particles, num_dimensions)
+        wave = Wavefunction(num_particles, num_dimensions, alpha, beta, a, sys)
 
         wf_current = wave.wavefunction(positions)
         wf_forward_x1 = wave.wavefunction(positions_fw_x1)

@@ -8,6 +8,7 @@ from Hamiltonian.hamiltonian import Hamiltonian  # noqa: 401
 from Hamiltonian.non_interaction import Non_Interaction # noqa: 401
 from Hamiltonian.weak_interaction import Weak_Interaction # noqa: 401
 from Wavefunction.wavefunction import Wavefunction  # noqa: 401
+from system import System # noqa: 401
 
 
 def test_kinetic_energy_2d():
@@ -19,7 +20,8 @@ def test_kinetic_energy_2d():
     a = 0.0
     alpha = 0.5
     beta = 1.0
-    wave = Wavefunction(num_particles, num_dimensions, alpha, beta, a)
+    sys = System(num_particles, num_dimensions)
+    wave = Wavefunction(num_particles, num_dimensions, alpha, beta, a, sys)
     ham = Hamiltonian(omega, wave)
     for _ in range(50):
         positions = np.random.uniform(-20, 20, (num_particles, num_dimensions))
@@ -55,7 +57,8 @@ def test_kinetic_energy_2d_2p():
     a = 0.0
     alpha = 0.5
     beta = 1.0
-    wave = Wavefunction(num_particles, num_dimensions, alpha, beta, a)
+    sys = System(num_particles, num_dimensions)
+    wave = Wavefunction(num_particles, num_dimensions, alpha, beta, a, sys)
     ham = Hamiltonian(omega, wave)
     for _ in range(50):
         positions = np.random.uniform(-20, 20, (num_particles, num_dimensions))
@@ -93,7 +96,8 @@ def test_kinetic_energy_3d():
     for _ in range(50):
         alpha = np.random.uniform(1e-3, 10)
         beta = np.random.uniform(1e-3, 10)
-        wave = Wavefunction(num_particles, num_dimensions, alpha, beta, a)
+        sys = System(num_particles, num_dimensions)
+        wave = Wavefunction(num_particles, num_dimensions, alpha, beta, a, sys)
         ham = Hamiltonian(omega, wave)
         x = np.random.uniform(-20, 20)
         y = np.random.uniform(-20, 20)
@@ -135,7 +139,8 @@ def test_kinetic_energy_3d_2p():
     a = 0.0
     alpha = 0.5
     beta = 1.0
-    wave = Wavefunction(num_particles, num_dimensions, alpha, beta, a)
+    sys = System(num_particles, num_dimensions)
+    wave = Wavefunction(num_particles, num_dimensions, alpha, beta, a, sys)
     ham = Hamiltonian(omega, wave)
     for _ in range(50):
         positions = np.random.uniform(-20, 20, (num_particles, num_dimensions))
@@ -175,8 +180,9 @@ def test_kinetic_analytic_2d():
     for _ in range(50):
         energy = 0.0
         alpha = np.random.uniform(1e-3, 10)
-        wave = Wavefunction(num_particles, num_dimensions, alpha, beta, a)
-        ham = Non_Interaction(omega, wave, True)
+        sys = System(num_particles, num_dimensions)
+        wave = Wavefunction(num_particles, num_dimensions, alpha, beta, a, sys)
+        ham = Non_Interaction(omega, wave, sys, True)
         x = np.random.uniform(-20, 20)
         y = np.random.uniform(-20, 20)
         positions[0, 0] = x
@@ -200,8 +206,9 @@ def test_kinetic_analytic_2d_2p():
         energy = 0.0
         alpha = np.random.uniform(1e-3, 10)
         omega = np.random.uniform(1e-3, 10)
-        wave = Wavefunction(num_particles, num_dimensions, alpha, beta, a)
-        ham = Non_Interaction(omega, wave, True)
+        sys = System(num_particles, num_dimensions)
+        wave = Wavefunction(num_particles, num_dimensions, alpha, beta, a, sys)
+        ham = Non_Interaction(omega, wave, sys, True)
         x1 = np.random.uniform(-20, 20)
         y1 = np.random.uniform(-20, 20)
         x2 = np.random.uniform(-20, 20)
@@ -229,8 +236,9 @@ def test_kinetic_analytic_3d():
     for _ in range(50):
         energy = 0.0
         alpha = np.random.uniform(1e-3, 10)
-        wave = Wavefunction(num_particles, num_dimensions, alpha, beta, a)
-        ham = Non_Interaction(omega, wave, True)
+        sys = System(num_particles, num_dimensions)
+        wave = Wavefunction(num_particles, num_dimensions, alpha, beta, a, sys)
+        ham = Non_Interaction(omega, wave, sys, True)
         x = np.random.uniform(-20, 20)
         y = np.random.uniform(-20, 20)
         z = np.random.uniform(-20, 20)
@@ -254,8 +262,9 @@ def test_kinetic_analytic_3d_2p():
         energy = 0.0
         alpha = np.random.uniform(1e-3, 10)
         omega = np.random.uniform(1e-3, 10)
-        wave = Wavefunction(num_particles, num_dimensions, alpha, beta, a)
-        ham = Non_Interaction(omega, wave, True)
+        sys = System(num_particles, num_dimensions)
+        wave = Wavefunction(num_particles, num_dimensions, alpha, beta, a, sys)
+        ham = Non_Interaction(omega, wave, sys, True)
         x1 = np.random.uniform(-20, 20)
         y1 = np.random.uniform(-20, 20)
         z1 = np.random.uniform(-20, 20)
@@ -287,7 +296,8 @@ def test_potential_energy_2d():
         alpha = np.random.uniform(1e-3, 10)
         beta = np.random.uniform(1e-3, 10)
         omega = np.random.uniform(1e-3, 10)
-        wave = Wavefunction(num_particles, num_dimensions, alpha, beta, a)
+        sys = System(num_particles, num_dimensions)
+        wave = Wavefunction(num_particles, num_dimensions, alpha, beta, a, sys)
         ham = Hamiltonian(omega, wave)
 
         x = np.random.uniform(-20, 20)
@@ -313,7 +323,8 @@ def test_potential_energy_2d_2p():
         alpha = np.random.uniform(1e-3, 10)
         beta = np.random.uniform(1e-3, 10)
         omega = np.random.uniform(1e-3, 10)
-        wave = Wavefunction(num_particles, num_dimensions, alpha, beta, a)
+        sys = System(num_particles, num_dimensions)
+        wave = Wavefunction(num_particles, num_dimensions, alpha, beta, a, sys)
         ham = Hamiltonian(omega, wave)
 
         x1 = np.random.uniform(-20, 20)
@@ -342,7 +353,8 @@ def test_potential_energy_3d():
         alpha = np.random.uniform(1e-3, 10)
         beta = np.random.uniform(1e-3, 10)
         omega = np.random.uniform(1e-3, 10)
-        wave = Wavefunction(num_particles, num_dimensions, alpha, beta, a)
+        sys = System(num_particles, num_dimensions)
+        wave = Wavefunction(num_particles, num_dimensions, alpha, beta, a, sys)
         ham = Hamiltonian(omega, wave)
 
         x = np.random.uniform(-20, 20)
@@ -370,7 +382,8 @@ def test_potential_energy_3d_2p():
         for _ in range(50):
             alpha = np.random.uniform(1e-3, 10)
             omega = np.random.uniform(1e-3, 10)
-            wave = Wavefunction(num_particles, num_dimensions, alpha, 1.0, a)
+            sys = System(num_particles, num_dimensions)
+            wave = Wavefunction(num_particles, num_dimensions, alpha, 1.0, a, sys)
             ham = Hamiltonian(omega, wave)
 
             x1 = np.random.uniform(-20, 20)
@@ -405,13 +418,14 @@ def test_local_energy_2d():
         omega = np.random.uniform(1e-3, 10)
         positions[0, 0] = np.random.uniform(-2, 2)
         positions[0, 1] = np.random.uniform(-2, 2)
-        wave = Wavefunction(num_particles, num_dimensions, alpha, beta, a)
-        ham = Non_Interaction(omega, wave, 'true')
+        sys = System(num_particles, num_dimensions)
+        wave = Wavefunction(num_particles, num_dimensions, alpha, beta, a, sys)
+        ham = Non_Interaction(omega, wave, sys, 'true')
         k = ham.laplacian_analytical(positions)
         p = ham.trap_potential_energy(positions)
         local_energy = -0.5*k + p
         test_loc_ener = ham.local_energy(positions)
-        assert local_energy == pytest.approx(test_loc_ener, abs=1e-14)
+        assert local_energy == pytest.approx(test_loc_ener, abs=1e-10)
 
 
 def test_local_energy_3d():
@@ -427,10 +441,11 @@ def test_local_energy_3d():
         positions[0, 0] = np.random.uniform(-2, 2)
         positions[0, 1] = np.random.uniform(-2, 2)
         positions[0, 2] = np.random.uniform(-2, 2)
-        wave = Wavefunction(num_particles, num_dimensions, alpha, beta, a)
-        ham = Non_Interaction(omega, wave, 'true')
+        sys = System(num_particles, num_dimensions)
+        wave = Wavefunction(num_particles, num_dimensions, alpha, beta, a, sys)
+        ham = Non_Interaction(omega, wave, sys, 'true')
         k = ham.laplacian_analytical(positions)
         p = ham.trap_potential_energy(positions)
         local_energy = -0.5*k + p
         test_loc_ener = ham.local_energy(positions)
-        assert local_energy == pytest.approx(test_loc_ener, abs=1e-14)
+        assert local_energy == pytest.approx(test_loc_ener, abs=1e-10)
