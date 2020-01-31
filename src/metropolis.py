@@ -3,7 +3,6 @@ import numpy as np
 import random
 import math
 from sampler import Sampler # noqa: 401
-from system import System  # noqa: 401
 
 
 class Metropolis:
@@ -12,7 +11,7 @@ class Metropolis:
     # Hamiltonian(omega, step)
 
     def __init__(self, monte_carlo_steps, delta_R, delta_t, num_particles,
-                 num_dimensions, wavefunction, hamiltonian):
+                 num_dimensions, wavefunction, hamiltonian, system):
         """Instance of class."""
         self.mc_cycles = monte_carlo_steps
         self.delta_R = delta_R
@@ -22,10 +21,10 @@ class Metropolis:
         # self.positions = positions
         self.w = wavefunction
         self.h = hamiltonian
+        self.s = system
         self.c = 0.0
 
         self.sam = Sampler(self.w, self.h)
-        self.sys = System(self.num_p, self.num_d)
 
     def metropolis_step(self, positions):
         """Calculate new metropolis step."""
@@ -45,7 +44,7 @@ class Metropolis:
 
         if acceptance_ratio > epsilon:
             positions = new_positions
-            self.sys.distances_update(positions)
+            self.s.distances_update(positions)
             self.c += 1.0
 
         else:
@@ -113,7 +112,7 @@ class Metropolis:
         # Initialize the posistions for each new Monte Carlo run
         positions = np.random.rand(self.num_p, self.num_d)
         # Initialize the distance matrix
-        self.sys.positions_distances(positions)
+        self.s.positions_distances(positions)
         # Initialize sampler method for each new Monte Carlo run
         self.sam.initialize()
 
@@ -148,6 +147,10 @@ class Metropolis:
         var = self.sam.variance
         # self.print_averages()
         return d_El, energy, var
+
+    def periodic_boundary_conditions(self, positions):
+        """Apply periodic boundary conditions"""
+        """for the case of strong interaction between particles"""
 
     def run_one_body_sampling(self):
         """Sample position of particles."""
