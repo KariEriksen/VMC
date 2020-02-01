@@ -78,11 +78,12 @@ class Weak_Interaction:
                 xj = positions[j, 0]
                 yj = positions[j, 1]
                 zj = positions[j, 2]
-                rj = np.array((xj, yj, zj))
+                # rj = np.array((xj, yj, zj))
 
                 if(j != k):
 
-                    rkj = math.sqrt(np.sum((rk - rj)*(rk - rj)))
+                    # rkj = math.sqrt(np.sum((rk - rj)*(rk - rj)))
+                    rkj = self.s.distances[k, j]
 
                     d_u_rkj = -a/(a*rkj - rkj*rkj)
 
@@ -103,11 +104,12 @@ class Weak_Interaction:
                         xi = positions[i, 0]
                         yi = positions[i, 1]
                         zi = positions[i, 2]
-                        ri = np.array((xi, yi, zi))
+                        # ri = np.array((xi, yi, zi))
 
                         if(i != k):
 
-                            rki = math.sqrt(np.sum((rk - ri)*(rk - ri)))
+                            # rki = math.sqrt(np.sum((rk - ri)*(rk - ri)))
+                            rki = self.s.distances[k, i]
 
                             d_u_rki = -a/(a*rki - rki*rki)
 
