@@ -10,13 +10,11 @@ class McMillian_Wavefunction:
     # g        = 0.0
     # f        = 0.0
 
-    def __init__(self, num_particles, num_dimensions, alpha, beta, a, system):
+    def __init__(self, num_particles, num_dimensions, alpha, system):
         """Instance of class."""
         self.num_p = num_particles
         self.num_d = num_dimensions
         self.alpha = alpha
-        self.beta = beta
-        self.a = a
         self.alpha4 = alpha**4
         self.alpha5 = alpha**5
         self.s = system
@@ -61,8 +59,8 @@ class McMillian_Wavefunction:
     def wavefunction_ratio(self, positions, new_positions):
         """Wave function with new positions squared divided by."""
         """wave equation with old positions squared"""
-        wf_old = self.mcmillian_wavefunction(positions)
-        wf_new = self.mcmillian_wavefunction(new_positions)
+        wf_old = self.wavefunction(positions)
+        wf_new = self.wavefunction(new_positions)
         numerator = wf_new*wf_new
         denominator = wf_old*wf_old
         acceptance_ratio = numerator/denominator
@@ -102,14 +100,14 @@ class McMillian_Wavefunction:
         gets updated, than calculating it over and over again each time"""
         quantum_force = np.zeros((self.num_p, self.num_d))
         position_forward = np.array(positions)
-        psi_current = self.mcmillian_wavefunction(positions)
+        psi_current = self.wavefunction(positions)
         psi_moved = 0.0
         step = 0.001
 
         for i in range(self.num_p):
             for j in range(self.num_d):
                 position_forward[i, j] = position_forward[i, j] + step
-                psi_moved = self.mcmillian_wavefunction(position_forward)
+                psi_moved = self.wavefunction(position_forward)
                 # Resett positions
                 position_forward[i, j] = position_forward[i, j] - step
                 derivative = (psi_moved - psi_current)/step
