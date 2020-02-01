@@ -44,7 +44,7 @@ class Metropolis:
 
         if acceptance_ratio > epsilon:
             positions = new_positions
-            self.s.distances_update(positions)
+            self.s.distances_update(positions, random_index)
             self.c += 1.0
 
         else:
