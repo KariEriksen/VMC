@@ -198,11 +198,31 @@ class Metropolis:
         # self.print_averages()
         return d_El, energy, var
 
-    def periodic_boundary_conditions(self, positions):
+    def periodic_boundary_conditions(self, positions, index):
         """Apply periodic boundary conditions"""
         """for the case of strong interaction between particles"""
 
-        return 0.0
+        moved_particle = positions[index, :]
+        x = moved_particle[0]
+        y = moved_particle[1]
+        z = moved_particle[2]
+        L = 1.0
+
+        if(x > L):
+            moved_particle[0] = x - L
+        if(y > L):
+            moved_particle[1] = y - L
+        if(z > L):
+            moved_particle[2] = z - L
+
+        if(x <= 0.0):
+            moved_particle[0] = x + L
+        if(y <= 0.0):
+            moved_particle[1] = y + L
+        if(z <= 0.0):
+            moved_particle[2] = z + L
+
+        return moved_particle
 
     def run_one_body_sampling(self):
         """Sample position of particles."""
