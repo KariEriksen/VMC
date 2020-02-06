@@ -64,7 +64,9 @@ class Lennard_Jones:
             rkj2 = rkj**2
             sum1 += (1/rkj2)*(1/rkj2)*(1/rkj2)*(1/rkj)
             # sum2 += r_kj
-            sum2 += r_kj*r_kj
+            # OBS, need correct expression
+            # check git
+            sum2 += 1.0
         term = sum1*sum2
         laplacian = self.fraction*(self.alpha5*term)**2 - 10*self.alpha5*sum1
 

@@ -59,13 +59,8 @@ class Wavefunction:
 
         for i in range(self.num_p):
             for j in range(i, self.num_p-1):
-                # ri_minus_rj = np.subtract(positions[i, :], positions[j+1, :])
-                r = 0.0
-                for k in range(self.num_d):
-                    ri_minus_rj = positions[i, k] - positions[j+1, k]
-                    r += ri_minus_rj**2
-                distance = math.sqrt(r)
-                # distance = math.sqrt(np.sum(np.square(ri_minus_rj)))
+
+                distance = self.s.distances[i, j+1]
                 if distance > self.a:
                     f = f*(1.0 - (self.a/distance))
                 else:
@@ -138,7 +133,7 @@ class Wavefunction:
                 if(j != k):
                     r_kj = rk - rj
                     rkj = math.sqrt(np.sum((rk - rj)*(rk - rj)))
-
+                    # rkj = self.s.distances[k, j]
                     # factor = -2*a/(a*rkj*rkj - rkj*rkj*rkj)
                     factor = 2*a/pow(rkj, 1.5)
                     d_u_rkj += factor*r_kj
