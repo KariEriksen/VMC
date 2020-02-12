@@ -26,12 +26,13 @@ class McMillian_Wavefunction:
         for i in range(self.num_p):
             for j in range(i, self.num_p-1):
                 # ri_minus_rj = np.subtract(positions[i, :], positions[j+1, :])
-                r = 0.0
-                for k in range(self.num_d):
-                    ri_minus_rj = positions[i, k] - positions[j+1, k]
-                    r += ri_minus_rj**2
-                distance = math.sqrt(r)
+                # r = 0.0
+                # for k in range(self.num_d):
+                    # ri_minus_rj = positions[i, k] - positions[j+1, k]
+                    # r += ri_minus_rj**2
+                # distance = math.sqrt(r)
                 # distance = math.sqrt(np.sum(np.square(ri_minus_rj)))
+                distance = self.s.distances[i, j]
                 term += (self.alpha/distance)**5
         w = math.exp(-0.5*term)
 
@@ -45,11 +46,12 @@ class McMillian_Wavefunction:
 
         for i in range(self.num_p):
             for j in range(i, self.num_p-1):
-                r = 0.0
-                for k in range(self.num_d):
-                    ri_minus_rj = positions[i, k] - positions[j+1, k]
-                    r += ri_minus_rj**2
-                distance = math.sqrt(r)
+                # r = 0.0
+                # for k in range(self.num_d):
+                    # ri_minus_rj = positions[i, k] - positions[j+1, k]
+                    # r += ri_minus_rj**2
+                # distance = math.sqrt(r)
+                distance = self.s.distances[i, j]
                 term += (1/distance)**5
 
         gradient = -2.5*term*self.alpha4
@@ -85,7 +87,8 @@ class McMillian_Wavefunction:
                 rj = np.array((xj, yj, zj))
                 if(j != k):
                     r_kj = rk - rj
-                    rkj = math.sqrt(np.sum((rk - rj)*(rk - rj)))
+                    # rkj = math.sqrt(np.sum((rk - rj)*(rk - rj)))
+                    rkj = self.s.distances[k, j]
 
                 rkj7 = rkj**7
                 sum += r_kj/rkj7
