@@ -43,9 +43,9 @@ def test_positions_distances_3d():
         d[0, 1] = math.sqrt(np.sum(r12))
         d[0, 2] = math.sqrt(np.sum(r13))
         d[1, 2] = math.sqrt(np.sum(r23))
-        # r2[1, 0] = r2[0, 1]
-        # r2[2, 0] = r2[0, 2]
-        # r2[2, 1] = r2[1, 2]
+        d[1, 0] = d[0, 1]
+        d[2, 0] = d[0, 2]
+        d[2, 1] = d[1, 2]
         s.positions_distances(positions)
         r_distance = s.distances
         assert r_distance == pytest.approx(d, abs=1e-14)
@@ -71,7 +71,7 @@ def test_distances_update_3d():
         d[0, 2] = math.sqrt(np.sum(r13))
         d[1, 2] = math.sqrt(np.sum(r23))
         d[1, 0] = d[0, 1]
-        # d[2, 0] = d[0, 2]
+        d[2, 0] = d[0, 2]
         d[2, 1] = d[1, 2]
         s.positions_distances(positions)
         s.distances_update(positions, 1)
