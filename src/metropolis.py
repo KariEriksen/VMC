@@ -72,7 +72,7 @@ class Metropolis:
 
         if acceptance_ratio > epsilon:
             positions = new_positions
-            self.s.distances_update(positions)
+            self.s.distances_update(positions, random_index)
             self.c += 1.0
 
         else:
@@ -90,7 +90,7 @@ class Metropolis:
         D = 0.5
         greens_function = 0.0
 
-        if analytic:
+        if analytic == 'true':
             F_old = self.w.quantum_force(positions)
         else:
             F_old = self.w.quantum_force_numerical(positions)
@@ -127,6 +127,7 @@ class Metropolis:
 
         if acceptance_ratio > epsilon:
             positions = new_positions
+            self.s.distances_update(positions, random_index)
             self.c += 1.0
 
         else:
@@ -183,6 +184,8 @@ class Metropolis:
 
         # Initialize the posistions for each new Monte Carlo run
         positions = np.random.rand(self.num_p, self.num_d)
+        # Initialize the distance matrix
+        self.s.positions_distances(positions)
         # Initialize sampler method for each new Monte Carlo run
         self.sam.initialize()
 
