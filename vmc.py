@@ -63,8 +63,8 @@ def non_interaction_case(monte_carlo_cycles, num_particles, num_dimensions,
                              step_importance, num_particles, num_dimensions,
                              wave, hamilton, sys)
 
-            # d_El, energy, var = met.run_metropolis()
-            d_El, energy, var = met.run_importance_sampling('true')
+            d_El, energy, var = met.run_metropolis()
+            # d_El, energy, var = met.run_importance_sampling('true')
             stop = timeit.default_timer()
             new_parameter = opt.gradient_descent(parameter, d_El)
             # new_parameter = opt.gradient_descent_barzilai_borwein(parameter,
