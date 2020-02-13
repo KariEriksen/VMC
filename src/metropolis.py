@@ -66,7 +66,8 @@ class Metropolis:
         # Suggest a new move
         new_positions[random_index, :] = new_random_position + r*self.delta_R
         # Check boundarys, apply PBC if necessary
-        self.periodic_boundary_conditions(new_positions)
+        pbc = self.periodic_boundary_conditions(new_positions, random_index)
+        new_positions[random_index, :] = pbc
         acceptance_ratio = self.w.wavefunction_ratio(positions, new_positions)
         epsilon = np.random.sample()
 
