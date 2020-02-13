@@ -32,7 +32,8 @@ class McMillian_Wavefunction:
                     # r += ri_minus_rj**2
                 # distance = math.sqrt(r)
                 # distance = math.sqrt(np.sum(np.square(ri_minus_rj)))
-                distance = self.s.distances[i, j]
+                # if j != i:
+                distance = self.s.distances[i, j+1]
                 term += (self.alpha/distance)**5
         w = math.exp(-0.5*term)
 
