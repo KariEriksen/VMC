@@ -14,7 +14,7 @@ class Lennard_Jones:
         self.s = system
         self.analytical = analytical
         self.alpha5 = self.w.alpha**5
-        self.fraction = 25/4
+        self.fraction = 25.0/4
 
     def laplacian_numerical(self, positions):
         """Numerical differentiation for solving laplacian."""
@@ -45,7 +45,7 @@ class Lennard_Jones:
         """Analytical solution to the laplacian"""
 
         sum1 = 0.0
-        sum2 = 0.0
+        sum2 = np.zeros(self.w.num_p)
         for k in range(self.w.num_p):
             xk = positions[k, 0]
             yk = positions[k, 1]
@@ -62,13 +62,13 @@ class Lennard_Jones:
                     # rkj = math.sqrt(np.sum((rk - rj)*(rk - rj)))
 
             rkj2 = rkj**2
-            sum1 += (1/rkj2)*(1/rkj2)*(1/rkj2)*(1/rkj)
-            # sum2 += r_kj
-            # OBS, need correct expression
-            # check git
-            sum2 += 1.0
-        term = sum1*sum2
-        laplacian = self.fraction*(self.alpha5*term)**2 - 10*self.alpha5*sum1
+            rkj7 = (1/rkj2)*(1/rkj2)*(1/rkj2)*(1/rkj)
+
+            sum1 += self.alpha5*rkj7
+            sum2 += r_kj
+
+        sum_squared = (sum1*sum1)*np.dot(sum2, sum2)
+        laplacian = self.fraction**sum_squared - 10.0*sum1
 
         return laplacian
 
