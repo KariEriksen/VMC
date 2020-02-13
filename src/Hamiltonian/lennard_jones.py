@@ -13,7 +13,7 @@ class Lennard_Jones:
         self.w = wavefunction
         self.s = system
         self.analytical = analytical
-        self.alpha5 = self.w.alpha**5
+        self.alpha2 = self.w.alpha**2
         self.fraction = 25.0/4
 
     def laplacian_numerical(self, positions):
@@ -51,20 +51,23 @@ class Lennard_Jones:
             yk = positions[k, 1]
             zk = positions[k, 2]
             rk = np.array((xk, yk, zk))
+            # rk = positions[k, :]
             for j in range(self.w.num_p):
                 xj = positions[j, 0]
                 yj = positions[j, 1]
                 zj = positions[j, 2]
                 rj = np.array((xj, yj, zj))
+                # rj = positions[j, :]
                 if(j != k):
                     r_kj = rk - rj
                     rkj = self.s.distances[k, j]
                     # rkj = math.sqrt(np.sum((rk - rj)*(rk - rj)))
 
-            rkj2 = rkj**2
-            rkj7 = (1/rkj2)*(1/rkj2)*(1/rkj2)*(1/rkj)
+            rkj1 = 1.0/(self.w.alpha*rkj)
+            rkj2 = self.alpha2/rkj**2
+            rkj6 = rkj2*rkj2*rkj2
 
-            sum1 += self.alpha5*rkj7
+            sum1 += rkj6*rkj1
             sum2 += r_kj
 
         sum_squared = (sum1*sum1)*np.dot(sum2, sum2)
