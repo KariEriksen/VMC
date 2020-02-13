@@ -52,7 +52,7 @@ class McMillian_Wavefunction:
                     # ri_minus_rj = positions[i, k] - positions[j+1, k]
                     # r += ri_minus_rj**2
                 # distance = math.sqrt(r)
-                distance = self.s.distances[i, j]
+                distance = self.s.distances[i, j+1]
                 term += (1/distance)**5
 
         gradient = -2.5*term*self.alpha4
