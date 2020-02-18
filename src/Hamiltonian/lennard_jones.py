@@ -107,6 +107,6 @@ class Lennard_Jones:
                  self.w.wavefunction(positions))
 
         p = self.lennard_jones_potential(positions)
-        energy = -0.5*k + p
+        energy = -6.05965*k + p
 
         return energy
