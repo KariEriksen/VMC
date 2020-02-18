@@ -45,7 +45,7 @@ class Lennard_Jones:
         """Analytical solution to the laplacian"""
 
         sum1 = 0.0
-        sum2 = np.zeros(self.w.num_p)
+        sum2 = np.zeros(self.w.num_d)
         for k in range(self.w.num_p):
             xk = positions[k, 0]
             yk = positions[k, 1]
@@ -107,6 +107,6 @@ class Lennard_Jones:
                  self.w.wavefunction(positions))
 
         p = self.lennard_jones_potential(positions)
-        energy = -6.05965*k + p
+        energy = -6.0596*k + p
 
         return energy
