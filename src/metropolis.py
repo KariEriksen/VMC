@@ -73,7 +73,7 @@ class Metropolis:
 
         if acceptance_ratio > epsilon:
             positions = new_positions
-            self.s.distances_update(positions, random_index)
+            self.s.distances_update_PBC(positions, random_index)
             self.c += 1.0
 
         else:
@@ -155,7 +155,7 @@ class Metropolis:
         energy = self.sam.local_energy
         d_El = self.sam.derivative_energy
         var = self.sam.variance
-        # self.print_averages()
+        self.print_averages()
         return d_El, energy, var
 
     def run_metropolis_PBC(self):
@@ -164,7 +164,7 @@ class Metropolis:
         # Initialize the posistions for each new Monte Carlo run
         positions = np.random.rand(self.num_p, self.num_d)
         # Initialize the distance matrix
-        self.s.positions_distances(positions)
+        self.s.positions_distances_PBC(positions)
         # Initialize sampler method for each new Monte Carlo run
         self.sam.initialize()
 
@@ -199,7 +199,7 @@ class Metropolis:
         energy = self.sam.local_energy
         d_El = self.sam.derivative_energy
         var = self.sam.variance
-        # self.print_averages()
+        self.print_averages()
         return d_El, energy, var
 
     def periodic_boundary_conditions(self, positions, index):
@@ -210,7 +210,8 @@ class Metropolis:
         x = moved_particle[0]
         y = moved_particle[1]
         z = moved_particle[2]
-        L = 1.0
+        # Update L in system
+        L = 5.0
 
         if(x > L):
             moved_particle[0] = x - L

@@ -62,3 +62,39 @@ class System:
                     r += ri_minus_rj**2
                 self.distances[i, j] = math.sqrt(r)
                 self.distances[j, i] = self.distances[i, j]
+
+    def positions_distances_PBC(self, positions):
+        """Calculate the distances between particles"""
+        # L update in metropolis
+        L = 5.0
+
+        for i in range(self.num_p):
+            for j in range(i, self.num_p-1):
+                # ri_minus_rj = np.subtract(positions[i, :], positions[j+1, :])
+                r = 0.0
+                for k in range(self.num_d):
+                    d = abs(positions[i, k] - positions[j+1, k])
+                    ri_minus_rj = d
+                    if d > 0.5*L:
+                        ri_minus_rj = L - d
+                    r += ri_minus_rj**2
+                self.distances[i, j+1] = math.sqrt(r)
+                self.distances[j+1, i] = math.sqrt(r)
+
+    def distances_update_PBC(self, positions, i):
+        """Update the distance matrix for movement of one particle"""
+        """particle i = particle index"""
+        # L update in metropolis
+        L = 5.0
+
+        for j in range(self.num_p):
+            if j != i:
+                r = 0.0
+                for k in range(self.num_d):
+                    d = abs(positions[i, k] - positions[j, k])
+                    ri_minus_rj = d
+                    if d > 0.5*L:
+                        ri_minus_rj = L - d
+                    r += ri_minus_rj**2
+                self.distances[i, j] = math.sqrt(r)
+                self.distances[j, i] = self.distances[i, j]
