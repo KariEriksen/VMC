@@ -66,7 +66,7 @@ class System:
     def positions_distances_PBC(self, positions):
         """Calculate the distances between particles"""
         # L update in metropolis
-        L = 5.0
+        L = (self.num_p/0.02185)**(1./3.)
 
         for i in range(self.num_p):
             for j in range(i, self.num_p-1):
@@ -85,7 +85,7 @@ class System:
         """Update the distance matrix for movement of one particle"""
         """particle i = particle index"""
         # L update in metropolis
-        L = 5.0
+        L = (self.num_p/0.02185)**(1./3.)
 
         for j in range(self.num_p):
             if j != i:

@@ -74,6 +74,7 @@ class Metropolis:
         if acceptance_ratio > epsilon:
             positions = new_positions
             self.s.distances_update_PBC(positions, random_index)
+            # print (self.s.distances)
             self.c += 1.0
 
         else:
@@ -211,7 +212,7 @@ class Metropolis:
         y = moved_particle[1]
         z = moved_particle[2]
         # Update L in system
-        L = 5.0
+        L = (self.num_p/0.02185)**(1./3.)
 
         if(x > L):
             moved_particle[0] = x - L
