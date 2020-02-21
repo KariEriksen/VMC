@@ -10,8 +10,8 @@ class Sampler:
         self.h = hamiltonian
 
     def sample_values(self, positions):
-        """Get the local energy from Hamiltonian class"""
         """Sample important values"""
+        """From Hamiltonian and Wavefunction class"""
 
         self.local_energy = self.h.local_energy(positions)
         self.alpha_gradient_wf = self.w.alpha_gradient_wavefunction(positions)

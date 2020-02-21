@@ -65,6 +65,8 @@ class System:
 
     def positions_distances_PBC(self, positions):
         """Calculate the distances between particles"""
+        """Applied periodic boundary conditions with
+        minimum image convetion"""
         # L update in metropolis
         L = (self.num_p/0.02185)**(1./3.)
 
@@ -75,6 +77,7 @@ class System:
                 for k in range(self.num_d):
                     d = abs(positions[i, k] - positions[j+1, k])
                     ri_minus_rj = d
+                    # minimum image
                     if d > 0.5*L:
                         ri_minus_rj = L - d
                     r += ri_minus_rj**2
@@ -84,6 +87,8 @@ class System:
     def distances_update_PBC(self, positions, i):
         """Update the distance matrix for movement of one particle"""
         """particle i = particle index"""
+        """Applied periodic boundary conditions with
+        minimum image convetion"""
         # L update in metropolis
         L = (self.num_p/0.02185)**(1./3.)
 
@@ -93,6 +98,7 @@ class System:
                 for k in range(self.num_d):
                     d = abs(positions[i, k] - positions[j, k])
                     ri_minus_rj = d
+                    # minimum image
                     if d > 0.5*L:
                         ri_minus_rj = L - d
                     r += ri_minus_rj**2

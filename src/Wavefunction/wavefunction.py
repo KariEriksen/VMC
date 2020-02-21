@@ -64,7 +64,7 @@ class Wavefunction:
                 if distance > self.a:
                     f = f*(1.0 - (self.a/distance))
                 else:
-                    f *= 0.0
+                    f *= 1e-14
         return f
 
     def alpha_gradient_wavefunction(self, positions):

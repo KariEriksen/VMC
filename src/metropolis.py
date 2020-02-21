@@ -285,6 +285,8 @@ class Metropolis:
 
         # Initialize the posistions for each new Monte Carlo run
         positions = np.random.rand(self.num_p, self.num_d)
+        # Initialize the distance matrix
+        self.s.positions_distances(positions)
         # Initialize sampler method for each new Monte Carlo run
         self.sam.initialize()
         energy = np.zeros(self.mc_cycles)
@@ -305,6 +307,7 @@ class Metropolis:
         print ('new alpha = ', self.w.alpha)
         print ('deri energy = ', self.sam.derivative_energy)
         print ('total energy =  ', self.sam.local_energy)
+        print ('expec energy =  ', self.sam.accumulate_energy/self.mc_cycles)
         print ('variance energy =  ', self.sam.variance)
         # energy/num_particles
         print ('----------------------------')
