@@ -138,6 +138,21 @@ class Weak_Interaction:
         # 0.5*omega_sq*np.sum(np.multiply(positions, positions))
         return 0.5*omega_sq*np.sum(np.multiply(positions, positions))
 
+    def internal_potential_energy(self, positions):
+
+        V = 0.0
+        for i in range(self.w.num_p):
+            for j in range(i, self.w.num_p-1):
+
+                distance = self.s.distances[i, j+1]
+                if distance > self.w.a:
+                    V += 10e14
+                else:
+                    # V += 0.0
+                    None
+
+        return V
+
     def local_energy(self, positions):
         """Return the local energy."""
         if self.analytical == 'true':
@@ -150,6 +165,7 @@ class Weak_Interaction:
                  self.w.wavefunction(positions))
 
         p = self.trap_potential_energy(positions)
+        v = self.internal_potential_energy(positions)
         energy = -0.5*k + p
 
         return energy

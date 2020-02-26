@@ -34,6 +34,13 @@ class Wavefunction:
         """Returns g, type float, product of all single particle wave functions
         of all particles."""
 
+        pos = np.square(positions)
+        if self.num_d > 2:
+            pos[:, 2] *= self.beta
+        pos_sum = np.sum(pos)
+        g = np.exp(-self.alpha*pos_sum)
+        # print (g)
+        """
         g = 1.0
 
         for i in range(self.num_p):
@@ -50,7 +57,8 @@ class Wavefunction:
                 g = g*math.exp(-self.alpha*(x*x + y*y + self.beta*z*z))
                 # g = np.prod(math.exp(-self.alpha*(np.sum(
                 # np.power(positions, 2)axis=1))))
-
+        # print (g)
+        """
         return g
 
     def jastrow_factor(self, positions):
@@ -64,7 +72,7 @@ class Wavefunction:
                 if distance > self.a:
                     f = f*(1.0 - (self.a/distance))
                 else:
-                    f *= 1e-14
+                    f *= 0.0
         return f
 
     def alpha_gradient_wavefunction(self, positions):
@@ -133,9 +141,9 @@ class Wavefunction:
                 if(j != k):
                     r_kj = rk - rj
                     # rkj = math.sqrt(np.sum((rk - rj)*(rk - rj)))
-                    # factor = -2/(a*rkj*rkj - rkj*rkj*rkj)
-                    rkj = float(self.s.distances[k, j])
-                    factor = 2.0*a / math.pow(rkj, 1.5)
+                    rkj = self.s.distances[k, j]
+                    factor = -2/(a*rkj*rkj - rkj*rkj*rkj)
+                    # factor = 2.0*a / math.pow(rkj, 1.5)
                     d_u_rkj += factor*r_kj
 
             quantum_force[k, :] = d_psi_k + d_u_rkj

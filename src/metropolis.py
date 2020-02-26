@@ -32,13 +32,63 @@ class Metropolis:
 
         # r = random.random()*random.choice((-1, 1))
         # r is a random number drawn from the uniform prob. dist. in [0,1]
-        r = random.uniform(-1, 1)
+        r = np.zeros(self.num_d)
+        for i in range(self.num_d):
+            r[i] = random.uniform(-1, 1)
         # Pick a random particle
         random_index = random.randrange(len(positions))
         new_positions = np.array(positions)
         new_random_position = new_positions[random_index, :]
         # Suggest a new move
         new_positions[random_index, :] = new_random_position + r*self.delta_R
+        test_wavefunction = self.w.wavefunction(new_positions)
+        if test_wavefunction == 0.0:
+            pass
+        else:
+            acceptance_ratio = self.w.wavefunction_ratio(positions,
+                                                         new_positions)
+            epsilon = np.random.sample()
+
+            if acceptance_ratio > epsilon:
+                positions = new_positions
+                self.s.distances_update(positions, random_index)
+                self.c += 1.0
+
+            else:
+                pass
+
+        return positions
+
+    def metropolis_step_check_distance(self, positions):
+        """Calculate new metropolis step."""
+        """with brute-force sampling of new positions."""
+
+        def draw_random(new_pos, random_i):
+            # r is a random number drawn from the uniform prob. dist. in [-1,1]
+            r = random.uniform(-1, 1)
+            # Suggest a new move
+            new_pos[random_i, :] += r*self.delta_R
+            return new_pos
+
+        # Pick a random particle
+        random_index = random.randrange(len(positions))
+        new_positions = np.array(positions)
+
+        # Find the suggested move by random draw
+        suggested = draw_random(new_positions, random_index)
+        # Check if the distance between particles is smaller than a
+        # if one is, than draw a new random number
+        for i in range(self.num_p):
+            if i != random_index:
+                r_sub = np.square(suggested[random_index, :] - suggested[i, :])
+                r = np.sum(r_sub)
+                distance = np.sqrt(r)
+                if distance < self.w.a:
+                    suggested = draw_random(new_positions, random_index)
+                    i = int(0)
+                else:
+                    new_positions = suggested
+
         acceptance_ratio = self.w.wavefunction_ratio(positions, new_positions)
         epsilon = np.random.sample()
 
@@ -178,7 +228,7 @@ class Metropolis:
         energy = self.sam.local_energy
         d_El = self.sam.derivative_energy
         var = self.sam.variance
-        # self.print_averages()
+        self.print_averages()
         return d_El, energy, var
 
     def run_importance_sampling(self, analytic):

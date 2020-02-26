@@ -36,8 +36,8 @@ class System:
                 # ri_minus_rj = np.subtract(positions[i, :], positions[j+1, :])
                 r = 0.0
                 for k in range(self.num_d):
-                    ri_minus_rj = (positions[i, k] -
-                                   positions[j+1, k])
+                    ri_minus_rj = np.abs((positions[i, k] -
+                                          positions[j+1, k]))
                     r += ri_minus_rj**2
                 self.distances[i, j+1] = math.sqrt(r)
                 self.distances[j+1, i] = math.sqrt(r)
