@@ -23,6 +23,7 @@ class McMillian_Wavefunction:
         """Return wave equation."""
         term = 0.0
 
+        self.s.positions_distances_PBC(positions)
         for i in range(self.num_p):
             for j in range(i, self.num_p-1):
                 # ri_minus_rj = np.subtract(positions[i, :], positions[j+1, :])

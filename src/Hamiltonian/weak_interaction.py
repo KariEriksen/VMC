@@ -56,6 +56,7 @@ class Weak_Interaction:
         # rki = np.zeros(d)
         d_psi_rk = np.zeros(d)
         laplacian = 0.0
+        self.s.positions_distances(positions)
 
         for k in range(n):
             sum_2 = 0.0

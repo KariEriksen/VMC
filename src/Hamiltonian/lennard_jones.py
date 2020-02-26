@@ -46,6 +46,7 @@ class Lennard_Jones:
 
         sum1 = 0.0
         sum2 = np.zeros(self.w.num_d)
+        self.s.positions_distances_PBC(positions)
         for k in range(self.w.num_p):
             xk = positions[k, 0]
             yk = positions[k, 1]
@@ -79,6 +80,7 @@ class Lennard_Jones:
         """Regular Lennard-Jones potential"""
 
         V = 0.0
+        self.s.positions_distances_PBC(positions)
         for i in range(self.w.num_p):
             for j in range(i, self.w.num_p-1):
                 # ri_minus_rj = np.subtract(positions[i, :], positions[j+1, :])

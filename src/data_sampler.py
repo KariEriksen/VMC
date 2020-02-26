@@ -1,29 +1,40 @@
 """Data sampler."""
 
-import sys
-import os
+import csv
 
-sys.path.append(os.path.join(os.path.dirname(__file__), 'src'))
-from sampler import Sampler # noqa: 401
 
 class Data_Sampler:
+    """Class for writing data to file"""
 
-    __init__(self, sample):
-
-    self.sample = sample
+    def __init__(self, filename):
+        """Instance of class."""
+        self.filename = filename
 
     def make_file(self):
         """Create a new file"""
         # fix input stuff
+        # f = open('/home/kari/VMC/data/data.csv', 'w')
+        # f.write('alpha')
 
-        with open('../data/data.csv', 'w', newline='') as file:
-            self.writer = csv.writer(file)
-            self.writer.writerow(["alpha", "energy", "d_energy"])
+        if self.filename is None:
+            with open('/home/kari/VMC/data/data.csv', 'w', newline='') as file:
+                writer = csv.writer(file)
+                writer.writerow(["alpha", "energy", "d_energy"])
+
+        else:
+            with open('/home/kari/VMC/data/%s.csv' % self.filename,
+                      'w', newline='') as file:
+                writer = csv.writer(file)
+                writer.writerow(["alpha", "energy", "d_energy"])
 
     def write_to_file(self):
         """Write average value to file"""
 
-        alpha = self.w.alpha
-        energy = self.local_energy
-        d_El = self.derivative_energy
-        self.writer.writerow([parameter, energy, d_El])
+        # alpha from wave functions
+        # energy, d_El from Sampler
+        with open('/home/kari/VMC/data/data.csv', 'a', newline='') as file:
+            alpha = self.w.alpha
+            energy = self.s.local_energy
+            d_El = self.s.derivative_energy
+            writer = csv.writer(file)
+            writer.writerow([alpha, energy, d_El])

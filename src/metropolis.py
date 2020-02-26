@@ -34,15 +34,15 @@ class Metropolis:
         # r is a random number drawn from the uniform prob. dist. in [0,1]
         r = np.zeros(self.num_d)
         for i in range(self.num_d):
-            r[i] = random.uniform(-1, 1)
+            r[i] = np.random.uniform(-1, 1)
         # Pick a random particle
-        random_index = random.randrange(len(positions))
+        random_index = np.random.randint(0, high=len(positions))
         new_positions = np.array(positions)
         new_random_position = new_positions[random_index, :]
         # Suggest a new move
         new_positions[random_index, :] = new_random_position + r*self.delta_R
         test_wavefunction = self.w.wavefunction(new_positions)
-        if test_wavefunction == 0.0:
+        if test_wavefunction**2 <= 1e-14:
             pass
         else:
             acceptance_ratio = self.w.wavefunction_ratio(positions,
@@ -59,58 +59,17 @@ class Metropolis:
 
         return positions
 
-    def metropolis_step_check_distance(self, positions):
-        """Calculate new metropolis step."""
-        """with brute-force sampling of new positions."""
-
-        def draw_random(new_pos, random_i):
-            # r is a random number drawn from the uniform prob. dist. in [-1,1]
-            r = random.uniform(-1, 1)
-            # Suggest a new move
-            new_pos[random_i, :] += r*self.delta_R
-            return new_pos
-
-        # Pick a random particle
-        random_index = random.randrange(len(positions))
-        new_positions = np.array(positions)
-
-        # Find the suggested move by random draw
-        suggested = draw_random(new_positions, random_index)
-        # Check if the distance between particles is smaller than a
-        # if one is, than draw a new random number
-        for i in range(self.num_p):
-            if i != random_index:
-                r_sub = np.square(suggested[random_index, :] - suggested[i, :])
-                r = np.sum(r_sub)
-                distance = np.sqrt(r)
-                if distance < self.w.a:
-                    suggested = draw_random(new_positions, random_index)
-                    i = int(0)
-                else:
-                    new_positions = suggested
-
-        acceptance_ratio = self.w.wavefunction_ratio(positions, new_positions)
-        epsilon = np.random.sample()
-
-        if acceptance_ratio > epsilon:
-            positions = new_positions
-            self.s.distances_update(positions, random_index)
-            self.c += 1.0
-
-        else:
-            pass
-
-        return positions
-
     def metropolis_step_PBC(self, positions):
         """Calculate new metropolis step."""
         """with brute-force sampling of new positions."""
 
         # r = random.random()*random.choice((-1, 1))
         # r is a random number drawn from the uniform prob. dist. in [0,1]
-        r = random.uniform(-1, 1)
+        r = np.zeros(self.num_d)
+        for i in range(self.num_d):
+            r[i] = np.random.uniform(-1, 1)
         # Pick a random particle
-        random_index = random.randrange(len(positions))
+        random_index = np.random.randint(0, high=len(positions))
         new_positions = np.array(positions)
         new_random_position = new_positions[random_index, :]
         # Suggest a new move
@@ -118,17 +77,23 @@ class Metropolis:
         # Check boundarys, apply PBC if necessary
         pbc = self.periodic_boundary_conditions(new_positions, random_index)
         new_positions[random_index, :] = pbc
-        acceptance_ratio = self.w.wavefunction_ratio(positions, new_positions)
-        epsilon = np.random.sample()
 
-        if acceptance_ratio > epsilon:
-            positions = new_positions
-            self.s.distances_update_PBC(positions, random_index)
-            # print (self.s.distances)
-            self.c += 1.0
-
-        else:
+        test_wavefunction = self.w.wavefunction(new_positions)
+        if test_wavefunction**2 <= 1e-14:
             pass
+        else:
+            acceptance_ratio = self.w.wavefunction_ratio(positions,
+                                                         new_positions)
+            epsilon = np.random.sample()
+
+            if acceptance_ratio > epsilon:
+                positions = new_positions
+                self.s.distances_update_PBC(positions, random_index)
+                # print (self.s.distances)
+                self.c += 1.0
+
+            else:
+                pass
 
         return positions
 
@@ -149,7 +114,9 @@ class Metropolis:
 
         # r = random.random()*random.choice((-1, 1))
         # r = np.random.normal()
-        r = random.gauss(0, 1)
+        r = np.zeros(self.num_d)
+        for i in range(self.num_d):
+            r[i] = random.gauss(0, 1)
         # Pick a random particle and calculate new position
         random_index = random.randrange(len(positions))
         new_positions = np.array(positions)
@@ -158,32 +125,38 @@ class Metropolis:
         term2 = r*np.sqrt(self.delta_t)
         new_random_position = new_positions[random_index, :] + term1 + term2
         new_positions[random_index, :] = new_random_position
-        prob_ratio = self.w.wavefunction_ratio(positions, new_positions)
 
-        if analytic == 'true':
-            F_new = self.w.quantum_force(new_positions)
-        else:
-            F_new = self.w.quantum_force_numerical(new_positions)
-
-        for i in range(self.num_p):
-            for j in range(self.num_d):
-                term1 = 0.5*((F_old[i, j] + F_new[i, j]) *
-                             (positions[i, j] - new_positions[i, j]))
-                term2 = D*self.delta_t*(F_old[i, j] - F_new[i, j])
-                greens_function += term1 + term2
-
-        greens_function = np.exp(greens_function)
-
-        epsilon = np.random.sample()
-        acceptance_ratio = prob_ratio*greens_function
-
-        if acceptance_ratio > epsilon:
-            positions = new_positions
-            self.s.distances_update(positions, random_index)
-            self.c += 1.0
-
-        else:
+        # Check if wave function is zero
+        test_wavefunction = self.w.wavefunction(new_positions)
+        if test_wavefunction**2 <= 1e-14:
             pass
+        else:
+            prob_ratio = self.w.wavefunction_ratio(positions, new_positions)
+
+            if analytic == 'true':
+                F_new = self.w.quantum_force(new_positions)
+            else:
+                F_new = self.w.quantum_force_numerical(new_positions)
+
+            for i in range(self.num_p):
+                for j in range(self.num_d):
+                    term1 = 0.5*((F_old[i, j] + F_new[i, j]) *
+                                 (positions[i, j] - new_positions[i, j]))
+                    term2 = D*self.delta_t*(F_old[i, j] - F_new[i, j])
+                    greens_function += term1 + term2
+
+            greens_function = np.exp(greens_function)
+
+            epsilon = np.random.sample()
+            acceptance_ratio = prob_ratio*greens_function
+
+            if acceptance_ratio > epsilon:
+                positions = new_positions
+                self.s.distances_update(positions, random_index)
+                self.c += 1.0
+
+            else:
+                pass
 
         return positions
 
@@ -194,6 +167,17 @@ class Metropolis:
         positions = np.random.rand(self.num_p, self.num_d)
         # Initialize the distance matrix
         self.s.positions_distances(positions)
+        # check if the wave function is zero
+        while True:
+            test_wavefunction = self.w.wavefunction(positions)
+            if test_wavefunction**2 <= 1e-14:
+                # Initialize the posistions for each new Monte Carlo run
+                positions = np.random.rand(self.num_p, self.num_d)
+                # Initialize the distance matrix
+                self.s.positions_distances(positions)
+            else:
+                break
+
         # Initialize sampler method for each new Monte Carlo run
         self.sam.initialize()
 
@@ -216,6 +200,16 @@ class Metropolis:
         positions = np.random.rand(self.num_p, self.num_d)
         # Initialize the distance matrix
         self.s.positions_distances_PBC(positions)
+        # check if the wave function is zero
+        while True:
+            test_wavefunction = self.w.wavefunction(positions)
+            if test_wavefunction**2 <= 1e-14:
+                # Initialize the posistions for each new Monte Carlo run
+                positions = np.random.rand(self.num_p, self.num_d)
+                # Initialize the distance matrix
+                self.s.positions_distances_PBC(positions)
+            else:
+                break
         # Initialize sampler method for each new Monte Carlo run
         self.sam.initialize()
 
@@ -238,6 +232,16 @@ class Metropolis:
         positions = np.random.rand(self.num_p, self.num_d)
         # Initialize the distance matrix
         self.s.positions_distances(positions)
+        # check if the wave function is zero
+        while True:
+            test_wavefunction = self.w.wavefunction(positions)
+            if test_wavefunction**2 <= 1e-14:
+                # Initialize the posistions for each new Monte Carlo run
+                positions = np.random.rand(self.num_p, self.num_d)
+                # Initialize the distance matrix
+                self.s.positions_distances(positions)
+            else:
+                break
         # Initialize sampler method for each new Monte Carlo run
         self.sam.initialize()
 

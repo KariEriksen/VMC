@@ -16,7 +16,10 @@ class Optimizer:
 
     def gradient_descent(self, alpha, derivative_energy):
         """Orinary gradient descent."""
+
         new_alpha = alpha - self.learning_rate*derivative_energy
+        if new_alpha <= 0:
+            new_alpha = 0.01
 
         return new_alpha
 

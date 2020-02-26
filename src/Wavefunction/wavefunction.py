@@ -21,6 +21,7 @@ class Wavefunction:
 
     def wavefunction(self, positions):
         """Return wave equation."""
+        self.s.positions_distances(positions)
         spf = self.single_particle_function(positions)
         jf = self.jastrow_factor(positions)
         wf = spf*jf
@@ -121,6 +122,7 @@ class Wavefunction:
         d_u_rkj = np.zeros(d)
 
         quantum_force = np.zeros((self.num_p, self.num_d))
+        self.s.positions_distances(positions)
 
         for k in range(n):
             xk = positions[k, 0]
@@ -142,8 +144,8 @@ class Wavefunction:
                     r_kj = rk - rj
                     # rkj = math.sqrt(np.sum((rk - rj)*(rk - rj)))
                     rkj = self.s.distances[k, j]
-                    factor = -2/(a*rkj*rkj - rkj*rkj*rkj)
-                    # factor = 2.0*a / math.pow(rkj, 1.5)
+                    # factor = -2/(a*rkj*rkj - rkj*rkj*rkj)
+                    factor = 2.0*a / math.pow(rkj, 1.5)
                     d_u_rkj += factor*r_kj
 
             quantum_force[k, :] = d_psi_k + d_u_rkj
