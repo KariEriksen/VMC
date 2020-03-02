@@ -23,8 +23,8 @@ configurations. Optimizing using Gradient descent.
 """
 step_metropolis = 1.0
 step_importance = 0.01
-learning_rate = 0.05
-gradient_iterations = 50
+learning_rate = 0.01
+gradient_iterations = 20
 
 opt = Optimizer(learning_rate)
 # Hamiltonian.update(self, alpha)
@@ -58,13 +58,13 @@ def non_interaction_case(monte_carlo_cycles, num_particles, num_dimensions,
         wave = Wavefunction(num_particles, num_dimensions, parameter,
                             beta, a, sys)
         # Run with analytical expression of local energy = true
-        hamilton = Non_Interaction(omega, wave, sys, 'true')
+        hamilton = Non_Interaction(omega, wave, sys, True)
         met = Metropolis(monte_carlo_cycles, step_metropolis,
                          step_importance, num_particles, num_dimensions,
                          wave, hamilton, sys)
 
         # d_El, energy, var = met.run_metropolis()
-        d_El, energy, var = met.run_importance_sampling('true')
+        d_El, energy, var = met.run_importance_sampling(True)
         stop = timeit.default_timer()
         new_parameter = opt.gradient_descent(parameter, d_El)
         # new_parameter = opt.gradient_descent_barzilai_borwein(parameter,
@@ -98,7 +98,7 @@ def weak_interaction_case(monte_carlo_cycles, num_particles, num_dimensions,
                           alpha):
     """Run the variational monte carlo."""
 
-    a = 0.433
+    a = 0.0433
     beta = omega = 1.0
     if alpha is None:
         alpha = 0.48
@@ -119,7 +119,7 @@ def weak_interaction_case(monte_carlo_cycles, num_particles, num_dimensions,
             wave = Wavefunction(num_particles, num_dimensions, parameter,
                                 beta, a, sys)
             # Run with analytical expression of local energy = true
-            hamilton = Weak_Interaction(omega, wave, sys, 'false')
+            hamilton = Weak_Interaction(omega, wave, sys, False)
             met = Metropolis(monte_carlo_cycles, step_metropolis,
                              step_importance, num_particles, num_dimensions,
                              wave, hamilton, sys)
@@ -159,7 +159,7 @@ def strong_interaction_case(monte_carlo_cycles, num_particles, num_dimensions,
     """Run the variational monte carlo."""
 
     if alpha is None:
-        alpha = 0.48
+        alpha = 2.9
 
     epsilon = 10.22
     sigma = 2.556
@@ -178,14 +178,14 @@ def strong_interaction_case(monte_carlo_cycles, num_particles, num_dimensions,
         wave = McMillian_Wavefunction(num_particles, num_dimensions, parameter,
                                       sys)
         # Run with analytical expression of local energy = true
-        hamilton = Lennard_Jones(epsilon, sigma, wave, sys, 'true')
+        hamilton = Lennard_Jones(epsilon, sigma, wave, sys, False)
         met = Metropolis(monte_carlo_cycles, step_metropolis,
                          step_importance, num_particles, num_dimensions,
                          wave, hamilton, sys)
 
         d_El, energy, var = met.run_metropolis_PBC()
         # Run with analytical expression for quantum force = true
-        # d_El, energy, var = met.run_importance_sampling('true')
+        # d_El, energy, var = met.run_importance_sampling(True)
         stop = timeit.default_timer()
         new_parameter = opt.gradient_descent(parameter, d_El)
         # new_parameter = opt.gradient_descent_barzilai_borwein(parameter,
@@ -232,13 +232,13 @@ def elliptic_weak_interaction_case(monte_carlo_cycles, num_particles,
         wave = Wavefunction(num_particles, num_dimensions, parameter,
                             beta, a, sys)
         # Run with analytical expression of local energy = true
-        hamilton = Non_Interaction(omega, wave, sys, 'true')
+        hamilton = Non_Interaction(omega, wave, sys, True)
         met = Metropolis(monte_carlo_cycles, step_metropolis,
                          step_importance, num_particles, num_dimensions,
                          wave, hamilton, sys)
 
         d_El, energy = met.run_metropolis()
-        # d_El, energy = met.run_importance_sampling('false')
+        # d_El, energy = met.run_importance_sampling(False)
         new_parameter = opt.gradient_descent(parameter, d_El)
         print ('new alpha = ', new_parameter)
         print ('number of gradien descent runs = ', i)
@@ -280,13 +280,13 @@ def brute_force(monte_carlo_cycles, num_particles, num_dimensions, alpha):
         wave = Wavefunction(num_particles, num_dimensions, parameter,
                             beta, a, sys)
         # Run with analytical expression of local energy = true
-        hamilton = Non_Interaction(omega, wave, sys, 'true')
+        hamilton = Non_Interaction(omega, wave, sys, True)
         met = Metropolis(monte_carlo_cycles, step_metropolis,
                          step_importance, num_particles, num_dimensions,
                          wave, hamilton, sys)
 
         d_El, energy, var = met.run_metropolis()
-        # d_El, energy, var = met.run_importance_sampling('true')
+        # d_El, energy, var = met.run_importance_sampling(True)
         # new_parameter = opt.gradient_descent_barzilai_borwein(parameter,
         #                                                       d_El, i)
 
@@ -310,16 +310,17 @@ def one_body_density(monte_carlo_cycles, num_particles, num_dimensions, alpha):
     """Run the variational monte carlo"""
     """using brute force"""
 
-    a = 0.0
+    a = 0.433
     beta = omega = 1.0
-    alpha = 0.5
+    alpha = 0.4997
 
     sys = System(num_particles, num_dimensions)
     # Call wavefunction class in order to set new alpha parameter
     wave = Wavefunction(num_particles, num_dimensions, alpha,
                         beta, a, sys)
     # Run with analytical expression of local energy = true
-    hamilton = Non_Interaction(omega, wave, sys, 'true')
+    # hamilton = Non_Interaction(omega, wave, sys, False)
+    hamilton = Weak_Interaction(omega, wave, sys, False)
     met = Metropolis(monte_carlo_cycles, step_metropolis,
                      step_importance, num_particles, num_dimensions,
                      wave, hamilton, sys)
@@ -337,24 +338,24 @@ def run_blocking(monte_carlo_cycles, num_particles, num_dimensions,
                  alpha):
     """Run the sampling in metropolis to be used for blocking."""
 
-    a = 0.433
+    a = 0.00433
     beta = omega = 1.0
     if alpha is None:
-        alpha = 0.495
+        alpha = 0.4997
 
     sys = System(num_particles, num_dimensions)
     # Call wavefunction class in order to set new alpha parameter
     wave = Wavefunction(num_particles, num_dimensions, alpha,
                         beta, a, sys)
     # Run with analytical expression of local energy = true
-    hamilton = Non_Interaction(omega, wave, sys, 'true')
+    hamilton = Non_Interaction(omega, wave, sys, False)
     met = Metropolis(monte_carlo_cycles, step_metropolis,
                      step_importance, num_particles, num_dimensions,
                      wave, hamilton, sys)
 
     # d_El, energy = met.run_metropolis()
     # Run with analytical expression for quantum force = true
-    energy = met.blocking('true')
+    energy = met.blocking(True)
 
     with open('/home/kari/VMC/data/blocking.csv', 'w',
               newline='') as file:

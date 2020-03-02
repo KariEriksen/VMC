@@ -13,9 +13,9 @@ import numpy as np
         number of dimensions, interaction parameter)"""
 
 # non_interaction_case(int(10e6), 1, 3, 0.1)
-# weak_interaction_case(1000, 5, 3, 0.4)
-strong_interaction_case(1000, 4, 3, 0.001)
+# weak_interaction_case(1000, 2, 3, 0.49)
+# strong_interaction_case(10, 2, 3, 2.8)
 # elliptic_weak_interaction_case(10000, 2, 3, None)
 # brute_force(100000, 1, 3, None)
-# one_body_density(100000, 3, 3, None)
-# run_blocking(pow(2, 18), 2, 3, 0.46)
+one_body_density(10000, 3, 3, None)
+# run_blocking(pow(2, 24), 2, 3, 0.4997)
