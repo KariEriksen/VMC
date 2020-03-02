@@ -70,6 +70,7 @@ class Wavefunction:
             for j in range(i, self.num_p-1):
 
                 distance = self.s.distances[i, j+1]
+                # print ('d = ', distance)
                 if distance > self.a:
                     f = f*(1.0 - (self.a/distance))
                 else:

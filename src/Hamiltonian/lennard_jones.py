@@ -81,6 +81,7 @@ class Lennard_Jones:
 
         V = 0.0
         self.s.positions_distances_PBC(positions)
+        # distance = self.s.distance
         for i in range(self.w.num_p):
             for j in range(i, self.w.num_p-1):
                 # ri_minus_rj = np.subtract(positions[i, :], positions[j+1, :])
@@ -90,16 +91,19 @@ class Lennard_Jones:
                     # r += ri_minus_rj**2
                 # distance = math.sqrt(r)
                 distance = self.s.distances[i, j+1]
-
-                C6 = (self.sigma/distance)**6
-                C12 = (self.sigma/distance)**12
-                V += 4*self.epsilon*(C12 - C6)
+                if distance < self.sigma:
+                    v = 0.0
+                else:
+                    C6 = (self.sigma/distance)**6
+                    C12 = (self.sigma/distance)**12
+                    v = 4*self.epsilon*(C12 - C6)
+                V += v
 
         return V
 
     def local_energy(self, positions):
         """Return the local energy."""
-        if self.analytical == 'true':
+        if self.analytical == True:
             # Run with analytical expression for kinetic energy
             k = self.laplacian_analytical(positions)
 
@@ -110,5 +114,9 @@ class Lennard_Jones:
 
         p = self.lennard_jones_potential(positions)
         energy = -6.0596*k + p
+        # print ('w = ', self.w.wavefunction(positions))
+        # print ('kinetic = ', -6.0596*k)
+        # print ('potential = ', p)
+        # print ('total = ', energy)
 
         return energy

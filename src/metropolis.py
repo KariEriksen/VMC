@@ -2,7 +2,10 @@
 import numpy as np
 import random
 import math
+from Wavefunction.wavefunction import Wavefunction # noqa: 401
+from Wavefunction.mcmillian import McMillian_Wavefunction # noqa: 401
 from sampler import Sampler # noqa: 401
+from system import System # noqa: 401
 
 
 class Metropolis:
@@ -41,17 +44,36 @@ class Metropolis:
         new_random_position = new_positions[random_index, :]
         # Suggest a new move
         new_positions[random_index, :] = new_random_position + r*self.delta_R
+        # Old system and wavefunction
+        wavefunction = self.w.wavefunction(positions)
+        old_wavefunction_squared = wavefunction**2
+
+        # Test the new position with a new system and wavefunction
+        # sys_test = System(self.num_p, self.num_d)
+        # sys_test.positions_distances(new_positions)
+        # alpha = self.w.alpha
+        # beta = self.w.beta
+        # a = self.w.a
+        # wave_test = Wavefunction(self.num_p, self.num_d, alpha, beta, a, sys_test)
+        # test_wavefunction = wave_test.wavefunction(new_positions)
         test_wavefunction = self.w.wavefunction(new_positions)
-        if test_wavefunction**2 <= 1e-14:
+
+        new_wavefunction_squared = test_wavefunction**2
+        # print ('Old = ', positions)
+
+        if new_wavefunction_squared <= 1e-14:
             pass
         else:
-            acceptance_ratio = self.w.wavefunction_ratio(positions,
-                                                         new_positions)
+            # acceptance_ratio = self.w.wavefunction_ratio(positions,
+            #                                              new_positions)
+            acceptance_ratio = new_wavefunction_squared/old_wavefunction_squared
             epsilon = np.random.sample()
 
             if acceptance_ratio > epsilon:
                 positions = new_positions
-                self.s.distances_update(positions, random_index)
+                # print ('New = ', positions)
+                # self.s.distances_update(positions, random_index)
+                # self.s.positions_distances(new_positions)
                 self.c += 1.0
 
             else:
@@ -107,7 +129,7 @@ class Metropolis:
         D = 0.5
         greens_function = 0.0
 
-        if analytic == 'true':
+        if analytic == True:
             F_old = self.w.quantum_force(positions)
         else:
             F_old = self.w.quantum_force_numerical(positions)
@@ -133,7 +155,7 @@ class Metropolis:
         else:
             prob_ratio = self.w.wavefunction_ratio(positions, new_positions)
 
-            if analytic == 'true':
+            if analytic == True:
                 F_new = self.w.quantum_force(new_positions)
             else:
                 F_new = self.w.quantum_force_numerical(new_positions)
@@ -204,6 +226,7 @@ class Metropolis:
         while True:
             test_wavefunction = self.w.wavefunction(positions)
             if test_wavefunction**2 <= 1e-14:
+                # print ('obs')
                 # Initialize the posistions for each new Monte Carlo run
                 positions = np.random.rand(self.num_p, self.num_d)
                 # Initialize the distance matrix
@@ -222,6 +245,7 @@ class Metropolis:
         energy = self.sam.local_energy
         d_El = self.sam.derivative_energy
         var = self.sam.variance
+        print ('w = ', self.w.wavefunction(positions))
         self.print_averages()
         return d_El, energy, var
 
@@ -289,6 +313,18 @@ class Metropolis:
 
         # Initialize the posistions for each new Monte Carlo run
         positions = np.random.rand(self.num_p, self.num_d)
+        # Initialize the distance matrix
+        self.s.positions_distances(positions)
+        # check if the wave function is zero
+        while True:
+            test_wavefunction = self.w.wavefunction(positions)
+            if test_wavefunction**2 <= 1e-14:
+                # Initialize the posistions for each new Monte Carlo run
+                positions = np.random.rand(self.num_p, self.num_d)
+                # Initialize the distance matrix
+                self.s.positions_distances(positions)
+            else:
+                break
         # Initialize sampler method for each new Monte Carlo run
         self.sam.initialize()
         density_adding = np.zeros(41)
@@ -299,9 +335,10 @@ class Metropolis:
             positions = new_positions
             density = self.one_body_density(positions)
             density_adding += density
-            # self.s.sample_values(positions)
+            # self.sam.sample_values(positions)
 
-        # self.s.average_values(self.mc_cycles)
+        # self.sam.average_values(self.mc_cycles)
+        # self.print_averages()
 
         return density_adding
 
@@ -341,12 +378,23 @@ class Metropolis:
         positions = np.random.rand(self.num_p, self.num_d)
         # Initialize the distance matrix
         self.s.positions_distances(positions)
+        # check if the wave function is zero
+        while True:
+            test_wavefunction = self.w.wavefunction(positions)
+            if test_wavefunction**2 <= 1e-14:
+                # Initialize the posistions for each new Monte Carlo run
+                positions = np.random.rand(self.num_p, self.num_d)
+                # Initialize the distance matrix
+                self.s.positions_distances(positions)
+            else:
+                break
         # Initialize sampler method for each new Monte Carlo run
         self.sam.initialize()
         energy = np.zeros(self.mc_cycles)
 
         for i in range(self.mc_cycles):
-            new_positions = self.importance_sampling_step(positions, analytic)
+            # new_positions = self.importance_sampling_step(positions, analytic)
+            new_positions = self.metropolis_step(positions)
             positions = new_positions
             self.sam.sample_values(positions)
             energy[i] = self.sam.local_energy

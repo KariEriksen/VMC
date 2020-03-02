@@ -46,6 +46,7 @@ class McMillian_Wavefunction:
         described by the McMillian wave function"""
         term = 0.0
 
+        self.s.positions_distances_PBC(positions)
         for i in range(self.num_p):
             for j in range(i, self.num_p-1):
                 # r = 0.0
@@ -54,7 +55,10 @@ class McMillian_Wavefunction:
                     # r += ri_minus_rj**2
                 # distance = math.sqrt(r)
                 distance = self.s.distances[i, j+1]
-                term += (1/distance)**5
+                if distance < self.alpha:
+                    pass
+                else:
+                    term += (1/distance)**5
 
         gradient = -2.5*term*self.alpha4
 

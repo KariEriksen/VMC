@@ -85,45 +85,51 @@ class Weak_Interaction:
 
                     # rkj = math.sqrt(np.sum((rk - rj)*(rk - rj)))
                     rkj = self.s.distances[k, j]
+                    if rkj < a:
+                        print ('first')
+                        pass
+                    else:
+                        d_u_rkj = -a/(a*rkj - rkj*rkj)
 
-                    d_u_rkj = -a/(a*rkj - rkj*rkj)
+                        xkj = xk - xj
+                        ykj = yk - yj
+                        zkj = zk - zj
 
-                    xkj = xk - xj
-                    ykj = yk - yj
-                    zkj = zk - zj
+                        sum_1[0] += ((xkj)/rkj)*d_u_rkj
+                        sum_1[1] += ((ykj)/rkj)*d_u_rkj
+                        sum_1[2] += ((zkj)/rkj)*d_u_rkj
 
-                    sum_1[0] += ((xkj)/rkj)*d_u_rkj
-                    sum_1[1] += ((ykj)/rkj)*d_u_rkj
-                    sum_1[2] += ((zkj)/rkj)*d_u_rkj
+                        dd_u_rkj = (a*(a - 2*rkj))/(rkj*rkj*(a - rkj)*(a - rkj))
 
-                    dd_u_rkj = (a*(a - 2*rkj))/(rkj*rkj*(a - rkj)*(a - rkj))
+                        sum_3 += dd_u_rkj + (2/rkj)*d_u_rkj
 
-                    sum_3 += dd_u_rkj + (2/rkj)*d_u_rkj
+                        for i in range(n):
 
-                    for i in range(n):
+                            xi = positions[i, 0]
+                            yi = positions[i, 1]
+                            zi = positions[i, 2]
+                            # ri = np.array((xi, yi, zi))
 
-                        xi = positions[i, 0]
-                        yi = positions[i, 1]
-                        zi = positions[i, 2]
-                        # ri = np.array((xi, yi, zi))
+                            if(i != k):
 
-                        if(i != k):
+                                # rki = math.sqrt(np.sum((rk - ri)*(rk - ri)))
+                                rki = self.s.distances[k, i]
+                                if rki < a:
+                                    print ('second')
+                                    pass
+                                else:
+                                    d_u_rki = -a/(a*rki - rki*rki)
 
-                            # rki = math.sqrt(np.sum((rk - ri)*(rk - ri)))
-                            rki = self.s.distances[k, i]
+                                    xki = xk - xi
+                                    yki = yk - yi
+                                    zki = zk - zi
 
-                            d_u_rki = -a/(a*rki - rki*rki)
+                                    rki_dot_rkj = xki*xkj + yki*ykj + zki*zkj
 
-                            xki = xk - xi
-                            yki = yk - yi
-                            zki = zk - zi
+                                    sum_2 += (rki_dot_rkj/(rki*rkj))*d_u_rki*d_u_rkj
 
-                            rki_dot_rkj = xki*xkj + yki*ykj + zki*zkj
-
-                            sum_2 += (rki_dot_rkj/(rki*rkj))*d_u_rki*d_u_rkj
-
-            part = (d_psi_rk[0]*sum_1[0] + d_psi_rk[1]*sum_1[1]
-                    + d_psi_rk[2]*sum_1[2])
+                part = (d_psi_rk[0]*sum_1[0] + d_psi_rk[1]*sum_1[1]
+                        + d_psi_rk[2]*sum_1[2])
 
             laplacian += dd_psi_rk + 2*part + sum_2 + sum_3
 
@@ -156,7 +162,7 @@ class Weak_Interaction:
 
     def local_energy(self, positions):
         """Return the local energy."""
-        if self.analytical == 'true':
+        if self.analytical == True:
             # Run with analytical expression for kinetic energy
             k = self.laplacian_analytical(positions)
 
